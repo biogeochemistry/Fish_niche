@@ -1,0 +1,39 @@
+import os
+
+dest = 'C:/Users/Marianne/Desktop/Fish_niche/MDN_FishNiche_2017/cordex'
+url1 = 'http://ns2806k.web.sigma2.no/' # 5-9-2018 MC
+url2 = '_EUR-11_'
+
+# 0 reserved for NORA10
+scenarios = {1: (('historical', '19710101', '19751231'), ('historical', '19760101', '19801231')), 
+             2: (('historical', '20010101', '20051231'), ('rcp45', '20060101', '20101231')), 
+             3: (('rcp45', '20310101', '20351231'), ('rcp45', '20360101', '20401231')), 
+             4: (('rcp45', '20610101', '20651231'), ('rcp45', '20660101', '20701231')), 
+             5: (('rcp45', '20910101', '20951231'), ('rcp45', '20960101', '21001231')), 
+             6: (('rcp85', '20310101', '20351231'), ('rcp85', '20360101', '20401231')), 
+             7: (('rcp85', '20610101', '20651231'), ('rcp85', '20660101', '20701231')), 
+             8: (('rcp85', '20910101', '20951231'), ('rcp85', '20960101', '21001231'))}
+             
+models = {1: ('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1')}
+#models = {1: ('IPSL-IPSL-CM5A-MR', 'r1i1p1_IPSL-INERIS-WRF331F_v1')}
+          #2: ('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1'), 
+          #3: ('MPI-M-MPI-ESM-LR', 'r1i1p1_CLMcom-CCLM4-8-17_v1')}
+		  #{1: ('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1')}
+## IPSL not complete?
+## SMHI not on real calendar?
+
+variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
+
+urlsA = ['%sLakes_%s%s%s_%s_%s_day_%s-%s.h5.gz' % #MC 2017-05-16 add of "Lakes_" to be fix h5 filename on repertory
+         (url1, v, url2, m0, s0[0], m1, s0[1], s0[2])
+         for m0, m1 in models.values() for s0, s1 in [scenarios[2]]
+         for v in variables]
+urlsB = ['%sLakes_%s%s%s_%s_%s_day_%s-%s.h5.gz' % #MC 2017-05-16 add of "Lakes_" to be fix h5 filename on repertory
+         (url1, v, url2, m0, s1[0], m1, s1[1], s1[2])
+         for m0, m1 in models.values() for s0, s1 in [scenarios[2]]
+         for v in variables]
+urls = urlsA + urlsB
+
+commands = ['wget64 "%s"' % url for url in urls]
+os.system(' & '.join(commands))
+

@@ -1,0 +1,1 @@
+mex -v CC=gcc LD=g++ COPTIMFLAGS='-O3 -ffast-math'  -I/Users/MarkelovIgor/eigen pH.cpp
