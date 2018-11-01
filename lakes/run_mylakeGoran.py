@@ -86,13 +86,12 @@ def mylakepar(longitude, latitude, outpath,swa_b1=0.1,k_BOD=0.01,k_SOD=100,I_scD
     :return: string to be written to a file
     """
     #5-7-2018 MC
-    #out = " "
-    #swa_b1=1
-    if (os.path.isfile ( "LAE_para_all1.txt" )): #modification for being able to change param template
+
+    if (os.path.isfile ( "LAE_para_all1.txt" )): #this file allows change of the four coefficients, if nothing is given, will uses initial values
         print('using file')
         with open ( "LAE_para_all1.txt", "r" ) as infile:
             out = infile.read () % (latitude, longitude, I_scDOC, swa_b1, k_BOD, k_SOD)
-    #take of
+
     else:
         out = '''-999	"Mylake parameters"			
     Parameter	Value	Min	Max	Unit
