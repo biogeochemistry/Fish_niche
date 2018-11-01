@@ -1,6 +1,6 @@
 function mylakeGoran(initfile, parfile, inputfile, m_start2, m_stop2, outdir)
 
-path(path, '../mylake')
+path(path, '../Mylake_O_simple')%change directory from mylake folder to Mylake_O_simple
 path(path, '../sediments')
 
 warning('off', 'all') 
