@@ -1,0 +1,3 @@
+[submodule "MyLake"]
+	path = MyLake_O_simple
+	url = ../MyLake_O_simple.git
