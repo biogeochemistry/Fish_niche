@@ -19,9 +19,6 @@ import math
 from joblib import Parallel, delayed
 import multiprocessing
 
-#listofmodels = int ( sys.argv[1] )
-#listofscenarios = int ( sys.argv[2] )
-#csvf = sys.argv[3]
 
 num_cores = multiprocessing.cpu_count () #to modified if you want to choose the number of cores used.
 
@@ -129,7 +126,9 @@ def loop_through_lake_list(i,lines,modeli,scenarioi,k_BOD=0.01,swa_b1=1,k_SOD=10
 
 
 if __name__ == '__main__':
-    listofscenarios = [1,2,3,4,5,6,7,8]
-    listofmodels = [1,2,3,4,5,6]
-    csvf = r'2017SwedenList_only_validation_lakes.csv'
-    loop_throught_model_scenario ( listofmodels, listofscenarios, csvf )
+
+    #Script to run test the model with the command line MC-2018-11-02
+    modeli = int ( sys.argv[1] )
+    scenarioi = int ( sys.argv[2] )
+    csvf = sys.argv[3]
+    runlakesGoran_par ( csvf, modeli, scenarioi)
