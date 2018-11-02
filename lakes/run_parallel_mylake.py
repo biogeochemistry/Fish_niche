@@ -118,11 +118,11 @@ def loop_through_lake_list(i,lines,modeli,scenarioi,k_BOD=0.01,swa_b1=1,k_SOD=10
     print ( 'running lake %s' % ebh )
     #swa_b1 = OLD EQUATION: 3.6478*float(depthmean)**-0.945 # 0.796405*math.exp(-0.016045*float(depth))#-0.3284*math.log(float(depth)) + 1.6134#-0.8547*math.log(math.log(depth)) + 1.4708#3.0774*math.exp(-0.6432*math.log(float(depth)))
     #k_SOD = OLD EQUATION: 13069.873528*math.exp(-1.760776*math.log(float(depth)))#11838.3*math.exp(-1.69321*math.log(float(depth)))
-    print('swa %s, SOD %s'%(swa_b1calib,k_sod))
+    print('swa %s, SOD %s'%(swa_b1,k_SOD))
     #k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304#0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
-    print ('BOD %s'% k_bod)
+    print ('BOD %s'% k_BOD)
     #I_scDOC2 = OLD EQUATION: math.log((swa_b1calib+0.727)/0.3208008880)/(2*0.1338538345) #to modified if swa_b0 is modified
-    print('IDOC %s'%I_scDOC2)
+    print('IDOC %s'%I_scDOC)
 
     run_mylakeGoran.runlake ( modeli, scenarioi, ebh.strip ( '"' ), int ( subid ), float ( depth ),
                     float ( area ), float ( longitude ), float ( latitude ),k_BOD,swa_b1,k_SOD,I_scDOC )

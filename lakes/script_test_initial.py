@@ -42,4 +42,5 @@ if __name__ == '__main__':
     swa_b1 = 1
     k_SOD = 100
     I_scDOC = 1
+    model,scenario = 2,2
     runlakesGoran_par(lakelistfile, model, scenario,k_BOD,swa_b1,k_SOD,I_scDOC)
