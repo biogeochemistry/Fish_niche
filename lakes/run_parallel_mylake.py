@@ -23,9 +23,10 @@ import multiprocessing
 #listofscenarios = int ( sys.argv[2] )
 #csvf = sys.argv[3]
 
-cordexfolder = 'G:cordex'
+num_cores = multiprocessing.cpu_count () #to modified if you want to choose the number of cores used.
+
+cordexfolder = 'G:cordex' #change depending where the climatic files are.
 outputfolder = '../output'
-report = '%s/running_report_run.txt'%outputfolder
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
 models = {1: ('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),  # MC 2018-05-16
           2: ('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1_day'),
@@ -76,14 +77,13 @@ def loop_throught_model_scenario(listofmodels,listofscenarios,csvf):
                     f.close ()
 
             except:
-                test = False
                 with open ( report, 'a' ) as f:
                     f.write ( 'unable to run mylake for _EUR-11_%s_%s_%s_%s-%s\n' % (m0, s0[0], m1, s0[1], s1[2]) )
                     f.close ()
 
                 print ( 'unable to run mylake for _EUR-11_%s_%s_%s_%s-%s' % (m0, s0[0], m1, s0[1], s1[2]) )
 
-def runlakesGoran_par(csvf,modeli,scenarioi,k_bod,k_sod):
+def runlakesGoran_par(csvf,modeli,scenarioi,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
     """
         Launch the modelisation with each model and scenario for each lake.
         :param modeli: model by number
@@ -98,20 +98,12 @@ def runlakesGoran_par(csvf,modeli,scenarioi,k_bod,k_sod):
         #nlines = 3
         ii = range ( 1, nlines )
 
-    num_cores = multiprocessing.cpu_count ()-4
-    #swa_b1series = []
-    #for i in lake:
-    #    swa_b1series.append ( 36.8178 * math.exp ( -0.275 * math.log (
-    #        i ) ) )  # 47.6621*math.exp(-0.2934*math.log(i)))#3012480.2603*math.log(i)**-5.694)#3388532.6444*math.log(i)**-5.7331)#2612210.7088*math.log(i)**-5.5954)#2000000*math.log(i)**-5.467)#840906*math.log(i)**-5.232)78.8602*math.exp(-0.325*math.log(i)))#
 
-    #with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
-    #    f.write ( '\nrunning loop_through_lake_list\n' )
-    #    f.close ()
     #for i in ii:
     #    loop_through_lake_list(i,lines,modeli,scenarioi)
-    Parallel ( n_jobs=num_cores ) ( delayed ( loop_through_lake_list ) ( i,lines,modeli,scenarioi,k_sod,k_bod) for i in ii)#series[i-1]
+    Parallel ( n_jobs=num_cores ) ( delayed ( loop_through_lake_list ) ( i,lines,modeli,scenarioi,k_BOD,swa_b1,k_SOD,I_scDOC) for i in ii)#series[i-1]
 
-def loop_through_lake_list(i,lines,modeli,scenarioi,k_sod,k_bod):
+def loop_through_lake_list(i,lines,modeli,scenarioi,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
     """
     loop which treat each lake in file with the function mylakeGoran.runlake().
     :param i: line in the file which give the information about the lake analysed
@@ -121,24 +113,19 @@ def loop_through_lake_list(i,lines,modeli,scenarioi,k_sod,k_bod):
     :return: None
     """
     # 5-9-2018 MC
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume,depthmean \
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume \
         = lines[i].strip ().split ( ',' )
     print ( 'running lake %s' % ebh )
-    swa_b1calib = 3.6478*float(depthmean)**-0.945
-    #swa_b1calib = 0.796405*math.exp(-0.016045*float(depth))#-0.3284*math.log(float(depth)) + 1.6134#-0.8547*math.log(math.log(depth)) + 1.4708#3.0774*math.exp(-0.6432*math.log(float(depth)))
-    #k_SODcalib = 100
-    #k_BODcalib = 0.01
-    #k_sod = 13069.873528*math.exp(-1.760776*math.log(float(depth)))#11838.3*math.exp(-1.69321*math.log(float(depth)))
+    #swa_b1 = OLD EQUATION: 3.6478*float(depthmean)**-0.945 # 0.796405*math.exp(-0.016045*float(depth))#-0.3284*math.log(float(depth)) + 1.6134#-0.8547*math.log(math.log(depth)) + 1.4708#3.0774*math.exp(-0.6432*math.log(float(depth)))
+    #k_SOD = OLD EQUATION: 13069.873528*math.exp(-1.760776*math.log(float(depth)))#11838.3*math.exp(-1.69321*math.log(float(depth)))
     print('swa %s, SOD %s'%(swa_b1calib,k_sod))
-    #k_bod =  0.268454*math.log(float(depth))**-3.980304#0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
+    #k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304#0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
     print ('BOD %s'% k_bod)
-    I_scDOC2 = math.log((swa_b1calib+0.727)/0.3208008880)/(2*0.1338538345) #to modified if swa_b0 is modified
+    #I_scDOC2 = OLD EQUATION: math.log((swa_b1calib+0.727)/0.3208008880)/(2*0.1338538345) #to modified if swa_b0 is modified
     print('IDOC %s'%I_scDOC2)
-    #with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
-    #    f.write ( '\nrunning runlake\n' )
-    #    f.close ()
+
     run_mylakeGoran.runlake ( modeli, scenarioi, ebh.strip ( '"' ), int ( subid ), float ( depth ),
-                    float ( area ), float ( longitude ), float ( latitude ),k_bod,swa_b1calib,k_sod,I_scDOC2 )
+                    float ( area ), float ( longitude ), float ( latitude ),k_BOD,swa_b1,k_SOD,I_scDOC )
 
 
 if __name__ == '__main__':

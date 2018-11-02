@@ -35,7 +35,7 @@ scenarios = {1: ('historical', 1971, 'historical', 1976),
              7: ('rcp85', 2061, 'rcp85', 2066),
              8: ('rcp85', 2091, 'rcp85', 2096)}
 
-cordexfolder = 'G:\cordex' #5-24-2018 MC
+cordexfolder = 'G:\cordex' #5-24-2018 MC #Need to be change depending where the climatic files where
 inflowfolder = '../sweden_inflow_data' #5-9-2018 MC
 outputfolder = '../output' #5-9-2018 MC
 
@@ -497,8 +497,8 @@ def runlake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_B
         flags = [os.path.exists ( os.path.join ( outdir, f ) ) for f in expectedfs]
 
         if all ( flags ):
-            # with open ( os.path.join ( outdir, '2017REDOCOMPLETE' ), 'w' ) as f:
-            #     f.write ( datetime.datetime.now ().isoformat () )
+            with open ( os.path.join ( outdir, '2017REDOCOMPLETE' ), 'w' ) as f:
+                f.write ( datetime.datetime.now ().isoformat () )
             ret=0
         ret = 0 if all ( flags ) else 100
     return ret
