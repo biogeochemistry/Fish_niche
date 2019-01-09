@@ -35,12 +35,12 @@ scenarios = {1: ('historical', 1971, 'historical', 1976),
              7: ('rcp85', 2061, 'rcp85', 2066),
              8: ('rcp85', 2091, 'rcp85', 2096)}
 
-cordexfolder = 'G:\cordex' #5-24-2018 MC #Need to be change depending where the climatic files where
+cordexfolder = '..\cordex' #5-24-2018 MC #Need to be change depending where the climatic files where
 inflowfolder = '../sweden_inflow_data' #5-9-2018 MC
 outputfolder = '../output' #5-9-2018 MC
 
 
-def mylakeinit(max_depth, area, outpath,I_scDOC=1):
+def mylakeinit(max_depth, area, outpath, I_scDOC=1):
     """
         create a file of a lake initiated with a max_depth and area.
         Assumes to have a cone shaped bathymetry curve
@@ -58,7 +58,7 @@ def mylakeinit(max_depth, area, outpath,I_scDOC=1):
 
     depth_levels = np.arange(0, max_depth, depth_resolution)
     if max_depth not in depth_levels:
-        depth_levels = np.concatenate((depth_levels, np.array([max_depth])))
+        depth_levels = np.concatenate((depth_levels, np.array([max_depth]))) #a enlever
     areas = area * (depth_levels - max_depth) ** 2 / max_depth ** 2
     lines = [
         '\t'.join([('%.2f' % d), ('%.0f' % a)] + ['4'] + ['0'] * 5 + ['%s'%(2000*I_scDOC)] + ['0'] * 5 + ['12000'] + ['0'] * 15) #MC 06-01-2018 add I_scDOC and initial 8000 become 2000#MC 06-29-2018 12000

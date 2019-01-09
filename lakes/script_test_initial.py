@@ -13,7 +13,7 @@ import datetime
 #modeli = int ( sys.argv[1] )
 #scenarioi = int ( sys.argv[2] )
 #csvf = sys.argv[3]
-cordexfolder = 'G:cordex' # neede to be change depending where de climatic files are.
+#cordexfolder = 'C:/Users/User/Documents/GitHub/Fish_niche/cordex' # neede to be change depending where de climatic files are.
 outputfolder = '../output'
 num_cores = multiprocessing.cpu_count ()
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']

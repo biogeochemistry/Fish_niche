@@ -22,7 +22,7 @@ import multiprocessing
 
 num_cores = multiprocessing.cpu_count () #to modified if you want to choose the number of cores used.
 
-cordexfolder = 'G:cordex' #change depending where the climatic files are.
+cordexfolder = '../cordex' #change depending where the climatic files are.
 outputfolder = '../output'
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
 models = {1: ('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),  # MC 2018-05-16
