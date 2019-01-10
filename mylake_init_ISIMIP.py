@@ -11,7 +11,7 @@ def mylakeinit(init_info_dict, I_scDOC = 1):
     """
     lines = [
         '\t'.join(
-            [('%.2f' % d), ('%.0f' % a), ('{}').format(w_t)] + ['0'] * 5 + ['%s' % (2000 * I_scDOC)] + ['0'] * 5 + ['12000'] + [
+            [('%.2f' % d), ('%.0f' % a), ('{}'.format(w_t))] + ['0'] * 5 + ['%s' % (2000 * I_scDOC)] + ['0'] * 5 + ['12000'] + [
                 '0'] * 15)  # MC 06-01-2018 add I_scDOC and initial 8000 become 2000#MC 06-29-2018 12000
         # Z, Az and T, ...., DOC, .... DO, ...
         for d, a, w_t in zip(init_info_dict["depth_levels"], init_info_dict["areas"], init_info_dict["w_temp"])]
@@ -74,8 +74,7 @@ def find_init_temp(observations, depth_levels, date_init = 601):
     For ISI-MIP
     With temperature .csv file opened, searches for the specified date in the time stamp column. Then checks if the data
     set for that date is complete (is there a temperature value for every known depth level for this lake). If not,
-    recursively search the next dates until a complete data set is found. Then returns the list of initial mean
-    temperatures for this lake.
+    interpolate the missing data (with missing_temp).
 
     :param observations: Type list. A list made from an opened .csv file.
     :param depth_levels: Type list. The depth levels obtained from the hypsometry file. Depth levels values are floats.
@@ -92,17 +91,14 @@ def find_init_temp(observations, depth_levels, date_init = 601):
 
         w_temp = []
         m = 0
-        n = 0
 
-        while n < len(depth_levels):
-            if float(observations[m][3]) == depth_levels[n]:
+        for depth in depth_levels:
+            if float(observations[m][3]) == depth:
                 w_temp.append(float(observations[m][4]))
                 m += 1
-                n += 1
 
             else:
                 w_temp.append("")
-                n += 1
 
         if "" in w_temp: return missing_temp(w_temp, depth_levels)
         else: return w_temp
@@ -121,24 +117,37 @@ def missing_temp(temp_list, depth_levels):
     :param depth_levels: Type list. The list of depth levels used in find_init_temp.
     :return: Type list. The list of initial temperatures with the interpolated values.
     """
-    missing_depths = []
+    observed_depths = []
 
     for depth in depth_levels:
-        if temp_list[depth_levels.index(depth)] == "":
-            missing_depths.append(depth)
-
-    for depth in missing_depths:
-        if depth in depth_levels: depth_levels.remove(depth)
+        if temp_list[depth_levels.index(depth)] != "":
+            observed_depths.append(depth)
 
     while "" in temp_list:
         temp_list.remove("")
 
-    for depth in missing_depths:
-        
+    for depth in depth_levels:
+        if depth in observed_depths: continue
+
+        else:
+            if depth < observed_depths[0]:
+                temp_list.insert(0, temp_list[0])
+                observed_depths.insert(0, depth)
+            elif depth > observed_depths[-1]:
+                temp_list.append(temp_list[-1])
+                observed_depths.append(depth)
+
+            else:
+                temp_list.insert(depth_levels.index(depth), numpy.interp(depth, observed_depths, temp_list))
+                observed_depths.insert(depth_levels.index(depth), depth)
+
+    return temp_list
+
+
 
 
 
 if __name__ == "__main__":
-    print(init_info("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv"))
-    mylakeinit(init_info("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv"))
+    print(init_info("observations/US_Alq/Allequash_hypsometry.csv", "observations/US_Alq/Allequash_temperature.csv"))
+    mylakeinit(init_info("observations/US_Alq/Allequash_hypsometry.csv", "observations/US_Alq/Allequash_temperature.csv"))
 
