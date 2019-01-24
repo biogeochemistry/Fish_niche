@@ -2,8 +2,9 @@ library(plotly)
 library(reshape2)
 
 #load data
+data <- read.csv(file.choose())
+my_df <- data[data[,8]<35,]
 
-my_df <- dontest
 my_df$Lnsod
 colnames(my_df)[24] <- 'LnSOD'
 colnames(my_df)[5] <- 'MAX'
