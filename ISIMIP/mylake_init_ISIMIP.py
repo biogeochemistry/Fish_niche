@@ -25,6 +25,7 @@ def mylakeinit(init_info_dict, I_scDOC = 1):
     with open(init_info_dict["outpath"], 'w') as f:
         f.write('\n'.join(lines))
 
+    return init_info_dict["outdir"]                 # To pass the output folder to the other modules
 
 def init_info(hypsometry_path, temperature_path):
     """
@@ -63,9 +64,9 @@ def init_info(hypsometry_path, temperature_path):
     if not os.path.exists(outdir):
         os.makedirs(outdir)
 
-    outpath = os.path.join(outdir, "{}_init".format(out_dir+"_"+out_folder))
+    outpath = os.path.join(outdir, "{}_init".format(out_folder))
 
-    return {"depth_levels": depth_levels, "areas": areas, "w_temp": w_temp, "outpath": outpath}
+    return {"depth_levels": depth_levels, "areas": areas, "w_temp": w_temp, "outdir": outdir, "outpath": outpath}
 
 
 def find_init_temp(observations, depth_levels, date_init = 601):
