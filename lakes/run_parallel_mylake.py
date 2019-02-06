@@ -92,26 +92,29 @@ def loop_through_model_scenario(listofmodels, listofscenarios, lakelistfile, rep
             f.close()
 
 
+def runlakesGoran_par(csvf, model_id, scenario_id, k_BOD=0.01, swa_b1=1, k_SOD=100, I_scDOC=1):
+    """Runs in parallel loop_through_lake_list()
 
-def runlakesGoran_par(csvf,modeli,scenarioi,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
+    For each lake in the lake list, it runs in parallel the function loop_through_lake_iist().
+
+    Args:
+        csvf: filename of the CSV file containing a list of lakes.
+        model_id: model id (one of the keys of the dictionary "models")
+        scenario_id: scenario id (one of the keys of the dictionary "scenarios")
+        k_BOD: Biochemical oxygen demand coefficient (0.01 is the initial value)
+        swa_b1: PAR light atteneuation coefficient (1 is the initial value)
+        k_SOD: Sedimentary oxygen demand (100 is the initial value)
+        I_scDOC: scaling factor for inflow concentration of DOC (1 is the initial value)
     """
-        Launch the modelisation with each model and scenario for each lake.
-        :param modeli: model by number
-        :param scenarioi: scenario by number
-        :param csvf: list of the lakes
-        :return: None
-    """
-    with open ( csvf, 'rU' ) as f:
-        # throwaway = f.readline()     #This was here to skip the heading, but somehow that is done automatically, and this line if left here skips the first lake. I have no idea why.
-        lines = f.readlines ()
-        nlines = len ( lines )
-        #nlines = 3
-        ii = range ( 1, nlines )
+    with open(csvf, 'rU') as f:
+        lines = f.readlines()
+        nlines = len(lines)
+        ii = range(1, nlines)
 
-
-    #for i in ii:
+    # for i in ii:
     #    loop_through_lake_list(i,lines,modeli,scenarioi)
-    Parallel ( n_jobs=num_cores ) ( delayed ( loop_through_lake_list ) ( i,lines,modeli,scenarioi,k_BOD,swa_b1,k_SOD,I_scDOC) for i in ii)#series[i-1]
+    Parallel(n_jobs=num_cores)(delayed(loop_through_lake_list)
+                               (i, lines, model_id, scenario_id, k_BOD, swa_b1, k_SOD, I_scDOC) for i in ii)
 
 def loop_through_lake_list(i,lines,modeli,scenarioi,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
     """
