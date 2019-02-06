@@ -116,35 +116,53 @@ def runlakesGoran_par(csvf, model_id, scenario_id, k_BOD=0.01, swa_b1=1, k_SOD=1
     Parallel(n_jobs=num_cores)(delayed(loop_through_lake_list)
                                (i, lines, model_id, scenario_id, k_BOD, swa_b1, k_SOD, I_scDOC) for i in ii)
 
-def loop_through_lake_list(i,lines,modeli,scenarioi,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
-    """
-    loop which treat each lake in file with the function mylakeGoran.runlake().
-    :param i: line in the file which give the information about the lake analysed
-    :param lines: list of lake and description
-    :param modeli: model by number
-    :param scenarioiL scenario by number
-    :return: None
-    """
-    # 5-9-2018 MC
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume \
-        = lines[i].strip ().split ( ',' )
-    print ( 'running lake %s' % ebh )
-    #swa_b1 = OLD EQUATION: 3.6478*float(depthmean)**-0.945 # 0.796405*math.exp(-0.016045*float(depth))#-0.3284*math.log(float(depth)) + 1.6134#-0.8547*math.log(math.log(depth)) + 1.4708#3.0774*math.exp(-0.6432*math.log(float(depth)))
-    #k_SOD = OLD EQUATION: 13069.873528*math.exp(-1.760776*math.log(float(depth)))#11838.3*math.exp(-1.69321*math.log(float(depth)))
-    print('swa %s, SOD %s'%(swa_b1,k_SOD))
-    #k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304#0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
-    print ('BOD %s'% k_BOD)
-    #I_scDOC2 = OLD EQUATION: math.log((swa_b1calib+0.727)/0.3208008880)/(2*0.1338538345) #to modified if swa_b0 is modified
-    print('IDOC %s'%I_scDOC)
 
-    run_mylakeGoran.runlake ( modeli, scenarioi, ebh.strip ( '"' ), int ( subid ), float ( depth ),
-                    float ( area ), float ( longitude ), float ( latitude ),k_BOD,swa_b1,k_SOD,I_scDOC )
+def loop_through_lake_list(i, lines, modelid, scenarioid, k_BOD, swa_b1, k_SOD, I_scDOC):
+    """Changes value of parameters and run run_mylakeGoran.runlake()
+
+    Args:
+        i: index of the list of lskes
+        lines: list of lakes
+        modelid: model id (one of the keys of the dictionary "models")
+        scenarioid: scenario id (one of the keys of the dictionary "scenarios")
+        k_BOD: Biochemical oxygen demand coefficient (0.01 is the initial value)
+        swa_b1: PAR light atteneuation coefficient (1 is the initial value)
+        k_SOD: Sedimentary oxygen demand (100 is the initial value)
+        I_scDOC: scaling factor for inflow concentration of DOC (1 is the initial value)
+    """
+    
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume \
+        = lines[i].strip().split(',')
+
+    print('running lake %s' % ebh)
+    swa_b1 = math.exp(-0.95670 * float(depthmean) + 1.36359)
+    # swa_b1 = OLD EQUATION: 3.6478*float(depthmean)**-0.945
+    #                        0.796405*math.exp(-0.016045*float(depth))
+    #                       -0.3284*math.log(float(depth)) + 1.6134
+    #                       -0.8547*math.log(math.log(depth)) + 1.4708
+    #                       3.0774*math.exp(-0.6432*math.log(float(depth)))
+
+    k_SOD = math.exp(-0.06629 * float(depth) + 0.64826 * math.log(float(area)) - 3.13037)
+    # k_SOD = OLD EQUATION: 13069.873528*math.exp(-1.760776*math.log(float(depth)))
+    #                       11838.3*math.exp(-1.69321*math.log(float(depth)))
+    print('swa %s, SOD %s' % (swa_b1, k_SOD))
+
+    k_BOD = math.exp(-0.25290 * float(depthmean) - 1.36966)
+    # k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304
+    #                       0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
+    print('BOD %s' % k_BOD)
+
+    I_scDOC = math.log((swa_b1calib + 0.727)/0.3208008880)/(2 * 0.1338538345)  # needs to modified if swa_b0 changes
+    print('IDOC %s' % I_scDOC)
+
+    run_mylakeGoran.runlake(modelid, scenarioid, ebh.strip('"'), int(subid), float(depth),
+                            float(area), float(longitude), float(latitude), k_BOD, swa_b1, k_SOD, I_scDOC)
 
 
 if __name__ == '__main__':
 
-    #Script to run test the model with the command line MC-2018-11-02
-    modeli = int ( sys.argv[1] )
-    scenarioi = int ( sys.argv[2] )
+    # Script to run test the model with the command line MC-2018-11-02
+    modeli = int(sys.argv[1])
+    scenarioi = int(sys.argv[2])
     csvf = sys.argv[3]
-    runlakesGoran_par ( csvf, modeli, scenarioi)
+    runlakesGoran_par(csvf, modeli, scenarioi)
