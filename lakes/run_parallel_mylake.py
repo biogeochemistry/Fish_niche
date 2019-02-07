@@ -113,12 +113,12 @@ def runlakesGoran_par(csvf, model_id, scenario_id, k_BOD=0.01, swa_b1=1, k_SOD=1
 
     # for i in ii:
     #    loop_through_lake_list(i,lines,modeli,scenarioi)
-    Parallel(n_jobs=num_cores)(delayed(loop_through_lake_list)
+    Parallel(n_jobs=num_cores)(delayed(loop_through_lakes_list)
                                (i, lines, model_id, scenario_id, k_BOD, swa_b1, k_SOD, I_scDOC) for i in ii)
 
 
-def loop_through_lake_list(i, lines, modelid, scenarioid, k_BOD, swa_b1, k_SOD, I_scDOC):
-    """Changes value of parameters and run run_mylakeGoran.runlake()
+def loop_through_lakes_list(i, lines, modelid, scenarioid, k_BOD, swa_b1, k_SOD, I_scDOC):
+    """Changes value of some parameters and run run_mylakeGoran.runlake()
 
     Args:
         i: index of the list of lskes
@@ -130,12 +130,12 @@ def loop_through_lake_list(i, lines, modelid, scenarioid, k_BOD, swa_b1, k_SOD, 
         k_SOD: Sedimentary oxygen demand (100 is the initial value)
         I_scDOC: scaling factor for inflow concentration of DOC (1 is the initial value)
     """
-    
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume \
+
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume,mean_depth \
         = lines[i].strip().split(',')
 
     print('running lake %s' % ebh)
-    swa_b1 = math.exp(-0.95670 * float(depthmean) + 1.36359)
+    swa_b1 = math.exp(-0.95670 * float(mean_depth) + 1.36359)
     # swa_b1 = OLD EQUATION: 3.6478*float(depthmean)**-0.945
     #                        0.796405*math.exp(-0.016045*float(depth))
     #                       -0.3284*math.log(float(depth)) + 1.6134
@@ -147,12 +147,12 @@ def loop_through_lake_list(i, lines, modelid, scenarioid, k_BOD, swa_b1, k_SOD, 
     #                       11838.3*math.exp(-1.69321*math.log(float(depth)))
     print('swa %s, SOD %s' % (swa_b1, k_SOD))
 
-    k_BOD = math.exp(-0.25290 * float(depthmean) - 1.36966)
+    k_BOD = math.exp(-0.25290 * float(mean_depth) - 1.36966)
     # k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304
     #                       0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
     print('BOD %s' % k_BOD)
 
-    I_scDOC = math.log((swa_b1calib + 0.727)/0.3208008880)/(2 * 0.1338538345)  # needs to modified if swa_b0 changes
+    I_scDOC = math.log((swa_b1 + 0.727)/0.3208008880)/(2 * 0.1338538345)  # needs to be modified if swa_b0 changes
     print('IDOC %s' % I_scDOC)
 
     run_mylakeGoran.runlake(modelid, scenarioid, ebh.strip('"'), int(subid), float(depth),
