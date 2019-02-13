@@ -1,16 +1,19 @@
+#!/usr/bin/env python3
 """
-run_parallel_mylake.py
-last modification 2018-08-29 MC
+    File name: run_parallel_mylake.py
+    Author: Mariane Cote
+    Date created: 08/28/2018
+    Python Version: 3.6
 
-Launch of the large modelisation.
+    Launch of the large modelisation.
 
-usage: python runlakesGoran_par.py modeli scenarioi csvfile
-   modeli:      modelid     (index into list in mylakeGoran.py)
-   scearioi:    scenarioid  (index into list in mylakeGoran.py)
-   csvfile:     filename of the csv with the list of lakes to run.
-   example:
+    usage: python runlakesGoran_par.py modeli scenarioi csvfile
+        modeli:      modelid     (index into list in mylakeGoran.py)
+        scearioi:    scenarioid  (index into list in mylakeGoran.py)
+        csvfile:     filename of the csv with the list of lakes to run.
+    example:
         python runlakesGoran_par.py 2 2 2017SwedenList.csv
-   Or using Python IDE.
+        Or using Python IDE.
 """
 
 import run_mylakeGoran
@@ -18,7 +21,6 @@ import sys
 import math
 from joblib import Parallel, delayed
 import multiprocessing
-
 
 num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to choose the number of cores used.
 
@@ -131,7 +133,7 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid, k_BOD, swa_b1, k_SOD,
         I_scDOC: scaling factor for inflow concentration of DOC (1 is the initial value)
     """
 
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume,mean_depth \
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth \
         = lines[i].strip().split(',')
 
     print('running lake %s' % ebh)
