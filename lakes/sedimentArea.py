@@ -14,7 +14,7 @@ import pandas as pd
 
 
 if __name__ == "__main__":
-    csvf = r"C:\Users\Marianne\Documents\Fish_niche\lakes\2017SwedenList.csv"
+    csvf = r"C:\Users\Marianne\Documents\Fish_niche\lakes\2017SwedenList_only_validation_9lakes.csv"
     data = pd.read_csv(csvf, encoding="ISO-8859-1")
     pd.to_numeric(data["area"], downcast='float')
     pd.to_numeric(data["depth"], downcast='float')
