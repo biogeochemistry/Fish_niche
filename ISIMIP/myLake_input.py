@@ -23,18 +23,36 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
     """"""
     for model in models:
         for scenario in scenarios:
-            with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
-                writer = csv.writer(input_file)
-                writer.writerows([[-999, "ISIMIP input tests"], ["Z (m)", "Az (m2)","Tz (deg C)","Cz","Sz",
-                                      "Pz (ug/l)","Chlaz","PPz","Chlaz_sed","PPz_sed","Hice","Hsnow"]])
+            list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
+
+            with open(os.path.join(output_directory, "{}_{}_{}_input.csv".format(lake_name[:3], model, scenario)), "w") as input_file:
+                file = csv.writer(input_file, lineterminator="\n")
+                file.writerows([[-999, "ISIMIP input tests"], ["Year", "Month","Day","Global radiation","Cloud cover",
+                                       "Air temperature","Relative humidity","Air pressure","Wind speed","Precipitation",
+                                       "Inflow_V","Inflow_T", "Inflow_PT", "Inflow_PST", "Inflow_DP", "Inflow_C", "Inflow_PP"]])
 
                 for variable in variables:
                     ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
-                    writer.writerows(ncdf_file.variables[:])
+
+
+                    for x in ncdf_file.variables[variable][:]:
+                        list_dict[variable].append(float(x))
+
+                    if variable is variables[0]:
+                        for y in ncdf_file.variables["time"][:]:
+                            list_dict["Day"].append(float(y))
 
                     ncdf_file.close()
 
-                input_file.close()
+                file.writerows(zip(list_dict["Year"],
+                                    list_dict["Month"],
+                                    list_dict["Day"],
+                                    list_dict["hurs"],
+                                    list_dict["pr"],
+                                    list_dict["ps"],
+                                    list_dict["rsds"],
+                                    list_dict["sfcWind"],
+                                    list_dict["tas"]))
 
 
 if __name__ == "__main__":
