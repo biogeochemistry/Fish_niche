@@ -11,8 +11,8 @@ def mylakeinit(init_info_dict, I_scDOC = 1):
     """
     lines = [
         '\t'.join(
-            [('%.2f' % d), ('%.0f' % a), ('{}'.format(w_t))] + ['0'] * 5 + ['%s' % (2000 * I_scDOC)] + ['0'] * 5 + ['12000'] + [
-                '0'] * 15)  # MC 06-01-2018 add I_scDOC and initial 8000 become 2000#MC 06-29-2018 12000
+            [('%.2f' % d), ('%.0f' % a), ('%.f' % w_t)] + ['0'] * 5 + ['%s' % (2000 * I_scDOC)] + ['0'] * 5 + ['12000']
+            + ['0'] * 15)  # MC 06-01-2018 add I_scDOC and initial 8000 become 2000#MC 06-29-2018 12000
         # Z, Az and T, ...., DOC, .... DO, ...
         for d, a, w_t in zip(init_info_dict["depth_levels"], init_info_dict["areas"], init_info_dict["w_temp"])]
 

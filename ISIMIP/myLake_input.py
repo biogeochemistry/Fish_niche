@@ -1,7 +1,6 @@
 import numpy as np
 import pandas as pd
 import datetime
-import csv
 import os
 import shutil
 import bz2
@@ -26,10 +25,10 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
             list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
 
             with open(os.path.join(output_directory, "{}_{}_{}_input.csv".format(lake_name[:3], model, scenario)), "w") as input_file:
-                file = csv.writer(input_file, lineterminator="\n")
-                file.writerows([[-999, "ISIMIP input tests"], ["Year", "Month","Day","Global radiation","Cloud cover",
-                                       "Air temperature","Relative humidity","Air pressure","Wind speed","Precipitation",
-                                       "Inflow_V","Inflow_T", "Inflow_PT", "Inflow_PST", "Inflow_DP", "Inflow_C", "Inflow_PP"]])
+
+                input_file.writelines(["-999\tISIMIP input tests", "Year\tMonth\tDay\tGlobal radiation\tCloud cover\t"
+                                        "Air temperature\tRelative humidity\tAir pressure\tWind speed\tPrecipitation\t"
+                                        "Inflow_V\tInflow_T\tInflow_PT\tInflow_PST\tInflow_DP\tInflow_C\tInflow_PP"])
 
                 for variable in variables:
                     ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
@@ -44,15 +43,19 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
 
                     ncdf_file.close()
 
-                file.writerows(zip(list_dict["Year"],
-                                    list_dict["Month"],
-                                    list_dict["Day"],
-                                    list_dict["hurs"],
-                                    list_dict["pr"],
-                                    list_dict["ps"],
-                                    list_dict["rsds"],
-                                    list_dict["sfcWind"],
-                                    list_dict["tas"]))
+                input_file.write("\t".join(["%.d" % year, "%.d" % month, "%.d" % day, "%.f" % hurs, "%.f" % pr,
+                                            "%.f" % ps, "%.f" % rsds, "%.f" % sfcwind, "%.f" % tas])
+                    for year, month, day, hurs, pr, ps, rsds, sfcwind, tas in zip(
+                    list_dict["Year"],
+                    list_dict["Month"],
+                    list_dict["Day"],
+                    list_dict["hurs"],
+                    list_dict["pr"],
+                    list_dict["ps"],
+                    list_dict["rsds"],
+                    list_dict["sfcWind"],
+                    list_dict["tas"]))
+
 
 
 if __name__ == "__main__":
