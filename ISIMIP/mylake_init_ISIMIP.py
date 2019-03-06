@@ -25,6 +25,8 @@ def mylakeinit(init_info_dict, I_scDOC = 1):
     with open(init_info_dict["outpath"], 'w') as f:
         f.write('\n'.join(lines))
 
+    print("{} Done".format(init_info_dict["outpath"]))
+
     return init_info_dict["outdir"]                 # To pass the output folder to the other modules
 
 def init_info(hypsometry_path, temperature_path):

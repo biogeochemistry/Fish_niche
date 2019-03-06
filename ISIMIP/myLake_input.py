@@ -12,9 +12,21 @@ scenarios = ["historical", "piControl", "rcp26", "rcp60"]
 
 
 def myLake_input(lake_name, forcing_data_directory, output_directory):
-    """"""
+    """
+    Creates input files for myLake model from forcing data. Forcing data is assumed to be in netCDF format. Variables,
+    models and scenarios can be changed as needed. The naming scheme of forcing data files is assumed to be the standard
+    for ISIMIP. No return value.
+
+    :param lake_name: Type string. The name of the lake for which the input files are being prepared.
+    :param forcing_data_directory: Type string. The folder containing the netCDF files for forcing data for a single lake.
+                                    Assumes that all files are in the same directory without any sub-folders.
+    :param output_directory: Type string. In a typical run, this is the return value of mylakeinit function.
+    :return: No value
+    """
     for model in models:
         for scenario in scenarios:
+            print("Outputing {}_{}_{}_input".format(lake_name[:3], model, scenario))
+
             list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
 
             with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
@@ -52,8 +64,7 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
                                             list_dict["sfcWind"],
                                             list_dict["tas"])]))
 
-
-            print("fichier fini")
+            print("{}_{}_{}_input Done".format(lake_name[:3], model, scenario))
 
 
 
