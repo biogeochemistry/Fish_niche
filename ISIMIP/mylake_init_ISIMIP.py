@@ -1,6 +1,69 @@
 import csv
 import os
 import numpy
+import netCDF4 as ncdf
+
+variables = ["hurs", "pr", "ps", "rsds", "sfcWind", "tas"]
+models = ["GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5A-LR", "MIROC5"]
+scenarios = ["historical", "piControl", "rcp26", "rcp60"]
+
+
+def myLake_input(lake_name, forcing_data_directory, output_directory):
+    """
+    Creates input files for myLake model from forcing data. Forcing data is assumed to be in netCDF format. Variables,
+    models and scenarios can be changed as needed. The naming scheme of forcing data files is assumed to be the standard
+    for ISIMIP. No return value.
+
+    :param lake_name: Type string. The name of the lake for which the input files are being prepared.
+    :param forcing_data_directory: Type string. The folder containing the netCDF files for forcing data for a single lake.
+                                    Assumes that all files are in the same directory without any sub-folders.
+    :param output_directory: Type string. In a typical run, this is the return value of mylakeinit function.
+    :return: No value
+    """
+    for model in models:
+        for scenario in scenarios:
+            print("Outputing {}_{}_{}_input".format(lake_name[:3], model, scenario))
+
+            list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
+
+            with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
+
+                input_file.writelines(["-999\tISIMIP input tests\n", "Year\tMonth\tDay\tGlobal radiation\tCloud cover\t"
+                                        "Air temperature\tRelative humidity\tAir pressure\tWind speed\tPrecipitation\t"
+                                        "Inflow_V\tInflow_T\tInflow_PT\tInflow_PST\tInflow_DP\tInflow_C\tInflow_PP\n"])
+
+                for variable in variables:
+                    ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
+
+
+                    for x in ncdf_file.variables[variable][:]:
+                        list_dict[variable].append(float(x))
+
+                    if variable is variables[0]:
+                        for y in ncdf_file.variables["time"][:]:
+                            list_dict["Year"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[0:4])
+                            list_dict["Month"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[5:7])
+                            list_dict["Day"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[8:10])
+
+                    ncdf_file.close()
+
+                input_file.write("\n".join(["\t".join(["%s" % year, "%s" % month, "%s" % day, "%f" % rsds,
+                                            "0", "%f" % tas, "%f" % hurs, "%f" % ps, "%f" % sfcwind, "%f" % pr,
+                                            "0", "0", "0", "0", "0", "0", "0"])
+                                            for year, month, day, hurs, pr, ps, rsds, sfcwind, tas in zip(
+                                            list_dict["Year"],
+                                            list_dict["Month"],
+                                            list_dict["Day"],
+                                            list_dict["hurs"],
+                                            list_dict["pr"],
+                                            list_dict["ps"],
+                                            list_dict["rsds"],
+                                            list_dict["sfcWind"],
+                                            list_dict["tas"])]))
+
+            print("{}_{}_{}_input Done".format(lake_name[:3], model, scenario))
+
+
 
 def mylakeinit(init_info_dict, I_scDOC = 1):
     """
@@ -146,6 +209,91 @@ def missing_temp(temp_list, depth_levels):
 
     return temp_list
 
+def mylakepar(longitude, latitude, outpath,swa_b1=0.1,k_BOD=0.01,k_SOD=100,I_scDOC=1):
+    """
+    Creates MyLake parameter file. If the file LAE_para_all1.txt is present, it will be used to prepare the parameters.
+    Otherwise, the string in this function while be used.
+
+    :param longitude: Type int. Longitude coordinate of Mylake in degrees.
+    :param latitude: Type int. Latitude coordinate of Mylake in degrees
+    :param outpath: Type str. Filename where a file of Mylake parameters will be written. In a typical run, this is the
+    return value of mylakeinit function
+    :return: None
+    """
+
+    if (os.path.isfile ( "LAE_para_all1.txt" )): #this file allows change of the four coefficients, if nothing is given, will uses initial values
+        print('using file')
+        with open ( "LAE_para_all1.txt", "r" ) as infile:
+            out = infile.read () % (latitude, longitude, I_scDOC, swa_b1, k_BOD, k_SOD)
+
+    else:
+        out = '''-999	"Mylake parameters"			
+    Parameter	Value	Min	Max	Unit
+    dz	1.0	0.5	2	m
+    Kz_ak	0.007	NaN	NaN	(-)
+    Kz_ak_ice	0.003	NaN	NaN	(-)
+    Kz_N0	7.00E-05	NaN	NaN	s-2
+    C_shelter	NaN	NaN	NaN	(-)
+    latitude	%.5f	NaN	NaN	dec.deg
+    longitude	%.5f	NaN	NaN	dec.deg
+    alb_melt_ice	0.6	NaN	NaN	(-)
+    alb_melt_snow	0.9	NaN	NaN	(-)
+    PAR_sat	3.00E-05	1.00E-05	1.00E-04	mol m-2 s-1
+    f_par	0.89	NaN	NaN	(-)
+    beta_chl	0.015	0.005	0.045	m2 mg-1
+    lamgbda_I	5	NaN	NaN	m-1
+    lambda_s	15	NaN	NaN	m-1
+    sed_sld	0.36	NaN	NaN	(m3/m3)
+    I_scV 	1.339	NaN	NaN	(-)
+    I_scT	1.781	NaN	NaN	deg C
+    I_scC	1	NaN	NaN	(-)
+    I_scS	1	1.1	1.9	(-)
+    I_scTP	1	0.4	0.8	(-)
+    I_scDOP	1	NaN	NaN	(-)
+    I_scChl	1	NaN	NaN	(-)
+    I_scDOC	%s	NaN	NaN	(-)
+    swa_b0	0.727	NaN	NaN	m-1
+    swa_b1	%s	0.8	1.3	m-1
+    S_res_epi	3.30E-07	7.30E-08	1.82E-06	m d-1 (dry mass)
+    S_res_hypo	3.30E-08	NaN	NaN	m d-1 (dry mass)
+    H_sed	0.03	NaN	NaN	m
+    Psat_Lang	2500	NaN	NaN	mg m-3
+    Fmax_Lang	8000	5000	10000	mg kg-1
+    Uz_Sz	0.3	0.1	1	m d-1
+    Uz_Chl	0.16	0.05	0.5	m d-1
+    Y_cp	1	NaN	NaN	(-)
+    m_twty	0.2	0.1	0.3	d-1
+    g_twty	1.5	1	1.5	d-1
+    k_sed_twty	2.00E-04	NaN	NaN	d-1
+    k_dop_twty	0	NaN	NaN	d-1
+    P_half	0.2	0.2	2	mg m-3
+    PAR_sat2	3.00E-05	NaN	NaN	mol m-2 s-1
+    beta_chl2	0.015	NaN	NaN	m2 mg-1
+    Uz_Chl2	0.16	NaN	NaN	m d-1
+    m_twty2	0.2	NaN	NaN	d-1
+    g_twty2	1.5	NaN	NaN	d-1
+    P_half2	0.2	NaN	NaN	mg m-3
+    oc_DOC	0.01	NaN	NaN	m2 mg-1
+    qy_DOC	0.1	NaN	NaN	mg mol-1
+    k_BOD	%s	NaN	NaN	d-1
+    k_SOD	%s	NaN	NaN	mg m-2
+    theta_BOD	1.047	NaN	NaN	(-)
+    theta_BOD_ice	1.13	NaN	NaN	(-)
+    theta_SOD	1	NaN	NaN	(-)
+    theta_SOD_ice	1	NaN	NaN	(-)
+    theta_T	4	NaN	NaN	deg.celcius
+    pH	5.2	NaN	NaN	(-)
+    I_scDIC	1	NaN	NaN	(-)
+    Mass_Ratio_C_Chl	100	NaN	NaN	(-)
+    SS_C	0.25	NaN NaN 57
+    density_org_H_nc	1.95	NaN NaN 58
+    density_inorg_H_nc	2.65	NaN NaN 59
+    I_scO	1	NaN NaN (-)
+    ''' % (latitude, longitude, I_scDOC, swa_b1, k_BOD, k_SOD)
+
+
+    with open(outpath, 'w') as f:
+        f.write(out)
 
 
 
