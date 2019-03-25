@@ -1,6 +1,6 @@
 import os
 
-def mylakepar(longitude, latitude, outpath,swa_b1=0.1,k_BOD=0.01,k_SOD=100,I_scDOC=1):
+def mylakepar(longitude, latitude, lake_name,  outdir, swa_b1=0.1,k_BOD=0.01,k_SOD=100,I_scDOC=1):
     """
     Creates MyLake parameter file. If the file LAE_para_all1.txt is present, it will be used to prepare the parameters.
     Otherwise, the string in this function while be used.
@@ -83,5 +83,12 @@ def mylakepar(longitude, latitude, outpath,swa_b1=0.1,k_BOD=0.01,k_SOD=100,I_scD
     ''' % (latitude, longitude, I_scDOC, swa_b1, k_BOD, k_SOD)
 
 
+    outpath = outdir + "/{}_par".format(lake_name[:3])
+
     with open(outpath, 'w') as f:
         f.write(out)
+
+
+if __name__ == "__main__":
+
+    mylakepar(0, 0, "Langtjern", "output/NO/Lan")
