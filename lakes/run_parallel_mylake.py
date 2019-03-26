@@ -16,7 +16,7 @@
         Or using Python IDE.
 """
 
-from lakes import run_mylakeGoran
+import run_mylakeGoran
 import math
 from joblib import Parallel, delayed
 import multiprocessing
@@ -135,8 +135,8 @@ def runlakesGoran_par(model_id, scenario_id, csvf):
         nlines = len(lines)
         ii = range(1, nlines)
 
-    # for i in ii:
-    #    loop_through_lake_list(i,lines,modeli,scenarioi)
+    #for i in ii:
+    #    loop_through_lakes_list(i,lines,model_id,scenario_id)
     Parallel(n_jobs=num_cores)(delayed(loop_through_lakes_list)(i, lines, model_id, scenario_id) for i in ii)
 
 
