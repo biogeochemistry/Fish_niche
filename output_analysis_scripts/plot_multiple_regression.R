@@ -6,9 +6,9 @@ data <- read.csv(file.choose())
 my_df <- data[data[,8]<35,]
 
 my_df$Lnsod
-colnames(my_df)[24] <- 'LnSOD'
+colnames(my_df)[17] <- 'LnSOD'
 colnames(my_df)[5] <- 'MAX'
-colnames(my_df)[16] <- 'LnArea'
+colnames(my_df)[18] <- 'LnArea'
 SOD_lm <- lm(LnSOD ~ MAX + LnArea,data = my_df)
 summary(SOD_lm)
 #Graph Resolution (more important for more complex shapes)
@@ -40,9 +40,9 @@ SOD_plot <- add_trace(p = SOD_plot,
                        type = "surface",
                        opacity = 0.9,
                        color="black")%>%
-  layout(scene = list(xaxis = list(title = 'Max'),
-                    yaxis = list(title = 'Ln(Area)'),
-                    zaxis = list(title = 'Ln(k_SOD)')),
+  layout(scene = list(xaxis = list(title = 'Max (m)'),
+                    yaxis = list(title = 'Ln Area (m^2)'),
+                    zaxis = list(title = 'Ln k_SOD (D^-1)')),
        annotations = list(
          x = 1.13,
          y = 1.05,
