@@ -38,7 +38,11 @@ pandas.plotting._converter.register()
 plt.style.use('seaborn-poster')
 
 outputfolderdata = r'..\figure_calibration\Figure_test_oxygen'
+<<<<<<< HEAD
 datafolder = r'E:\output-30-03-2019'
+=======
+datafolder = r'D:\output-30-03-2019'
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
 outputfolder = r'C:\Users\Marianne\Documents\Fish_niche2\MDN_FishNiche_2017/output'
 models = {1:('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
           2:('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1_day'),
@@ -932,6 +936,175 @@ def FishNiche_cathegories(lakelistfile):
     # fig1.savefig("histogram.png")
     plt.show()
 
+def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, datafolder):
+    years = YearLocator() # every year
+    months = MonthLocator() # every month
+    yearsFmt = DateFormatter('%Y')
+    monthsFmt = DateFormatter('%M')
+    # fig2,fig3=plt.figure(),plt.figure()
+    modelname = ['KNM', 'DMI', 'MPI', 'MOH', 'IPS', 'CNR']
+    color2 = ['white', 'blue', 'black', 'magenta', 'cyan', 'red', 'yellow']
+    i = 0
+    for group in [1]:
+        datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s.csv' % group))
+        datasheet_all['Date'] = pd.to_datetime(datasheet_all['Date'], format="%Y-%m-%d")
+        datasheet_all.set_index('Date', inplace=True)
+        datasheet2 = datasheet_all
+        fig1 = plt.figure()
+        ax1 = plt.subplot(211)
+        for scenario in ['historical',  'rcp85']:
+            
+            i += 1
+            tt = pd.date_range(start='2000-01-01', end='2000-12-31')
+
+            datasheet_scenario = datasheet_all.loc[datasheet_all['Scenario'] == scenario]
+            if scenario == 'historical':
+                datasheet_scenario = datasheet_scenario.loc[:'1982-12-31']
+            else:
+                datasheet_scenario = datasheet_scenario.loc['2090-12-31':]
+                # datasheet_scenario = datasheet_scenario.loc['2060-12-31':'2080-12-31']
+                # datasheet_scenario = datasheet_scenario.loc[:'2050-12-31']
+            # ttyear = datasheet2.index
+            # ttyear = ttyear.drop_duplicates(keep='first')
+            listonplot = []
+            for model in [1, 2, 3, 4, 5, 6]:
+                datasheet = datasheet_scenario.loc[datasheet_scenario['Model'] == model]
+                datasheet['%0_T'] = datasheet['%_T'] * 100
+                datasheet['%0_O2'] = datasheet['%_O2'] * 100
+                datasheet['%0_PAR'] = datasheet['%_PAR'] * 100
+
+                if len(datasheet)!= 0:
+                    listonplot.append(model)
+
+                    medianbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).quantile(0.5)
+                    minbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).quantile(0.25)
+                    maxbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).quantile(0.75)
+
+                    meanbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).mean()
+                    stdbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).std()
+
+                    # z_critical = stats.norm.ppf(q=0.975) # Get the z-critical value*
+                    meanbyday['%0_O22'] = 100 - meanbyday['%0_O2']
+                    meanbyday['%0_PAR2'] = 100 - meanbyday['%0_PAR']
+                    stdbyday['%0_O22'] = stdbyday['%0_O2']
+                    stdbyday['%0_PAR2'] = stdbyday['%0_PAR']
+                    # minbyday['%0_O22'] =100- minbyday['%0_O2']
+                    # maxbyday['%0_O22'] = 100-maxbyday['%0_O2']
+                    # minbyday['%0_PAR2'] = 100 - minbyday['%0_PAR']
+                    # maxbyday['%0_PAR2'] = 100 - maxbyday['%0_PAR']
+
+                    stats.norm.ppf(q=0.025)
+                    # margin_of_error = z_critical *(stdbyday/sqrt(countbyday.iloc[0,0]))
+                    meanplusmargin = meanbyday + stdbyday
+                    meanplusmargin.loc[meanplusmargin['%0_T'] > 100, '%0_T'] = 100
+                    meanplusmargin.loc[meanplusmargin['%0_PAR2'] > 100, '%0_PAR2'] = 100
+                    meanplusmargin.loc[meanplusmargin['%0_O22'] > 100, '%0_O22'] = 100
+                    meanlessmargin = meanbyday - stdbyday
+                    meanlessmargin.loc[meanlessmargin['%0_T'] < 0, '%0_T'] = 0
+                    meanlessmargin.loc[meanlessmargin['%0_PAR2'] < 0, '%0_PAR2'] = 0
+                    meanlessmargin.loc[meanlessmargin['%0_O22'] < 0, '%0_O22'] = 0
+
+                    #fig1 = plt.figure(2 * group * i, figsize=(18.0, 10.0))
+                    
+                    #ax1.fill_between(tt, meanbyday['%0_T'], meanlessmargin['%0_T'], color='lightblue', alpha='0.5')
+                    #ax1.fill_between(tt, meanbyday['%0_T'], meanplusmargin['%0_T'], color='lightblue', alpha='0.5')
+                    #ax1.plot_date(tt, meanbyday['%0_T'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2, ms=3)
+                    # ax1.annotate('Temperature barrier(T>15C)', xy=(80, 80), xycoords='figure points')
+                    # ax1.plot_date(tt, meanbyday['%_T']-margin_of_error['%_T'],'k--',lw=2, ms=3)
+                    #ax1.fill_between(tt, meanbyday['%0_PAR2'], meanplusmargin['%0_PAR2'], color='green', alpha='0.2')
+                    #ax1.fill_between(tt, meanbyday['%0_PAR2'], meanlessmargin['%0_PAR2'], color='green', alpha='0.2')
+                    #ax1.plot_date(tt, meanbyday['%0_PAR2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+                    #                ms=3)
+                    # ax1.annotate('PAR barrier(PAR)', xy=(80, 80), xycoords='figure points')
+                    # ax1.plot_date(tt, meanbyday['%_PAR'] - margin_of_error['%_PAR'], 'g--', lw=2, ms=3)
+                    #ax1.fill_between(tt, meanbyday['%0_O22'], meanlessmargin['%0_O22'], color='red', alpha='0.1')
+                    if scenario =='historical':
+                        #if model == 5:
+                        ax1.fill_between(tt, 0, meanplusmargin['%0_O22'], color='black', alpha='0.1')
+                            #ax1.fill_between(tt, meanbyday['%0_O2'], meanplusmargin['%0_O2'], color='red', alpha='0.3')
+                        ax1.plot_date(tt, meanplusmargin['%0_O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
+
+                    else:
+                        #if model ==1:
+                        ax1.fill_between(tt, 0, meanplusmargin['%0_O22'], color='red', alpha='0.1')
+                            #ax1.fill_between(tt, meanbyday['%0_O2'], meanplusmargin['%0_O2'], color='red', alpha='0.3')
+                        ax1.plot_date(tt, meanplusmargin['%0_O22'], '-', color=plt.cm.Reds((model / 10)+ 0.3), lw=2,ms=3)
+
+                    #ax1.plot_date(tt, meanplusmargin['%0_O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
+
+                    ax1.autoscale_view()
+
+                    plt.ylim(0, 100, 50)
+                    plt.yticks([0, 25, 50, 75, +100])
+                    ax1.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
+                    plt.ylabel("% Volume O2")
+
+                    ax4 = ax1
+                    ax4.set_ylim(0, 100, 50)
+                    #plt.yticks([0, 25, 50, 75, +100])
+                    #ax4.plot_date(tt, meanbyday['%0_O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+                    #                ms=3)
+                    # ax4.plot_date(tt, meanlessmargin['%_O2'], ':', color=color[model], lw=2, ms=3)
+                    # ax4.annotate('Oxygen barrier(O>15C)', xy=(80, 80), xycoords='figure points')
+                    # ax4.plot_date(tt, meanbyday['%_O2'] - margin_of_error['%_O2'], 'r--', lw=2, ms=3)
+                    # ax4.fill_between(tt, meanbyday['%_O2'], meanlessmargin['%_O2'], color=color2[model],alpha='0.2')
+                    # ax4.fill_between(tt, meanbyday['%_O2'], meanplusmargin['%_O2'], color=color2[model], alpha='0.2')
+                    #plt.gca().invert_yaxis()
+                    ax4.xaxis.set_major_locator(months)
+                    ax4.xaxis.set_minor_locator(mondays)
+                    ax4.xaxis.set_major_formatter(weekFormatter)
+                    ax1.fmt_ydata = price
+                    ax1.yaxis.grid(True)
+
+                    # winter_months = tt[
+                    #    ((tt.month == 1)&(tt.day == 1))|((tt.month == 12)&(tt.day == 21))
+                    #     |((tt.month == 3)&(tt.day == 20))|(
+                    #      (tt.month == 12)&(tt.day == 31))]
+                    # summer_months = tt[((tt.month == 6)&(tt.day == 21))|((tt.month == 9)&(tt.day == 22))]
+                    # Loop through groups and add axvspan between winter month
+                    # for i in np.arange(0, len(winter_months), 2):
+                    #    ax1.axvspan(winter_months[i], winter_months[i + 1], facecolor='lavender', alpha=0.5)
+                    # for i in np.arange(0, len(summer_months), 2):
+                    #    ax1.axvspan(summer_months[i], summer_months[i + 1], facecolor='wheat', alpha=0.5)
+                    # fig1.autofmt_xdate()
+                    ax1.tick_params(axis='y', labelsize=16)
+                    ax1.tick_params(axis='x', labelsize=16)
+                    # plt.legend(loc="lower left", ncol=2)
+
+                    #plt.ylabel("% Volume T")
+                    plt.xlabel("Date")
+
+                    # ax1.set_xlim(pd.Timestamp("2-12-01"), pd.Timestamp("2011-02-01"))
+                    # plt.legend(loc='best')
+                    #ax4.xaxis_date()
+
+                    plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
+
+                    # plt.title('group %s scenario %s'%(group,scenario))# scenario %s' %(group,scenario))
+                    plt.tight_layout()
+
+            interet = []
+            ert = []
+#            for i in [1, 2, 3, 4, 5, 6]:
+#                interet.append(mlines.Line2D([], [], color=plt.cm.binary((i / 10)+ 0.3), markersize=3,
+#                                                 label=modelname[i - 1]))
+#
+#            ert.append(Patch(color='green', alpha=0.2, label='PAR'))
+#            ert.append(Patch(color='lightblue', alpha=0.5, label='T'))
+#            ert.append(Patch(color='red', alpha=0.1, label='DO'))
+#
+#            first_legend = plt.legend(loc='upper center', bbox_to_anchor=(0.4, -0.2), fancybox=True, shadow=True,
+#                                        ncol=1, handles=ert)
+#            plt.gca().add_artist(first_legend)
+#
+#            plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=1,
+#                         handles=interet)
+            plt.show()
+            # fig1.savefig(path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.png" %(group, scenario)))
+            fig1.savefig(
+                    path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.png" %(group, scenario)))
+            print('completed')
+
 def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, datafolder):
     years = YearLocator() # every year
     months = MonthLocator() # every month
@@ -1306,11 +1479,19 @@ def FishNiche_plot_volume_param(param, lakelistfile, listscenarios, listmodels, 
         print('completed')
 
 def generate_timeseries_his_by_model(listmodels, listscenarios, lakelistfile, datafolder):
+<<<<<<< HEAD
      i = 0
      j=0
      complete_data = pd.DataFrame()
      for model in listmodels:
          for scenario in listscenarios:
+=======
+    i = 0
+    j = 0
+    complete_data = pd.DataFrame()
+    for model in listmodels:
+        for scenario in listscenarios:
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
             exA, y1A, exB, y1B = scenarios[scenario]
             y2B = y1B + 4
             m1, m2 = models[model]
@@ -1319,17 +1500,24 @@ def generate_timeseries_his_by_model(listmodels, listscenarios, lakelistfile, da
                 lakes = f.readlines()
                 nlakes = len(lakes)
                 f.close()
+<<<<<<< HEAD
 #            lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
 #                = lakes[1].strip().split(',')
             lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated = lakes[i].strip().split(',')
             
+=======
+
+            lake_id, subid, name, eh, area, depth, longitude, latitude,volume \
+                   = lakes[1].strip().split(',')
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
             eh = eh[2:] if eh[:2] == '0x' else eh
             while len(eh)< 6:
                 eh = '0' + eh
             
             d1, d2, d3 = eh[:2], eh[:4], eh[:6]
-            outdir = path.join(datafolder, d1, d2, d3,
+            outdir = os.path.join(datafolder, d1, d2, d3,
                                  'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
+<<<<<<< HEAD
             tzt_dir = path.join(outdir, 'Tzt.csv')# print(tzt_dir)
             if j ==0:
                  datasheet2 = os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
@@ -1436,6 +1624,114 @@ def generate_timeseries_his_by_model(listmodels, listscenarios, lakelistfile, da
 #    complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'His_data_32.csv'),
 #                                                                 index=False)
     #print('end')
+=======
+            if j ==0:
+                datasheet2 = os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+                        m1, exA, exB, m2, y1A, y2B))
+                timeseries2 = pd.read_csv(datasheet2)
+                timeseries2 = timeseries2[['lakeid','Total Volume']].drop_duplicates(keep='first').reset_index()
+                listlake = pd.read_csv(os.path.join(lakelistfile),encoding='cp1252')
+                volumelist =  pd.DataFrame(columns=['lake_id','Total Volume'])
+                volumelist['lake_id']=listlake['lake_id']
+
+                volumelist['Total Volume']=timeseries2['Total Volume']
+                volumelist=volumelist.drop_duplicates(keep='first')
+                    # volumelist.to_csv(os.path.join(datafolder,'volume_list.csv'),index=False)
+                j+=1
+
+            tzt_dir = os.path.join(outdir,'Tzt.csv')
+            if os.path.exists(os.path.join(datafolder, 'fish_niche_export_his_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
+                # if os.path.exists(tzt_dir):
+                cmd = 'matlab -wait -r -nosplash -nodesktop generateParamTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' %(lakelistfile, m1, m2, exA, y1A, exB, y1B, datafolder)
+                print(lakelistfile,m1,m2,exA,y1A,exB,y2B,datafolder,cmd)
+                os.system(cmd)
+                print('complete')
+            else:
+                print('nan')
+
+    # 
+    # i = 0
+    # j = 0
+    # for model in listmodels:
+    #     for scenario in listscenarios:
+    #         exA, y1A, exB, y1B = scenarios[scenario]
+    #         y2B = y1B + 4
+    #         m1, m2 = models[model]
+    #
+    #         with open(lakelistfile, 'rU')as f:
+    #             lakes = f.readlines()
+    #             nlakes = len(lakes)
+    #             f.close()
+    #
+    #         lake_id, subid, name, eh, area, depth, longitude, latitude, volume = lakes[1].strip().split(',')
+    #         eh = eh[2:] if eh[:2] == '0x' else eh
+    #         while len(eh)< 6:
+    #             eh = '0' + eh
+    #         d1, d2, d3 = eh[:2], eh[:4], eh[:6]
+    #         outdir = path.join(datafolder, d1, d2, d3,
+    #                              'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
+    #         if j == 0:
+    #             datasheet2 = path.join(datafolder,
+    #                                      'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+    #                                          m1, exA, exB, m2, y1A, y2B))
+    #             timeseries2 = pd.read_csv(datasheet2)
+    #             timeseries2 = timeseries2[['lakeid', 'Total Volume']].drop_duplicates(
+    #                 keep='first').reset_index()
+    #             listlake = pd.read_csv(path.join('2017SwedenList.csv'), encoding='cp1252')
+    #             volumelist = pd.DataFrame(columns=['lake_id', 'Total Volume'])
+    #             volumelist['lake_id'] = listlake['lake_id']
+    #
+    #             volumelist['Total Volume'] = timeseries2['Total Volume']
+    #             volumelist = volumelist.drop_duplicates(keep='first')
+    #             volumelist.to_csv(path.join(datafolder, 'volume_list.csv'), index=False)
+    #             j += 1
+    #         if path.exists(path.join(datafolder, 'fish_niche_export_His_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+    #                 m1, exA, exB, m2, y1A, y2B))):
+    #
+    #             his_dir = path.join(datafolder, 'fish_niche_export_His_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+    #                 m1, exA, exB, m2, y1A, y2B))
+    #             datasheet = pd.read_csv(his_dir)
+    #             datasheet['Date'] = pd.to_datetime(datasheet['Date'], format="%d.%m.%Y")
+    #             timeseries = pd.DataFrame(
+    #                 columns=['Date', 'Model', 'Scenario', 'Lake_group', 'rho_snow', 'IceIndicator', 'Total Volume'])
+    #             timeseries['Date'] = datasheet['Date']
+    #             timeseries['Model'] = model
+    #             timeseries['Scenario'] = exA
+    #             timeseries['rho_snow'] = datasheet['rho_snow']
+    #             timeseries['IceIndicator'] = datasheet['IceIndicator']
+    #
+    #             timeseries['Lake_group'] = 2
+    #             for lakenum in np.arange(1, nlakes):
+    #                 lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
+    #                     = lakes[lakenum].strip().split(',')
+    #                 # volume = volumelist.loc[volumelist['lake_id']==int(lake_id),'Total Volume'].reset_index().iloc[0,1]
+    #                 datasheet.loc[datasheet['lakeid'] == int(lake_id), 'TotalV'] = float(volume)
+    #
+    #             timeseries['Total Volume'] = datasheet['TotalV']
+    #             timeseries['lake_id'] = datasheet['lakeid']
+    #
+    #             timeseries.loc[timeseries['Total Volume'] < 1.0e7, 'Lake_group'] = 1
+    #             timeseries.loc[timeseries['Total Volume'] > 5.0e9, 'Lake_group'] = 3
+    #
+    #             print('completed')
+    #             if i == 0:
+    #                 complete_data = timeseries
+    #                 print('first')
+    #                 i += 1
+    #             else:
+    #                 complete_data = complete_data.append(timeseries, ignore_index=True)
+    #                 print('added')
+    #
+    # complete_data.loc[complete_data['Lake_group'] == 1].to_csv(path.join(datafolder, 'His_data_12.csv'),
+    #                                                              index=False)
+    # print('1_save')
+    # complete_data.loc[complete_data['Lake_group'] == 2].to_csv(path.join(datafolder, 'His_data_22.csv'),
+    #                                                              index=False)
+    # print('2_save')
+    # complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'His_data_32.csv'),
+    #                                                              index=False)
+    # print('end')
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
 
 def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafolder):
     i = 0
@@ -3328,8 +3624,17 @@ if __name__ == '__main__':
     # print(lakes)
     # FishNiche_graph_temp_time(2, 4, r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\test.csv')
     # plt.show()
+<<<<<<< HEAD
     #FishNiche_plot_volume_param('His',r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     #generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],r'D:\Fish_niche\lakes\2017SwedenList.csv',datafolder)
     #FishNiche_plot_volume(r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     # 
     generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'D:\Fish_niche\lakes\2017SwedenList.csv', datafolder)
+=======
+    # FishNiche_plot_volume_param('His', r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
+    #     2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
+    FishNiche_plot_volume01(r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
+         2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
+    # 
+    #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'C:\Users\Administrateur\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', datafolder)
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b

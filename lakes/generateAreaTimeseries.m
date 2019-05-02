@@ -64,11 +64,11 @@ for T_x = 1:length(T_list)
                             break
                         end
                     end
-                    %if zlen <5
-                    %    lambda = lambdazt(time,1:zlen);
-                    %else
-                    lambda = lambdazt(time,1:5);
-                    %end
+                    if zlen <5
+                        lambda = lambdazt(time,1:zlen);
+                    else
+                        lambda = lambdazt(time,1:5);
+                    end
                     secchi_calculated(time)= 1.48/mean(lambda);
                 
                     if secchi_calculated(time) >= secchi_min

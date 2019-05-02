@@ -6,7 +6,7 @@ function generateVolumeTimeseries(lakelistfile,m1,m2,exA,y1A,exB,y1B,outputdir)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 path(path, '../output')
-path(path, 'E:\output 30-3-2019')
+path(path, 'G:\output-06-08-2018')
 
 warning('off', 'all') 
 y2B = y1B+4;
