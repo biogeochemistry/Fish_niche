@@ -29,6 +29,7 @@ from matplotlib.dates import YearLocator, MonthLocator, DateFormatter, DayLocato
 # import matplotlib as mpl
 from datetime import date, datetime
 from os import path
+import os
 from csv import reader
 # from function_runlakesGoran_par_test import runlakesGoran_par
 import pandas.plotting._converter
@@ -37,7 +38,11 @@ pandas.plotting._converter.register()
 plt.style.use('seaborn-poster')
 
 outputfolderdata = r'..\figure_calibration\Figure_test_oxygen'
+<<<<<<< HEAD
+datafolder = r'E:\output-30-03-2019'
+=======
 datafolder = r'D:\output-30-03-2019'
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
 outputfolder = r'C:\Users\Marianne\Documents\Fish_niche2\MDN_FishNiche_2017/output'
 models = {1:('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
           2:('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1_day'),
@@ -1109,7 +1114,7 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
     modelname = ['KNM', 'DMI', 'MPI', 'MOH', 'IPS', 'CNR']
     color2 = ['white', 'blue', 'black', 'magenta', 'cyan', 'red', 'yellow']
     i = 0
-    for group in [1, 3]:
+    for group in [1,2,3]:
         datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s.csv' % group))
         datasheet_all['Date'] = pd.to_datetime(datasheet_all['Date'], format="%Y-%m-%d")
         datasheet_all.set_index('Date', inplace=True)
@@ -1254,7 +1259,7 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
             plt.show()
             # fig1.savefig(path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.png" %(group, scenario)))
             fig1.savefig(
-                path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.svg" %(group, scenario)))
+                path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.png" %(group, scenario)))
             print('completed')
 
 def FishNiche_plot_volume_param(param, lakelistfile, listscenarios, listmodels, calivari, datafolder):
@@ -1474,28 +1479,152 @@ def FishNiche_plot_volume_param(param, lakelistfile, listscenarios, listmodels, 
         print('completed')
 
 def generate_timeseries_his_by_model(listmodels, listscenarios, lakelistfile, datafolder):
+<<<<<<< HEAD
+     i = 0
+     j=0
+     complete_data = pd.DataFrame()
+     for model in listmodels:
+         for scenario in listscenarios:
+=======
     i = 0
     j = 0
     complete_data = pd.DataFrame()
     for model in listmodels:
         for scenario in listscenarios:
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
             exA, y1A, exB, y1B = scenarios[scenario]
             y2B = y1B + 4
             m1, m2 = models[model]
-
             with open(lakelistfile, 'rU')as f:
+                skip = f.readline()
                 lakes = f.readlines()
                 nlakes = len(lakes)
                 f.close()
+<<<<<<< HEAD
+#            lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
+#                = lakes[1].strip().split(',')
+            lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated = lakes[i].strip().split(',')
+            
+=======
 
             lake_id, subid, name, eh, area, depth, longitude, latitude,volume \
                    = lakes[1].strip().split(',')
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
             eh = eh[2:] if eh[:2] == '0x' else eh
             while len(eh)< 6:
                 eh = '0' + eh
+            
             d1, d2, d3 = eh[:2], eh[:4], eh[:6]
             outdir = os.path.join(datafolder, d1, d2, d3,
                                  'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
+<<<<<<< HEAD
+            tzt_dir = path.join(outdir, 'Tzt.csv')# print(tzt_dir)
+            if j ==0:
+                 datasheet2 = os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+                         m1, exA, exB, m2, y1A, y2B))
+                 timeseries2 = pd.read_csv(datasheet2)
+                 timeseries2 = timeseries2[['lakeid','Total Volume']].drop_duplicates(keep='first').reset_index()
+                 listlake = pd.read_csv(os.path.join(lakelistfile),encoding='cp1252')
+                 volumelist =  pd.DataFrame(columns=['lake_id','Total Volume'])
+                 volumelist['lake_id']=listlake['lake_id']
+     
+                 volumelist['Total Volume']=timeseries2['Total Volume']
+                 volumelist=volumelist.drop_duplicates(keep='first')
+                     # volumelist.to_csv(os.path.join(datafolder,'volume_list.csv'),index=False)
+                 j+=1
+            if not os.path.exists(os.path.join(datafolder, 'fish_niche_export_his_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
+                 # if os.path.exists(tzt_dir):
+                 cmd = 'matlab -wait -r -nosplash -nodesktop generateParamTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' %(lakelistfile, m1, m2, exA, y1A, exB, y1B, datafolder)
+                 print(lakelistfile,m1,m2,exA,y1A,exB,y2B,datafolder,cmd)
+                 os.system(cmd)
+                 print('complete')
+            else:
+                 print('nan')
+
+#     
+#    i = 0
+#    j = 0
+#    for model in listmodels:
+#        for scenario in listscenarios:
+#            exA, y1A, exB, y1B = scenarios[scenario]
+#            y2B = y1B + 4
+#            m1, m2 = models[model]
+#
+#            with open(lakelistfile, 'rU')as f:
+#                lakes = f.readlines()
+#                nlakes = len(lakes)
+#                f.close()
+#
+#            lake_id, subid, name, eh, area, depth, longitude, latitude, volume , meandepth,sedimentArea,meanCalculated  = lakes[1].strip().split(',')
+#            eh = eh[2:] if eh[:2] == '0x' else eh
+#            while len(eh)< 6:
+#                eh = '0' + eh
+#            d1, d2, d3 = eh[:2], eh[:4], eh[:6]
+#            outdir = path.join(datafolder, d1, d2, d3,
+#                                 'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
+#            if j == 0:
+#                datasheet2 = path.join(datafolder,
+#                                         'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+#                                             m1, exA, exB, m2, y1A, y2B))
+#                timeseries2 = pd.read_csv(datasheet2)
+#                timeseries2 = timeseries2[['lakeid', 'Total Volume']].drop_duplicates(
+#                    keep='first').reset_index()
+#                listlake = pd.read_csv(path.join('2017SwedenList.csv'), encoding='cp1252')
+#                volumelist = pd.DataFrame(columns=['lake_id', 'Total Volume'])
+#                volumelist['lake_id'] = listlake['lake_id']
+#
+#                volumelist['Total Volume'] = timeseries2['Total Volume']
+#                volumelist = volumelist.drop_duplicates(keep='first')
+#                volumelist.to_csv(path.join(datafolder, 'volume_list.csv'), index=False)
+#                j += 1
+#            if path.exists(path.join(datafolder, 'fish_niche_export_His_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+#                    m1, exA, exB, m2, y1A, y2B))):
+#
+#                his_dir = path.join(datafolder, 'fish_niche_export_His_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+#                    m1, exA, exB, m2, y1A, y2B))
+#                print(his_dir)
+#                datasheet = pd.read_csv(his_dir)
+#                datasheet['Date'] = pd.to_datetime(datasheet['Date'], format="%d.%m.%Y")
+#                timeseries = pd.DataFrame(
+#                    columns=['Date', 'Model', 'Scenario', 'Lake_group', 'rho_snow', 'IceIndicator', 'Total Volume'])
+#                timeseries['Date'] = datasheet['Date']
+#                timeseries['Model'] = model
+#                timeseries['Scenario'] = exA
+#                timeseries['rho_snow'] = datasheet['rho_snow']
+#                timeseries['IceIndicator'] = datasheet['IceIndicator']
+#
+#                timeseries['Lake_group'] = 2
+#                for lakenum in np.arange(1, nlakes):
+#                    lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
+#                        = lakes[lakenum].strip().split(',')
+#                    # volume = volumelist.loc[volumelist['lake_id']==int(lake_id),'Total Volume'].reset_index().iloc[0,1]
+#                    datasheet.loc[datasheet['lakeid'] == int(lake_id), 'TotalV'] = float(volume)
+#
+#                timeseries['Total Volume'] = datasheet['TotalV']
+#                timeseries['lake_id'] = datasheet['lakeid']
+#
+#                timeseries.loc[timeseries['Total Volume'] < 1.0e7, 'Lake_group'] = 1
+#                timeseries.loc[timeseries['Total Volume'] > 5.0e9, 'Lake_group'] = 3
+#
+#                print('completed')
+#                if i == 0:
+#                    complete_data = timeseries
+#                    print('first')
+#                    i += 1
+#                else:
+#                    complete_data = complete_data.append(timeseries, ignore_index=True)
+#                    print('added')
+#
+#    complete_data.loc[complete_data['Lake_group'] == 1].to_csv(path.join(datafolder, 'His_data_12.csv'),
+#                                                                 index=False)
+#    print('1_save')
+#    complete_data.loc[complete_data['Lake_group'] == 2].to_csv(path.join(datafolder, 'His_data_22.csv'),
+#                                                                 index=False)
+#    print('2_save')
+#    complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'His_data_32.csv'),
+#                                                                 index=False)
+    #print('end')
+=======
             if j ==0:
                 datasheet2 = os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
                         m1, exA, exB, m2, y1A, y2B))
@@ -1602,6 +1731,7 @@ def generate_timeseries_his_by_model(listmodels, listscenarios, lakelistfile, da
     # complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'His_data_32.csv'),
     #                                                              index=False)
     # print('end')
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
 
 def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafolder):
     i = 0
@@ -1612,14 +1742,18 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
             y2B = y1B + 4
             m1, m2 = models[model]
             with open(lakelistfile, 'rU')as f:
+                skip = f.readline()
                 lakes = f.readlines()
                 nlakes = len(lakes)
                 f.close()
-            lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
-                = lakes[1].strip().split(',')
+#            lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
+#                = lakes[1].strip().split(',')
+            lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated = lakes[i].strip().split(',')
+            
             eh = eh[2:] if eh[:2] == '0x' else eh
             while len(eh)< 6:
                 eh = '0' + eh
+            
             d1, d2, d3 = eh[:2], eh[:4], eh[:6]
             outdir = path.join(datafolder, d1, d2, d3,
                                  'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
@@ -1627,12 +1761,12 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
             # print(tzt_dir)
             if not path.exists(path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
                     m1, exA, exB, m2, y1A, y2B))):
-                # if os.path.exists(os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
-                # if os.path.exists(tzt_dir):
-                # cmd = 'matlab -wait -r -nosplash -nodesktop generateVolumeTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' % \
-                #       (lakelistfile, m1, m2, exA, y1A, exB, y1B, datafolder)
-                # print(cmd)
-                # os.system(cmd)
+#                # if os.path.exists(os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
+#                print(tzt_dir)
+#                if os.path.exists(tzt_dir):
+#                    cmd = 'matlab -wait -r -nosplash -nodesktop generateVolumeTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' %(lakelistfile, m1, m2, exA, y1A, exB, y1B, datafolder)
+#                    print(cmd)
+#                    os.system(cmd)
                 print('nan')
             else:
 
@@ -1652,8 +1786,7 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                 timeseries_select.loc[timeseries['Total Volume'] > 5.0e9, 'Lake_group'] = 3
                 timeseries_select['%_T'] = timeseries['Volume with T < 15 C'] / timeseries['Total Volume']
                 timeseries_select['%_O2'] = timeseries['Volume with O2 > 3000'] / timeseries['Total Volume']
-                timeseries_select['%_PAR'] = timeseries['Volume with PAR > 1% of surface PAR'] / timeseries[
-                    'Total Volume']
+                timeseries_select['%_PAR'] = timeseries['Volume with PAR > 1% of surface PAR'] / timeseries['Total Volume']
                 print('completed')
                 if i == 0:
                     complete_data = timeseries_select
@@ -3491,9 +3624,17 @@ if __name__ == '__main__':
     # print(lakes)
     # FishNiche_graph_temp_time(2, 4, r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\test.csv')
     # plt.show()
+<<<<<<< HEAD
+    #FishNiche_plot_volume_param('His',r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
+    #generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],r'D:\Fish_niche\lakes\2017SwedenList.csv',datafolder)
+    #FishNiche_plot_volume(r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
+    # 
+    generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'D:\Fish_niche\lakes\2017SwedenList.csv', datafolder)
+=======
     # FishNiche_plot_volume_param('His', r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
     #     2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     FishNiche_plot_volume01(r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
          2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     # 
     #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'C:\Users\Administrateur\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', datafolder)
+>>>>>>> dc4fbae2cd54b75669d10b4259cc8ebe5f2be77b
