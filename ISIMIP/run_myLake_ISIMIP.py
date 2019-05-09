@@ -306,6 +306,19 @@ def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=0.1,k_BOD=0.01,k_SOD
     with open(outpath, 'w') as f:
         f.write(out)
 
+def get_longitude(lake_name, forcing_data_directory):
+    ncdf_file = ncdf.Dataset(
+        forcing_data_directory + "/hurs_GFDL-ESM2M_historical_{}.allTS.nc".format(lake_name), "r", format="NETCDF4")
+
+    return ncdf_file.variables["lon"][0]
+
+def get_latitude(lake_name, forcing_data_directory):
+    ncdf_file = ncdf.Dataset(
+        forcing_data_directory + "/hurs_GFDL-ESM2M_historical_{}.allTS.nc".format(lake_name), "r", format="NETCDF4")
+
+    return ncdf_file.variables["lat"][0]
+
+
 
 def generate_data_files(hypsometry_path, temperature_path, lake_name, forcing_data_directory, longitude, latitude):
     """
@@ -320,12 +333,14 @@ def generate_data_files(hypsometry_path, temperature_path, lake_name, forcing_da
     :return: None
     """
     outdir = mylakeinit(init_info(hypsometry_path, temperature_path))
-    myLake_input(lake_name, forcing_data_directory, outdir)
     mylakepar(longitude, latitude, lake_name, outdir)
+    myLake_input(lake_name, forcing_data_directory, outdir)
 
 
-def run_myLake_ISIMIP():
+
+def run_myLake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
     pass
 
 if __name__ == "__main__":
-    generate_data_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", 0, 0)
+
+    generate_data_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"))
