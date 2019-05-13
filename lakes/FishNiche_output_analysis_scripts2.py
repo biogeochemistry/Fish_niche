@@ -1085,7 +1085,6 @@ def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, d
 #                interet.append(mlines.Line2D([], [], color=plt.cm.binary((i / 10)+ 0.3), markersize=3,
 #                                                 label=modelname[i - 1]))
 #
-#            ert.append(Patch(color='green', alpha=0.2, label='PAR'))
 #            ert.append(Patch(color='lightblue', alpha=0.5, label='T'))
 #            ert.append(Patch(color='red', alpha=0.1, label='DO'))
 #

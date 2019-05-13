@@ -1,17 +1,22 @@
-# -*- coding: utf-8 -*-
+# !/usr/bin/env python3
 """
-Created on Thu Apr 18 15:24:05 2019
+    File name: plot_montly_temp_light_profile.py
+    Author: Marianne Cote
+    Python Version: 3.6
 
-@author: Administrateur
+
 """
-
 
 import multiprocessing
 from statistics import mean
 from os import path
-
+from matplotlib.dates import YearLocator, MonthLocator, DateFormatter, DayLocator, WeekdayLocator, MONDAY
+# import matplotlib as mpl
+from datetime import date, datetime
 import csv
+import pandas as pd
 import rpy2.robjects as ro
+import matplotlib.pyplot as plt
 num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to choose the number of cores used.
 
 
@@ -32,7 +37,17 @@ scenarios = {1: ('historical', 1971, 'historical', 1976),
              6: ('rcp85', 2031, 'rcp85', 2036),
              7: ('rcp85', 2061, 'rcp85', 2066),
              8: ('rcp85', 2091, 'rcp85', 2096)}
-
+years = YearLocator() # every year
+# months = MonthLocator() # every month
+days = DayLocator()
+yearsFmt = DateFormatter('%Y')
+# monthsFmt=DateFormatter('%M')
+months = MonthLocator()
+mondays = WeekdayLocator(MONDAY) # major ticks on the mondays
+alldays = DayLocator() # minor ticks on the days
+weekFormatter = DateFormatter('%b') # e.g., Jan 12
+dayFormatter = DateFormatter('%d')
+# format the coords message box
 def thermocline(temp,depths):
     r=ro.r
     r.source(r'montly_temperature_light_profiles.R' )
@@ -65,6 +80,7 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 
                 print(lake_id)
                 lambdazt = path.join(outdir, 'lambdazt.csv')
+                inputlake = path.join(outdir,'2017input')
                 Tzt = path.join(outdir, 'Tzt.csv')
                 zlen = int(float(depth))
                 dp = list(range(1,zlen+1))
@@ -75,15 +91,14 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                     jj = range(0, nliness)
                 with open(lambdazt, 'rU') as tlambda:
                     linesl = tlambda.readlines()
-                    
+                Glo = pd.read_csv(inputlake,sep="\t", header= 1)    
                 for j in jj:
                     
                     wts = ''.join(liness[j])
                     dp1 = ''.join(dp)[1:-1]
                     depththermo = (((str(thermocline(wts,dp1))).strip().split(' '))[1].strip().split('.')[0])
                     print(depththermo) 
-                    if j == 136:
-                        print('ok')
+                    
                     if depththermo.isdigit():
                         depththermo = int(depththermo)
                         listtemp = liness[j].strip().split(',')
@@ -93,8 +108,9 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                      
                         listlam = linesl[j].strip().split(',')
                         floatlam = [float(nl) for nl in listlam if nl]
-                        lamavgep = mean(floatlam[:depththermo])
-                        lamavghy = mean(floatlam[depththermo:])
+                        floatPAR = Glo.iloc[j,3]**floatlam
+                        lamavgep = mean(floatPAR[:depththermo])
+                        lamavghy = mean(floatPAR[depththermo:])
                     else:
                         tempavgep = tempfloat[0]
                         tempavghy = tempfloat[-1]
@@ -119,12 +135,113 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
             with open("%s/output_%s_temp_hypo.csv"%(outputfolder,lakems), "w",newline='') as f1:
                 writer = csv.writer(f1)
                 writer.writerows(listlaketemphyday)
-            with open("%s/output_%s_lam_epi.csv"%(outputfolder,lakems), "w",newline='') as f2:
+            with open("%s/output_%s_par_epi.csv"%(outputfolder,lakems), "w",newline='') as f2:
                 writer = csv.writer(f2)
                 writer.writerows(listlakelamepday) 
-            with open("%s/output_%s_lam_hypo.csv"%(outputfolder,lakems), "w",newline='') as f3:
+            with open("%s/output_%s_par_hypo.csv"%(outputfolder,lakems), "w",newline='') as f3:
                 writer = csv.writer(f3)
                 writer.writerows(listlakelamhyday)
+def price(x):
+    return '$%1.2f' % x                
+def plot_montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile): 
+    months = MonthLocator()
+    datasheet1 = pd.read_csv('E:\output-30-03-2019\mean_temp_hypo.csv')
+    datasheet2 = pd.read_csv('E:\output-30-03-2019\mean_temp_epi.csv')
+    datasheet3 = pd.read_csv('E:\output-30-03-2019\mean_par_hypo.csv')
+    datasheet4 = pd.read_csv('E:\output-30-03-2019\mean_par_epi.csv')                     
+    datasheet1['Date'] = pd.to_datetime(datasheet1['Date'], format="%Y-%m-%d")
+    datasheet2['Date'] = pd.to_datetime(datasheet2['Date'], format="%Y-%m-%d")
+    datasheet3['Date'] = pd.to_datetime(datasheet3['Date'], format="%Y-%m-%d")
+    datasheet4['Date'] = pd.to_datetime(datasheet4['Date'], format="%Y-%m-%d")
+    datasheet1.set_index('Date', inplace=True)
+    datasheet2.set_index('Date', inplace=True)
+    datasheet3.set_index('Date', inplace=True)
+    datasheet4.set_index('Date', inplace=True)
+    
+    tt = pd.date_range(start='2000-01-01', end='2000-12-31')
+    meantemph = datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).mean()
+    meantempe = datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).mean()
+    meanlamh =  datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).mean()
+    meanlame =  datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).mean()
+    stdtemph =  datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).std()
+    stdtempe =  datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).std()
+    stdlamh =   datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).std()
+    stdlame =   datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).std()
+    
+#    medtemph = datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.5)
+#    medtempe = datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.5)
+#    medlamh =  datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.5)
+#    medlame =  datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).quantile(0.5)
+#    
+#    mintemph =  datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.25)
+#    mintempe =  datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.25)
+#    minlamh =   datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.25)
+#    minlame =   datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).quantile(0.25)
+#    
+#    maxtemph =  datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.75)
+#    maxtempe =  datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.75)
+#    maxlamh =   datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.75)
+#    maxlame =   datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).quantile(0.75)
+    
+    for i in range(0,210):
+        fig1 = plt.figure(figsize=(20, 10))
+        ax1 = plt.subplot(211)
+        plt.plot_date(tt, meantempe.iloc[:,i],'-',color='red',label='Epilimnion')
+        plt.fill_between(tt, meantempe.iloc[:,i] + stdtempe.iloc[:,i], meantempe.iloc[:,i] - stdtempe.iloc[:,i], color='red', alpha='0.5')
+        #plt.fill_between(tt, meantempe.iloc[:,i], meantempe.iloc[:,i], color='red', alpha='0.5')
+        
+        plt.plot_date(tt, meantemph.iloc[:,i],'-',color='blue',label='Hypolimnion')
+        plt.fill_between(tt, meantemph.iloc[:,i] + stdtemph.iloc[:,i], meantemph.iloc[:,i] - stdtemph.iloc[:,i], color='blue', alpha='0.5')
+        #plt.fill_between(tt, meantemph.iloc[:,i], meantemph.iloc[:,i], color='blue', alpha='0.5')
+        #print(meantemph.iloc[:,i])
+    
+        plt.ylim(-1, 20)
+        
+        ax1.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
+        ax1.fmt_xdata = DateFormatter('%Y-%m-%d')
+        ax1.xaxis.set_major_locator(months)
+        ax1.xaxis.set_minor_locator(mondays)
+        ax1.xaxis.set_major_formatter(weekFormatter)
+        ax1.fmt_ydata = price
+        ax1.yaxis.grid(True)
+        plt.ylabel("Temp")
+        
+        plt.xlabel("Date")
+        plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
+        plt.tight_layout()
+        plt.legend()
+        
+        fig1.savefig("E:\output-30-03-2019\Figure1_mean_temp_%s.png" %(meantemph.columns.get_values()[i]))
+        
+        
+        fig2 = plt.figure(figsize=(20, 10))
+        ax2 = plt.subplot(211)
+        plt.plot_date(tt, meanlame.iloc[:,i],'-',color='red',label='Epilimnion')
+        plt.fill_between(tt, meanlame.iloc[:,i] + stdlame.iloc[:,i], meanlame.iloc[:,i] - stdlame.iloc[:,i], color='red', alpha='0.5')
+        #plt.fill_between(tt, meanlame.iloc[:,i], meanlame.iloc[:,i], color='red', alpha='0.5')
+        plt.plot_date(tt, meanlamh.iloc[:,i],'-',color='blue',label='Hypolimnion')
+        plt.fill_between(tt, meanlamh.iloc[:,i] + stdlamh.iloc[:,i], meanlamh.iloc[:,i] - stdlamh.iloc[:,i], color='blue', alpha='0.5')
+        #plt.fill_between(tt, meanlamh.iloc[:,i], meanlamh.iloc[:,i], color='blue', alpha='0.5')
+        #print(meanlamh.iloc[:,i])
+    
+        plt.ylim(-1, 20)
+        
+        ax2.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
+        ax2.fmt_xdata = DateFormatter('%Y-%m-%d')
+        ax2.xaxis.set_major_locator(months)
+        ax2.xaxis.set_minor_locator(mondays)
+        ax2.xaxis.set_major_formatter(weekFormatter)
+        ax2.fmt_ydata = price
+        ax2.yaxis.grid(True)
+        plt.ylabel("PAR")
+        
+        plt.xlabel("Date")
+        plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
+        plt.tight_layout()
+        plt.legend()
+        print(meanlamh.columns.get_values()[i])
+        fig2.savefig("E:\output-30-03-2019\Figure1_mean_par_%s.png" %(meanlamh.columns.get_values()[i]))
+    plt.show()
                 
 if __name__ == '__main__':
-    montly_temp_light_profile([2], [2], 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')
+    plot_montly_temp_light_profile([2], [2], 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')

@@ -1,8 +1,10 @@
-# -*- coding: utf-8 -*-
+# !/usr/bin/env python3
 """
-Created on Thu Apr 18 15:51:15 2019
+    File name: thermocline_function.py
+    Author: Marianne Cote
+    Python Version: 3.6
 
-@author: Administrateur
+
 """
 
 import rpy2.robjects as ro
