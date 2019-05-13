@@ -7,15 +7,14 @@ Created on Thu Apr 18 15:24:05 2019
 
 
 import multiprocessing
-import datetime
-import time
+from statistics import mean
 from os import path
-import pandas as pd
+
 import csv
 import rpy2.robjects as ro
 num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to choose the number of cores used.
 
-cordexfolder = 'G:cordex'  # needs to be changed depending where the meteorological files are.
+
 outputfolder = 'E:\output-30-03-2019'
 timeformat = '%Y-%m-%d %H:%M:%S'
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
@@ -52,9 +51,10 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 ii = range(1, nlines)
             listlaketempepday,listlaketemphyday,listlakelamepday,listlakelamhyday = [],[],[],[]
             for i in ii:
-                listtempepi,listtemphypo,listlamepi,listlamhypo = [],[],[],[]
+                
                 lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated = lines[i].strip().split(',')
             
+                listtempepi,listtemphypo,listlamepi,listlamhypo = [lake_id],[lake_id],[lake_id],[lake_id]
                 eh = eh[2:] if eh[:2] == '0x' else eh
                 while len(eh)< 6:
                     eh = '0' + eh
@@ -62,36 +62,46 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 d1, d2, d3 = eh[:2], eh[:4], eh[:6]
                 outdir = path.join(outputfolder, d1, d2, d3,
                                  'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y1B+4))
-                print(outdir)
-
+                
+                print(lake_id)
                 lambdazt = path.join(outdir, 'lambdazt.csv')
                 Tzt = path.join(outdir, 'Tzt.csv')
                 zlen = int(float(depth))
-                wtr = range(1,zlen)
-                wtr = str(wtr)
+                dp = list(range(1,zlen+1))
+                dp = str(dp)
                 with open(Tzt, 'rU') as tt:
                     liness = tt.readlines()
                     nliness = len(liness)
-                    jj = range(1, nliness)
+                    jj = range(0, nliness)
                 with open(lambdazt, 'rU') as tlambda:
                     linesl = tlambda.readlines()
                     
                 for j in jj:
-                    print(wtr)
-                    print(j)
-                    depththermo = thermocline(wtr, j)
-                    depththermo = int(((str(depththermo).strip().split(' '))[1].strip().split('.'))[0])
+                    
+                    wts = ''.join(liness[j])
+                    dp1 = ''.join(dp)[1:-1]
+                    depththermo = (((str(thermocline(wts,dp1))).strip().split(' '))[1].strip().split('.')[0])
+                    print(depththermo) 
+                    if j == 136:
+                        print('ok')
+                    if depththermo.isdigit():
+                        depththermo = int(depththermo)
+                        listtemp = liness[j].strip().split(',')
+                        tempfloat = [float(n) for n in listtemp if n]
+                        tempavgep = mean(tempfloat[:depththermo])
+                        tempavghy = mean(tempfloat[depththermo:])
                      
-                    listtemp = liness[j].strip().split(',')
-                    tempfloat = [float(n) for n in listtemp if n]
-                    tempavgep = sum(tempfloat[:depththermo])/len(tempfloat[:depththermo]) if tempfloat else '-'
-                    tempavghy = sum(tempfloat[depththermo:])/len(tempfloat[:depththermo]) if tempfloat else '-'
-                     
-                    listlam = linesl[j].strip().split(',')
-                    floatlam = [float(nl) for nl in listlam if nl]
-                    lamavgep = sum(floatlam[:depththermo])/len(floatlam[:depththermo]) if floatlam else '-'
-                    lamavghy = sum(floatlam[depththermo:])/len(floatlam[:depththermo]) if floatlam else '-'
-                     
+                        listlam = linesl[j].strip().split(',')
+                        floatlam = [float(nl) for nl in listlam if nl]
+                        lamavgep = mean(floatlam[:depththermo])
+                        lamavghy = mean(floatlam[depththermo:])
+                    else:
+                        tempavgep = tempfloat[0]
+                        tempavghy = tempfloat[-1]
+                        lamavgep = tempfloat[0]
+                        lamavghy = tempfloat[-1]
+                    
+                    
                     listtempepi.append(tempavgep)
                     listtemphypo.append(tempavghy)
                     listlamepi.append(lamavgep)
@@ -101,20 +111,20 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 listlakelamepday.append(listlamepi)
                 listlakelamhyday.append(listlamhypo)
             
-            lakems = '%s_%s_%s_EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(d1, d2, d3, m1, exA, exB, m2, y1A, y1B)
+            lakems = 'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %( m1, exA, exB, m2, y1A, y1B+4)
             
-            with open("%s/output_%s_temp_epi.csv"%(outputfolder.lakems), "wb") as f:
-                writer = csv.writer(f)
+            with open("%s/output_%s_temp_epi.csv"%(outputfolder, lakems), "w",newline='') as f:
+                writer = csv.writer(f) 
                 writer.writerows(listlaketempepday)
-            with open("%s/output_%s_temp_hypo.csv"%(outputfolder.lakems), "wb") as f1:
+            with open("%s/output_%s_temp_hypo.csv"%(outputfolder,lakems), "w",newline='') as f1:
                 writer = csv.writer(f1)
                 writer.writerows(listlaketemphyday)
-            with open("%s/output_%s_lam_epi.csv"%(outputfolder.lakems), "wb") as f2:
+            with open("%s/output_%s_lam_epi.csv"%(outputfolder,lakems), "w",newline='') as f2:
                 writer = csv.writer(f2)
                 writer.writerows(listlakelamepday) 
-            with open("%s/output_%s_lam_hypo.csv"%(outputfolder.lakems), "wb") as f3:
+            with open("%s/output_%s_lam_hypo.csv"%(outputfolder,lakems), "w",newline='') as f3:
                 writer = csv.writer(f3)
                 writer.writerows(listlakelamhyday)
                 
 if __name__ == '__main__':
-    montly_temp_light_profile([2], [2], 'D:\\Fish_niche\\lakes\\2017SwedenList111.csv')
+    montly_temp_light_profile([2], [2], 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')
