@@ -2,6 +2,10 @@
 *.h5
 *.nc
 *.csv
-ISIMIP/scratch.py
+*.xls
+*.xlsx
+scratch.py
 ISIMIP/test/*
 ISIMIP/output/*
+ISIMIP/input/*
+ISIMIP/observations/*

@@ -13,9 +13,25 @@ Calls the init, input and par scripts to create the appropriate files for MyLake
 Then launches MyLake for the specified lake
 """
 
-variables = ["hurs", "pr", "ps", "rsds", "sfcWind", "tas"]
-models = ["GFDL-ESM2M", "HadGEM2-ES", "IPSL-CM5A-LR", "MIROC5"]
-scenarios = ["historical", "piControl", "rcp26", "rcp60"]
+#Comment variables, models and scenarios here
+
+variables = ["hurs",
+             "pr",
+             "ps",
+             "rsds",
+             "sfcWind",
+             "tas"
+             ]
+models = ["GFDL-ESM2M"#,
+          #"HadGEM2-ES",
+          #"IPSL-CM5A-LR",
+          #"MIROC5"
+          ]
+scenarios = ["historical"#,
+             #"piControl",
+             #"rcp26",
+             #"rcp60"
+             ]
 
 
 def myLake_input(lake_name, forcing_data_directory, output_directory):
@@ -102,7 +118,7 @@ def mylakeinit(init_info_dict, I_scDOC = 1):
 
     return init_info_dict["outdir"]                 # To pass the output folder to the other modules
 
-def init_info(hypsometry_path, temperature_path):
+def init_info(hypsometry_path, temperature_path, date_init = 101):
     """
     J. Bellavance 2018/11/19
     For ISI-MIP
@@ -130,11 +146,11 @@ def init_info(hypsometry_path, temperature_path):
     with open("{}".format(temperature_path), "r") as obs:
         reader = list(csv.reader(obs))[1:]
 
-        w_temp = find_init_temp(reader, depth_levels)
+        w_temp = find_init_temp(reader, depth_levels, date_init)
 
 
 
-    outdir = os.path.join("output", "{}".format(out_dir), "{}".format(out_folder))
+    outdir = os.path.join("input", "{}".format(out_dir), "{}".format(out_folder))
 
     if not os.path.exists(outdir):
         os.makedirs(outdir)
@@ -144,7 +160,7 @@ def init_info(hypsometry_path, temperature_path):
     return {"depth_levels": depth_levels, "areas": areas, "w_temp": w_temp, "outdir": outdir, "outpath": outpath}
 
 
-def find_init_temp(observations, depth_levels, date_init = 601):
+def find_init_temp(observations, depth_levels, date_init):
     """
     J. Bellavance 2018/12/18
     For ISI-MIP
@@ -157,32 +173,32 @@ def find_init_temp(observations, depth_levels, date_init = 601):
     :param date_init: Type int. Date used to initialise data. Must be in the form of 'MMDD'. Year must not be specified.
     :return: Type list. A complete set of mean temperatures for init files, ordered by depth levels
     """
-    try:
-        if len(observations) == 0:
-            print("Date not found, using dummy temperatures")
-            return list("4"*len(depth_levels))
-
-        if float(observations[0][2][4:]) < date_init:
-            return find_init_temp(observations[1:], depth_levels, date_init)
-
-        w_temp = []
-        m = 0
-
-        for depth in depth_levels:
-            if float(observations[m][3]) == depth:
-                w_temp.append(float(observations[m][4]))
-                m += 1
-
-            else:
-                w_temp.append("")
-
-        if "" in w_temp: return missing_temp(w_temp, depth_levels)
-        else: return w_temp
-
-    except RecursionError:
+    if len(observations) == 0:
         print("Date not found, using dummy temperatures")
-        return list("4" * len(depth_levels))
+        return list("4"*len(depth_levels))
 
+    obs_list = []
+
+    for observation in observations:
+        if int(observation[2][4:]) < date_init or int(observation[2][4:]) > date_init + 20:
+            continue
+        elif obs_list == []: obs_list.append(observation)
+        elif observation[2][4:] == obs_list[0][2][4:]:
+            obs_list.append(observation)
+
+    w_temp = []
+    m = 0
+
+    for depth in depth_levels:
+        if float(obs_list[m][3]) == depth:
+            w_temp.append(float(obs_list[m][4]))
+            m += 1
+
+        else:
+            w_temp.append("")
+
+    if "" in w_temp: return missing_temp(w_temp, depth_levels)
+    else: return w_temp
 
 def missing_temp(temp_list, depth_levels):
     """
@@ -301,18 +317,32 @@ def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=0.1,k_BOD=0.01,k_SOD
     I_scO	1	NaN NaN (-)
     ''' % (latitude, longitude, I_scDOC, swa_b1, k_BOD, k_SOD)
 
-    outpath = outdir + "/{}_par".format(lake_name[:3])
+    outpath = outdir + "\{}_par".format(lake_name[:3])
 
     with open(outpath, 'w') as f:
         f.write(out)
 
+    print("{} Done".format(outpath))
+
 def get_longitude(lake_name, forcing_data_directory):
+    """
+    Obtains longitude from a given ncdf file.
+    :param lake_name: string.
+    :param forcing_data_directory: string. The directory with the ncdf files.
+    :return: float. the longitude of the lake.
+    """
     ncdf_file = ncdf.Dataset(
         forcing_data_directory + "/hurs_GFDL-ESM2M_historical_{}.allTS.nc".format(lake_name), "r", format="NETCDF4")
 
     return ncdf_file.variables["lon"][0]
 
 def get_latitude(lake_name, forcing_data_directory):
+    """
+    Obtains latitude from a given ncdf file.
+    :param lake_name: string.
+    :param forcing_data_directory: string. The directory with the ncdf files.
+    :return: float. the latitude of the lake.
+    """
     ncdf_file = ncdf.Dataset(
         forcing_data_directory + "/hurs_GFDL-ESM2M_historical_{}.allTS.nc".format(lake_name), "r", format="NETCDF4")
 
@@ -339,7 +369,21 @@ def generate_data_files(hypsometry_path, temperature_path, lake_name, forcing_da
 
 
 def run_myLake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
-    pass
+    """
+    Runs the MyLake model using the input, init and parameters files.
+
+    :param modelid: string. model used
+    :param scenarioid: string. scenario used
+    :param eh: ebhex number
+    :param subid: Reference number
+    :param depth: depth used to initiate Mylake (see mylakeinit())
+    :param area: area used to initiate Mylake (see mylakeinit())
+    :param longitude: longitude coordinate for Mylake (see mylakepar())
+    :param latitude: latitude coordinate for Mylake (see mylakepar())
+    :return: None
+    """
+
+
 
 if __name__ == "__main__":
 
