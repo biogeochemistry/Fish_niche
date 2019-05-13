@@ -62,4 +62,7 @@ dlmwrite(f6_name, Qst(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 f7_name =(strcat(outdir, '\Attn_zt.csv'));%MC 2018-05-31 add to comparaison with SDD
 dlmwrite(f7_name, Attn_zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
+f9_name =(strcat(outdir, '\His.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
+dlmwrite(f9_name,His(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+
 end          

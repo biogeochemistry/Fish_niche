@@ -2,7 +2,6 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="d1b2978b-1fda-4432-a990-b065ff11c1f0" name="Default" comment="">
-      <change beforePath="$PROJECT_DIR$/2017SwedenList111.csv" beforeDir="false" afterPath="$PROJECT_DIR$/2017SwedenList111.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py" beforeDir="false" afterPath="$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
@@ -37,8 +36,8 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="531">
-              <caret line="3576" selection-start-line="3576" selection-end-line="3576" />
+            <state relative-caret-position="212">
+              <caret line="1477" column="9" lean-forward="true" selection-start-line="1477" selection-start-column="9" selection-end-line="1477" selection-end-column="9" />
               <folding>
                 <element signature="e#2769#5988#0" />
                 <element signature="e#6059#6864#0" />
@@ -53,8 +52,6 @@
                 <element signature="e#43321#53479#0" />
                 <element signature="e#53575#63010#0" />
                 <element signature="e#63119#74351#0" />
-                <element signature="e#74449#87367#0" />
-                <element signature="e#74663#83011#0" />
                 <element signature="e#87938#92015#0" />
                 <element signature="e#91626#106318#0" />
                 <element signature="e#106879#112429#0" />
@@ -111,7 +108,6 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>price</find>
       <find>pA</find>
       <find>pB</find>
       <find>outputfolder</find>
@@ -139,8 +135,9 @@
       <find>'pearson</find>
       <find>rmse_%</find>
       <find>par</find>
-      <find>generate_timeseries_his_by_model</find>
       <find>FishNiche_plot_volume_param</find>
+      <find>His_data</find>
+      <find>generate_timeseries_his_by_model</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -206,7 +203,7 @@
   <component name="ProjectFrameBounds">
     <option name="x" value="-9" />
     <option name="width" value="1333" />
-    <option name="height" value="1038" />
+    <option name="height" value="1047" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -277,7 +274,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.FishNiche_output_analysis_scripts2 (1)">
+  <component name="RunManager" selected="Python.FishNiche_output_analysis_scripts2">
     <configuration name="FishNiche_output_analysis_scripts2 (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lakes" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -392,11 +389,11 @@
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.FishNiche_output_analysis_scripts2" />
         <item itemvalue="Python.FishNiche_output_analysis_scripts2 (1)" />
         <item itemvalue="Python.a_faire_rouler_rmse (1)" />
         <item itemvalue="Python.a_faire_rouler_rmse" />
         <item itemvalue="Python.a_faire_rouler" />
-        <item itemvalue="Python.FishNiche_output_analysis_scripts2" />
       </list>
     </recent_temporary>
   </component>
@@ -489,7 +486,7 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="0" width="1333" height="1038" extended-state="0" />
+    <frame x="-9" y="0" width="1333" height="1038" extended-state="1" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.035521235" />
@@ -497,14 +494,14 @@
       <window_info id="Structure" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.48925886" weight="0.32918552" />
-      <window_info anchor="bottom" id="Run" order="2" sideWeight="0.8562834" weight="0.2883295" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.85559845" visible="true" weight="0.2872928" />
       <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.6181525" weight="0.4004525" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32837528" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49678457" weight="0.32816228" />
-      <window_info active="true" anchor="bottom" id="Event Log" order="9" sideWeight="0.14371657" side_tool="true" visible="true" weight="0.2872928" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.14440155" side_tool="true" visible="true" weight="0.2872928" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49785176" weight="0.32918552" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -554,7 +551,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>314</line>
+          <line>315</line>
           <option name="timeStamp" value="200" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -594,43 +591,43 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>2832</line>
+          <line>2833</line>
           <option name="timeStamp" value="407" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1740</line>
+          <line>1741</line>
           <option name="timeStamp" value="496" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>838</line>
+          <line>839</line>
           <option name="timeStamp" value="570" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1393</line>
+          <line>1394</line>
           <option name="timeStamp" value="656" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1564</line>
+          <line>1565</line>
           <option name="timeStamp" value="660" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1486</line>
-          <option name="timeStamp" value="661" />
-        </line-breakpoint>
-        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
-          <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1470</line>
+          <line>1471</line>
           <option name="timeStamp" value="662" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://T:/RMC/Usagers/macot620/optimisation - Copy/lakes/a_faire_rouler_rmse.py</url>
           <line>19</line>
           <option name="timeStamp" value="690" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
+          <line>1482</line>
+          <option name="timeStamp" value="693" />
         </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
@@ -753,8 +750,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="531">
-          <caret line="3576" selection-start-line="3576" selection-end-line="3576" />
+        <state relative-caret-position="212">
+          <caret line="1477" column="9" lean-forward="true" selection-start-line="1477" selection-start-column="9" selection-end-line="1477" selection-end-column="9" />
           <folding>
             <element signature="e#2769#5988#0" />
             <element signature="e#6059#6864#0" />
@@ -769,8 +766,6 @@
             <element signature="e#43321#53479#0" />
             <element signature="e#53575#63010#0" />
             <element signature="e#63119#74351#0" />
-            <element signature="e#74449#87367#0" />
-            <element signature="e#74663#83011#0" />
             <element signature="e#87938#92015#0" />
             <element signature="e#91626#106318#0" />
             <element signature="e#106879#112429#0" />

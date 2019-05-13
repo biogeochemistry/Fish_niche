@@ -498,7 +498,7 @@ def runlake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_B
         os.system ( cmd )
         #for f in [initp, parp, inputp]:
         #    os.system ( 'bzip2 -f -k %s' % f )
-        expectedfs = [ 'Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv']
+        expectedfs = [ 'Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv','His.csv']
         flags = [os.path.exists ( os.path.join ( outdir, f ) ) for f in expectedfs]
 
         if all ( flags ):
