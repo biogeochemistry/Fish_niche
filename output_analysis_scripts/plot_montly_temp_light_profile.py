@@ -64,12 +64,12 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 lines = f.readlines()
                 nlines = len(lines)
                 ii = range(1, nlines)
-            listlaketempepday,listlaketemphyday,listlakeIzday = [],[],[]
+            listlaketempepday,listlaketemphyday,listlakeIzepday,listlakeIzhyday = [],[],[],[]
             for i in ii:
                 
                 lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated = lines[i].strip().split(',')
             
-                listtempepi,listtemphypo,listIz= [lake_id],[lake_id],[lake_id]
+                listtempepi,listtemphypo,listIzepi,listIzhypo= [lake_id],[lake_id],[lake_id],[lake_id]
                 eh = eh[2:] if eh[:2] == '0x' else eh
                 while len(eh)< 6:
                     eh = '0' + eh
@@ -107,24 +107,29 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                         tempfloat = [float(n) for n in listtemp if n]
                         tempavgep = mean(tempfloat[:depththermo])
                         tempavghy = mean(tempfloat[depththermo:])
+                        listlambda = linesl[j].strip().split(',')
+                        floatlambda = [float(nl) for nl in listlambda if nl]
+                        lambdaavg = mean(floatlambda)
+                        floatIz = [Glo.iloc[j,3]**(-lambdaavg*x)(1-Ice.iloc[j,6])for x in range(1,int(depth)+1)]
+                        Izavgep = mean(floatIz[:depththermo])
+                        Izavghy = mean(floatIz[depththermo:])
                                       
                     else:
                         tempavgep = tempfloat[0]
                         tempavghy = tempfloat[-1]
-
+                        Izavgep = floatIz[0]
+                        Izavghy = floatIz[-1]
                     
-                    listlambda = linesl[j].strip().split(',')
-                    floatlambda = [float(nl) for nl in listlambda if nl]
-                    lambdaavg = mean(floatlambda)
-                    floatIz = [Glo.iloc[j,3]**(-floatlambda*x)(1-Ice.iloc[j,6])for x in range(1,depth)]
                     
                     listtempepi.append(tempavgep)
                     listtemphypo.append(tempavghy)
-                    listIz.append(floatIz)
+                    listIzepi.append(Izavgep)
+                    listIzhypo.append(Izavghy)
                     
                 listlaketempepday.append(listtempepi)
                 listlaketemphyday.append(listtemphypo)
-                listlakeIzday.append(listIz)
+                listlakeIzday.append(listIzepi)
+                listlakeIzday.append(listIzhypo)
             
             lakems = 'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %( m1, exA, exB, m2, y1A, y1B+4)
             
@@ -134,9 +139,12 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
             with open("%s/output_%s_temp_hypo.csv"%(outputfolder,lakems), "w",newline='') as f1:
                 writer = csv.writer(f1)
                 writer.writerows(listlaketemphyday)
-            with open("%s/output_%s_Iz.csv"%(outputfolder,lakems), "w",newline='') as f2:
+            with open("%s/output_%s_Iz_epi.csv"%(outputfolder,lakems), "w",newline='') as f2:
                 writer = csv.writer(f2)
-                writer.writerows(listlakeIzday) 
+                writer.writerows(listlakeIzhyday) 
+            with open("%s/output_%s_Iz_hypo.csv"%(outputfolder,lakems), "w",newline='') as f2:
+                writer = csv.writer(f2)
+                writer.writerows(listlakeIzepday) 
            
 def price(x):
     return '$%1.2f' % x                
