@@ -64,12 +64,12 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 lines = f.readlines()
                 nlines = len(lines)
                 ii = range(1, nlines)
-            listlaketempepday,listlaketemphyday,listlakelamepday,listlakelamhyday = [],[],[],[]
+            listlaketempepday,listlaketemphyday,listlakeIzday = [],[],[]
             for i in ii:
                 
                 lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated = lines[i].strip().split(',')
             
-                listtempepi,listtemphypo,listlamepi,listlamhypo = [lake_id],[lake_id],[lake_id],[lake_id]
+                listtempepi,listtemphypo,listIz= [lake_id],[lake_id],[lake_id]
                 eh = eh[2:] if eh[:2] == '0x' else eh
                 while len(eh)< 6:
                     eh = '0' + eh
@@ -81,6 +81,7 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 print(lake_id)
                 lambdazt = path.join(outdir, 'lambdazt.csv')
                 inputlake = path.join(outdir,'2017input')
+                His = path.join(outdir,'His.csv')
                 Tzt = path.join(outdir, 'Tzt.csv')
                 zlen = int(float(depth))
                 dp = list(range(1,zlen+1))
@@ -91,7 +92,8 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                     jj = range(0, nliness)
                 with open(lambdazt, 'rU') as tlambda:
                     linesl = tlambda.readlines()
-                Glo = pd.read_csv(inputlake,sep="\t", header= 1)    
+                Glo = pd.read_csv(inputlake,sep="\t", header= 1) 
+                Ice = pd.read_csv(His,sep="\t", header= None) 
                 for j in jj:
                     
                     wts = ''.join(liness[j])
@@ -105,27 +107,24 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                         tempfloat = [float(n) for n in listtemp if n]
                         tempavgep = mean(tempfloat[:depththermo])
                         tempavghy = mean(tempfloat[depththermo:])
-                     
-                        listlam = linesl[j].strip().split(',')
-                        floatlam = [float(nl) for nl in listlam if nl]
-                        floatPAR = Glo.iloc[j,3]**floatlam
-                        lamavgep = mean(floatPAR[:depththermo])
-                        lamavghy = mean(floatPAR[depththermo:])
+                                      
                     else:
                         tempavgep = tempfloat[0]
                         tempavghy = tempfloat[-1]
-                        lamavgep = tempfloat[0]
-                        lamavghy = tempfloat[-1]
+
                     
+                    listlambda = linesl[j].strip().split(',')
+                    floatlambda = [float(nl) for nl in listlambda if nl]
+                    lambdaavg = mean(floatlambda)
+                    floatIz = [Glo.iloc[j,3]**(-floatlambda*x)(1-Ice.iloc[j,6])for x in range(1,depth)]
                     
                     listtempepi.append(tempavgep)
                     listtemphypo.append(tempavghy)
-                    listlamepi.append(lamavgep)
-                    listlamhypo.append(lamavghy)
+                    listIz.append(floatIz)
+                    
                 listlaketempepday.append(listtempepi)
                 listlaketemphyday.append(listtemphypo)
-                listlakelamepday.append(listlamepi)
-                listlakelamhyday.append(listlamhypo)
+                listlakeIzday.append(listIz)
             
             lakems = 'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %( m1, exA, exB, m2, y1A, y1B+4)
             
@@ -135,12 +134,10 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
             with open("%s/output_%s_temp_hypo.csv"%(outputfolder,lakems), "w",newline='') as f1:
                 writer = csv.writer(f1)
                 writer.writerows(listlaketemphyday)
-            with open("%s/output_%s_par_epi.csv"%(outputfolder,lakems), "w",newline='') as f2:
+            with open("%s/output_%s_Iz.csv"%(outputfolder,lakems), "w",newline='') as f2:
                 writer = csv.writer(f2)
-                writer.writerows(listlakelamepday) 
-            with open("%s/output_%s_par_hypo.csv"%(outputfolder,lakems), "w",newline='') as f3:
-                writer = csv.writer(f3)
-                writer.writerows(listlakelamhyday)
+                writer.writerows(listlakeIzday) 
+           
 def price(x):
     return '$%1.2f' % x                
 def plot_montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile): 
