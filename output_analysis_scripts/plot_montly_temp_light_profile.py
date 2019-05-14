@@ -128,8 +128,8 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                     
                 listlaketempepday.append(listtempepi)
                 listlaketemphyday.append(listtemphypo)
-                listlakeIzday.append(listIzepi)
-                listlakeIzday.append(listIzhypo)
+                listlakeIzepday.append(listIzepi)
+                listlakeIzhyday.append(listIzhypo)
             
             lakems = 'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %( m1, exA, exB, m2, y1A, y1B+4)
             
@@ -139,10 +139,10 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
             with open("%s/output_%s_temp_hypo.csv"%(outputfolder,lakems), "w",newline='') as f1:
                 writer = csv.writer(f1)
                 writer.writerows(listlaketemphyday)
-            with open("%s/output_%s_Iz_epi.csv"%(outputfolder,lakems), "w",newline='') as f2:
+            with open("%s/output_%s_Iz_hypo.csv"%(outputfolder,lakems), "w",newline='') as f2:
                 writer = csv.writer(f2)
                 writer.writerows(listlakeIzhyday) 
-            with open("%s/output_%s_Iz_hypo.csv"%(outputfolder,lakems), "w",newline='') as f2:
+            with open("%s/output_%s_Iz_epi.csv"%(outputfolder,lakems), "w",newline='') as f2:
                 writer = csv.writer(f2)
                 writer.writerows(listlakeIzepday) 
            
@@ -152,8 +152,8 @@ def plot_montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
     months = MonthLocator()
     datasheet1 = pd.read_csv('E:\output-30-03-2019\mean_temp_hypo.csv')
     datasheet2 = pd.read_csv('E:\output-30-03-2019\mean_temp_epi.csv')
-    datasheet3 = pd.read_csv('E:\output-30-03-2019\mean_par_hypo.csv')
-    datasheet4 = pd.read_csv('E:\output-30-03-2019\mean_par_epi.csv')                     
+    datasheet3 = pd.read_csv('E:\output-30-03-2019\mean_Iz_hypo.csv')
+    datasheet4 = pd.read_csv('E:\output-30-03-2019\mean_Iz_epi.csv')                     
     datasheet1['Date'] = pd.to_datetime(datasheet1['Date'], format="%Y-%m-%d")
     datasheet2['Date'] = pd.to_datetime(datasheet2['Date'], format="%Y-%m-%d")
     datasheet3['Date'] = pd.to_datetime(datasheet3['Date'], format="%Y-%m-%d")
