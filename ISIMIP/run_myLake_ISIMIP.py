@@ -1,6 +1,7 @@
 import csv
 import os
 import numpy
+import datetime
 import netCDF4 as ncdf
 
 # Pour un lac
@@ -54,9 +55,11 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
 
             with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
 
-                input_file.writelines(["-999\tISIMIP input tests\n", "Year\tMonth\tDay\tGlobal radiation\tCloud cover\t"
-                                        "Air temperature\tRelative humidity\tAir pressure\tWind speed\tPrecipitation\t"
-                                        "Inflow_V\tInflow_T\tInflow_PT\tInflow_PST\tInflow_DP\tInflow_C\tInflow_PP\n"])
+                input_file.writelines(["-999\tMyLake Input\n", "Year\tMonth\tDay\tGlobal radiation (MJ/m2)\tCloud cover(-)\t"
+                                        "Air temperature (deg C)\tRelative humidity (%)\tAir pressure (hPa)\tWind speed (m/s)\t"
+                                        "Precipitation (mm/day)\tInflow (m3/day)\tInflow_T (deg C)\tInflow_C\tInflow_S (kg/m3)\t"
+                                        "Inflow_TP (mg/m3)\tInflow_DOP (mg/m3)\tInflow_Chla (mg/m3)\tInflow_DOC (mg/m3)\t"
+                                        "DIC\tDO\tNO3\tNH4\tSO4\tFe2\tCa\tpH\tCH4\tFe3\tAl3\tSiO4\tSiO2\tdiatom\n"])
 
                 for variable in variables:
                     ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
@@ -75,6 +78,7 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
 
                 input_file.write("\n".join(["\t".join(["%s" % year, "%s" % month, "%s" % day, "%f" % rsds,
                                             "0", "%f" % tas, "%f" % hurs, "%f" % ps, "%f" % sfcwind, "%f" % pr,
+                                            "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
                                             "0", "0", "0", "0", "0", "0", "0"])
                                             for year, month, day, hurs, pr, ps, rsds, sfcwind, tas in zip(
                                             list_dict["Year"],
@@ -368,23 +372,53 @@ def generate_data_files(hypsometry_path, temperature_path, lake_name, forcing_da
 
 
 
-def run_myLake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
+def run_myLake(observations_path, input_directory, region, lakeName, modelid, scenarioid, k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
     """
-    Runs the MyLake model using the input, init and parameters files.
+    Runs the MyLake simulation using the input, init and parameters files. Makes a single run for a combination of lake,
+    model and scenario.
 
+    :param input_directory: string. folder containing all input files.
+    :param lakeName: string. Name of the lake to simulate
     :param modelid: string. model used
     :param scenarioid: string. scenario used
-    :param eh: ebhex number
-    :param subid: Reference number
-    :param depth: depth used to initiate Mylake (see mylakeinit())
-    :param area: area used to initiate Mylake (see mylakeinit())
-    :param longitude: longitude coordinate for Mylake (see mylakepar())
-    :param latitude: latitude coordinate for Mylake (see mylakepar())
+
     :return: None
     """
 
+    init_file = os.path.join(input_directory, "{}_init".format(lakeName[:3]))
+    parameter_file = os.path.join(input_directory, "{}_par".format(lakeName[:3]))
+    input_file = os.path.join(input_directory, "{}_{}_{}_input".format(lakeName[:3], modelid, scenarioid))
+
+    outfolder = os.path.join("output", region, lakeName)
+
+    with open("{}/{}_temperature.csv".format(observations_path, lakeName), "r") as obs:
+        reader = list(csv.reader(obs))[1:]
+        y1 = int(reader[0][2][:4])
+        y2 = int(reader[-1][2][:4])
+
+    if not os.path.exists ( outfolder ):
+        os.makedirs ( outfolder )
+
+    if os.path.exists ( os.path.join ( outfolder, 'RunComplete' ) ):
+        print ( 'lake {} is already completed'.format(lakeName) )
+        ret = 0
+    else:
+        cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
+        print ( cmd )
+        os.system ( cmd )
+
+        expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'lambdazt.csv']
+        flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
+
+        if all(flags):
+            with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
+                f.write(datetime.datetime.now().isoformat())
+            ret = 0
+        ret = 0 if all(flags) else 100
+    return ret
 
 
 if __name__ == "__main__":
 
-    generate_data_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"))
+    #generate_data_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"))
+    run_myLake("observations/NO_Lan", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")
