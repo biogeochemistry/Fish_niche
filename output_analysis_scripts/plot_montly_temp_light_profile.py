@@ -20,7 +20,7 @@ import matplotlib.pyplot as plt
 num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to choose the number of cores used.
 
 
-outputfolder = 'E:\output-30-03-2019'
+outputfolder = 'T:\macot620\output_2001'
 timeformat = '%Y-%m-%d %H:%M:%S'
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
 models = {1: ('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
@@ -93,26 +93,40 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 with open(lambdazt, 'rU') as tlambda:
                     linesl = tlambda.readlines()
                 Glo = pd.read_csv(inputlake,sep="\t", header= 1) 
-                Ice = pd.read_csv(His,sep="\t", header= None) 
+                Glo = Glo.iloc[730:,:]
+                Ice = pd.read_csv(His,header=None) 
                 for j in jj:
                     
                     wts = ''.join(liness[j])
                     dp1 = ''.join(dp)[1:-1]
                     depththermo = (((str(thermocline(wts,dp1))).strip().split(' '))[1].strip().split('.')[0])
                     print(depththermo) 
+                    listtemp = liness[j].strip().split(',')
+                    tempfloat = [float(n) for n in listtemp if n]
+                        
+                    listlambda = linesl[j].strip().split(',')
+                    floatlambda = [float(nl) for nl in listlambda if nl]
+                    lambdaavg = mean(floatlambda)
+                    try:
+                        floatIz=[((Glo.iloc[j,3]**(-lambdaavg*x))*(1-int(Ice.iloc[j,6])))for x in range(1,int(float(depth))+1)]
+                    except:
+                        print("marchepas")
+                            
                     
                     if depththermo.isdigit():
                         depththermo = int(depththermo)
-                        listtemp = liness[j].strip().split(',')
-                        tempfloat = [float(n) for n in listtemp if n]
+                        #listtemp = liness[j].strip().split(',')
+                        #tempfloat = [float(n) for n in listtemp if n]
                         tempavgep = mean(tempfloat[:depththermo])
                         tempavghy = mean(tempfloat[depththermo:])
-                        listlambda = linesl[j].strip().split(',')
-                        floatlambda = [float(nl) for nl in listlambda if nl]
-                        lambdaavg = mean(floatlambda)
-                        floatIz = [Glo.iloc[j,3]**(-lambdaavg*x)(1-Ice.iloc[j,6])for x in range(1,int(depth)+1)]
+                        #listlambda = linesl[j].strip().split(',')
+                        #floatlambda = [float(nl) for nl in listlambda if nl]
+                        #lambdaavg = mean(floatlambda)
+                        
+                            #floatIz=[(Glo.iloc[j,3]**(-lambdaavg*x))*(1-int(Ice.iloc[j,6]))for x in range(1,int(float(depth))+1)]
                         Izavgep = mean(floatIz[:depththermo])
                         Izavghy = mean(floatIz[depththermo:])
+                            
                                       
                     else:
                         tempavgep = tempfloat[0]
@@ -249,4 +263,4 @@ def plot_montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
     plt.show()
                 
 if __name__ == '__main__':
-    plot_montly_temp_light_profile([2], [2], 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')
+    montly_temp_light_profile([2], [2], 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')
