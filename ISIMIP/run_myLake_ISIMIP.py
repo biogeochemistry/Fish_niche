@@ -66,7 +66,15 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
 
 
                     for x in ncdf_file.variables[variable][:]:
-                        list_dict[variable].append(float(x))
+                        if variable == "tas":
+                            temp = float(x) - 273.15
+                            list_dict[variable].append(temp)
+
+                        elif variable == "ps":
+                            press = float(x)/100
+                            list_dict[variable].append(press)
+
+                        else : list_dict[variable].append(float(x))
 
                     if variable is variables[0]:
                         for y in ncdf_file.variables["time"][:]:
@@ -239,7 +247,7 @@ def missing_temp(temp_list, depth_levels):
 
     return temp_list
 
-def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=0.1,k_BOD=0.01,k_SOD=100,I_scDOC=1):
+def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=1,k_BOD=0.01,k_SOD=100,I_scDOC=1):
     """
     Creates MyLake parameter file. If the file LAE_para_all1.txt is present, it will be used to prepare the parameters.
     Otherwise, the string in this function while be used.
@@ -260,29 +268,29 @@ def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=0.1,k_BOD=0.01,k_SOD
         out = '''-999	"Mylake parameters"			
     Parameter	Value	Min	Max	Unit
     dz	1.0	0.5	2	m
-    Kz_ak	0.007	NaN	NaN	(-)
-    Kz_ak_ice	0.003	NaN	NaN	(-)
+    Kz_ak	NaN	NaN	NaN	(-)
+    Kz_ak_ice	0.0009	NaN	NaN	(-)
     Kz_N0	7.00E-05	NaN	NaN	s-2
     C_shelter	NaN	NaN	NaN	(-)
     latitude	%.5f	NaN	NaN	dec.deg
     longitude	%.5f	NaN	NaN	dec.deg
-    alb_melt_ice	0.6	NaN	NaN	(-)
-    alb_melt_snow	0.9	NaN	NaN	(-)
+    alb_melt_ice	0.3	NaN	NaN	(-)
+    alb_melt_snow	0.55	NaN	NaN	(-)
     PAR_sat	3.00E-05	1.00E-05	1.00E-04	mol m-2 s-1
     f_par	0.89	NaN	NaN	(-)
     beta_chl	0.015	0.005	0.045	m2 mg-1
     lamgbda_I	5	NaN	NaN	m-1
     lambda_s	15	NaN	NaN	m-1
     sed_sld	0.36	NaN	NaN	(m3/m3)
-    I_scV 	1.339	NaN	NaN	(-)
-    I_scT	1.781	NaN	NaN	deg C
+    I_scV 	1	NaN	NaN	(-)
+    I_scT	0	NaN	NaN	deg C
     I_scC	1	NaN	NaN	(-)
     I_scS	1	1.1	1.9	(-)
     I_scTP	1	0.4	0.8	(-)
     I_scDOP	1	NaN	NaN	(-)
     I_scChl	1	NaN	NaN	(-)
     I_scDOC	%s	NaN	NaN	(-)
-    swa_b0	0.727	NaN	NaN	m-1
+    swa_b0	2.5	NaN	NaN	m-1
     swa_b1	%s	0.8	1.3	m-1
     S_res_epi	3.30E-07	7.30E-08	1.82E-06	m d-1 (dry mass)
     S_res_hypo	3.30E-08	NaN	NaN	m d-1 (dry mass)

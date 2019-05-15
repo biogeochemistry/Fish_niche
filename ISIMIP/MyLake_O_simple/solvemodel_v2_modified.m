@@ -89,7 +89,7 @@ disp(['Running MyLake-DOCOMO from ' datestr(datenum(M_start)) ' to ' datestr(dat
 
 % ===Switches===
 snow_compaction_switch=1;       %snow compaction: 0=no, 1=yes
-river_inflow_switch=1;          %river inflow: 0=no, 1=yes
+river_inflow_switch=0;          %river inflow: 0=no, 1=yes
 deposition_switch= 0;			%human impact, atm deposition , point source addition %% NEW_DOCOMO
 sediment_heatflux_switch=1;     %heatflux from sediments: 0=no, 1=yes
 selfshading_switch=1;           %light attenuation by chlorophyll a: 0=no, 1=yes
@@ -774,52 +774,52 @@ dfloc = 0.030/365 .* DOCz ./ 1000; % loss of DOC to POC
 	
 	
   
-     if(IceIndicator==0)
+    % if(IceIndicator==0)
         % BOD = 1.5*BOD7*ones(length(zz),1);
-         dO2_BOD = (32/12) .* DOCz .* k_BOD.*theta_b.^(Tz-20);
+    %     dO2_BOD = (32/12) .* DOCz .* k_BOD.*theta_b.^(Tz-20);
 %         dO2_BOD = k_BOD*theta_bod.^(Tz-20).*BOD;
-         dO2_SOD = k_SOD.*theta_s.^(Tz-20).*(-diff([Az; 0])./Vz);
-     else
+    %     dO2_SOD = k_SOD.*theta_s.^(Tz-20).*(-diff([Az; 0])./Vz);
+    % else
 %         BOD_ice = 1.5*BOD7_ice*ones(length(zz),1);
-         dO2_BOD = (32/12) .* DOCz .* k_BOD.*theta_b.^(Tz-20);
+    %     dO2_BOD = (32/12) .* DOCz .* k_BOD.*theta_b.^(Tz-20);
 %         dO2_BOD = k_BOD*theta_bod_ice.^(Tz-20).*BOD_ice;
-         dO2_SOD = k_SOD.*theta_s.^(Tz-20).*(-diff([Az; 0])./Vz);   
+    %     dO2_SOD = k_SOD.*theta_s.^(Tz-20).*(-diff([Az; 0])./Vz);   
 %     %    dO2_BOD = k_BOD.*0.25.*Tz.*BOD;
          %dO2_SOD = k_SOD.*0.25.*Tz.*(-diff([Az; 0])./Vz); 
-     end
+    % end
     
-    O2_old = O2z;
-    O2z = max(0, O2z + dO2_Chl - dO2_BOD - dO2_SOD);
-    O2_diff = O2z - O2_old;
-    O2_new = O2z;
+ %   O2_old = O2z;
+ %   O2z = max(0, O2z + dO2_Chl - dO2_BOD - dO2_SOD);
+ %   O2_diff = O2z - O2_old;
+ %   O2_new = O2z;
 
     %Oxygen surface flux
-    if(IceIndicator==0)
-        [O2z(1),O2flux,O2_eq,K0_O2] = oxygenflux(O2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz);
-    else
-        O2flux = 0;         
-    end
+   % if(IceIndicator==0)
+    %    [O2z(1),O2flux,O2_eq,K0_O2] = oxygenflux(O2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz);
+    %else
+    %    O2flux = 0;         
+    %end
             
     O2z = Fi \ O2z; %Solving new dissolved oxygen profile (diffusion)
-    DOCz = max(0, DOCz - (12/32) * dO2_BOD);
+%   DOCz = max(0, DOCz - (12/32) * dO2_BOD);
     DOCz = Fi \ DOCz;
    
     %Dissolved inorganic carbon
     %DIC partitioning in water
-    [CO2z,CO2frac] = carbonequilibrium(DICz,Tz,pH);
+    %[CO2z,CO2frac] = carbonequilibrium(DICz,Tz,pH);
     
 	% CO2 production by degraded DOC
-    CO2z = max(0,CO2z + 1.375.*(-O2_diff));
-    DICz = CO2z./CO2frac;
+    %CO2z = max(0,CO2z + 1.375.*(-O2_diff));
+    %DICz = CO2z./CO2frac;
     %TC = Tz(1); %For monitoring only
     
     %Carbon dioxide surface flux
-    if(IceIndicator==0)
-        [CO2z(1),surfflux,CO2_eq,K0,CO2_ppm] = carbondioxideflux(CO2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz,tt(i));
-        DICz(1) = CO2z(1)/CO2frac(1);
-    else
-        surfflux=0;
-    end
+    %if(IceIndicator==0)
+    %    [CO2z(1),surfflux,CO2_eq,K0,CO2_ppm] = carbondioxideflux(CO2z(1),C_shelter^(1/3)*Wt(i,6),Wt(i,5),Tz(1),dz,tt(i));
+    %    DICz(1) = CO2z(1)/CO2frac(1);
+    %else
+    %    surfflux=0;
+    %end
     
     DICz = Fi \ DICz; %Solving new DIC profile (diffusion)
     
@@ -1555,10 +1555,10 @@ dfloc = 0.030/365 .* DOCz ./ 1000; % loss of DOC to POC
     SiO2zt(:,i) = SiO2z;
     diatomzt(:,i) = diatomz;
        
-	O2diffzt(:,i) = O2_diff;
-    CO2zt(:,i) = CO2z;
-    O2_sat_relt(:,i) = O2_sat_rel;
-    O2_sat_abst(:,i) = O2_sat_abs;
+	%O2diffzt(:,i) = O2_diff;
+    %CO2zt(:,i) = CO2z;
+    %O2_sat_relt(:,i) = O2_sat_rel;
+    %O2_sat_abst(:,i) = O2_sat_abs;
     BODzt = 0; %for compatibility with the other code
     
 
@@ -1581,21 +1581,21 @@ dfloc = 0.030/365 .* DOCz ./ 1000; % loss of DOC to POC
     lambdazt(:,i) = lambdaz_wtot_avg;
 	Attn_zt(:, i) = Attn_z;
     
-    surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
-    CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
-    K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
-    CO2_ppmt(:,i) = CO2_ppm;
+    %surfaceflux(1,i) = surfflux; %Carbon dioxide surface flux
+    %CO2_eqt(1,i) = CO2_eq;       %Carbon dioxide equilibrium concentration
+    %K0t(:,i) = K0;               %Dissolved carbon doxide solubility coefficient
+    %CO2_ppmt(:,i) = CO2_ppm;
     
-    O2fluxt(1,i) = O2flux;       %Oxygen surface flux
-    O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
-    K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
+    %O2fluxt(1,i) = O2flux;       %Oxygen surface flux
+    %O2_eqt(1,i) = O2_eq;         %Oxygen equilibrium concentration
+    %K0_O2t(1,i) = K0_O2;         %Dissolved oxygen solubility coefficient
     dO2Chlt(:,i) = dO2_Chl;
-    dO2BODt(:,i) = - dO2_BOD;
+    %dO2BODt(:,i) = - dO2_BOD;
     dphotoDOCt(:,i) = dDOC;
-    dO2SODt(:,i) = dO2_SOD;
+    %dO2SODt(:,i) = dO2_SOD;
     
-    testi1t(:,i) = O2_old;
-    testi2t(:,i) = O2_diff; testi3t(:,i) = O2_new;
+    %testi1t(:,i) = O2_old;
+    %testi2t(:,i) = O2_diff; testi3t(:,i) = O2_new;
        
     %P3zt_sed(:,i,1) = Pdz_store; %diss. P conc. in sediment pore water (mg m-3)
     %P3zt_sed(:,i,2) = Psz_store; %P conc. in inorganic sediment particles (mg kg-1 dry w.)
