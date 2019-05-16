@@ -362,7 +362,7 @@ def get_latitude(lake_name, forcing_data_directory):
 
 
 
-def generate_data_files(hypsometry_path, temperature_path, lake_name, forcing_data_directory, longitude, latitude):
+def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_data_directory, longitude, latitude):
     """
     Creates all files needed for a run of mylake model with a single lake. The input function will generate ALL needed
     input files(one for each combination of scenario, model and variable)
@@ -428,5 +428,5 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
 if __name__ == "__main__":
 
-    #generate_data_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"))
+    #generate_input_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"))
     run_myLake("observations/NO_Lan", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")
