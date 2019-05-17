@@ -402,7 +402,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     with open("{}/{}_temperature.csv".format(observations_path, lakeName), "r") as obs:
         reader = list(csv.reader(obs))[1:]
         y1 = int(reader[0][2][:4])
-        y2 = int(reader[-1][2][:4])
+        y2 = int(reader[-1][2][:4]) + 1
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )

@@ -25,7 +25,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder):
         reader = list(csv.reader(obs_file))[1:]
 
 
-        with open ("{}\\observed_temp.csv".format(output_folder), "w", newline = '') as csvfile:
+        with open ("{}\\Observed_Temperatures.csv".format(output_folder), "w", newline = '') as csvfile:
 
             header = "Date, {}\n".format(depthLevels)
             csvfile.write(header.translate({ord(i): None for i in '[]'}))
@@ -68,6 +68,31 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder):
                 out.writerow(temp_list)
                 temp_list.clear()
 
+def make_comparison_file(output_folder):
+    with open("{}/T_comparison.csv".format(output_folder), "w") as file:
+        observation_layer1 = []
+        observation_layer2 = []
+        simulation_layer1 = []
+        simulation_layer2 = []
+        depth_levels = []
+
+        with open("{}/Observed_Temperatures.csv".format(output_folder), "r") as observation_file:
+            reader = csv.reader(observation_file)
+            for obs in reader:
+                if reader.index(obs) == 0:
+                    depth_levels.append(obs[2])
+                    depth_levels.append(obs[-2])
+                else:
+                    observation_layer1.append(obs[2])
+                    observation_layer2.append(obs[-2])
+
+        with open("{}/Tzt.csv".format(output_folder), "r") as simulation_file:
+            reader = csv.reader(simulation_file)
+            for sims in reader:
+                simulation_layer1.append(sims[1])
+                simulation_layer2.append(sims[-2])
+
+        
 
 if __name__ == "__main__":
     temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
