@@ -25,7 +25,7 @@ import time
 import os
 num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to choose the number of cores used.
 
-cordexfolder = 'G:cordex'  # needs to be changed depending where the meteorological files are.
+#cordexfolder = 'G:cordex'  # needs to be changed depending where the meteorological files are.
 outputfolder = '../output'
 timeformat = '%Y-%m-%d %H:%M:%S'
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
@@ -69,6 +69,7 @@ def loop_through_model_scenario(listofmodels, listofscenarios, lakelistfile, rep
     """
     nbrsuccess = 0
     nbrtested = 0
+    report = os.path.join(outputfolder, report)
     st = datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
     with open(lakelistfile, 'rU') as f:
         lines = f.readlines()
@@ -78,14 +79,22 @@ def loop_through_model_scenario(listofmodels, listofscenarios, lakelistfile, rep
         for scenario in listofscenarios:
             m0, m1 = models[model]
             s0, s1 = scenarios[scenario]
+            
             if report is not None:
-                report = os.path.join(outputfolder, report)
-                with open(report, 'w') as f:
-                    f.write('\n-------Start-------\n')
-                    f.close()
+                if not os.path.isfile(report): 
+                    with open(report, 'w') as f:
+                        f.write('\n-------Start-------\n%s\n'%(st))
+                        f.close()
+                else:
+                    if model ==1 and scenario == 1:
+                        with open(report, 'a') as f:
+                            f.write('\n-------Start-------\n%s\n'%(st))
+                            f.close()
                 try:
+                    
                     with open(report, 'a') as f:
-                        f.write('\nrunning _EUR-11_%s_%s_%s_%s-%s\n' % (m0, s0[0], m1, s0[1], s1[2]))
+                        times = datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
+                        f.write('\nrunning _EUR-11_%s_%s_%s_%s-%s\n%s\n' % (m0, s0[0], m1, s0[1], s1[2],times))
                         f.close()
                     nbrtested += nlines
                     runlakesGoran_par(model, scenario, lakelistfile)
@@ -191,4 +200,5 @@ if __name__ == '__main__':
     # runlakesGoran_par(csvf, modeli, scenarioi)
 
     # Line used to run regional scale simulation with all model-scenario combinations
-    loop_through_model_scenario ( [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report.txt' )
+    #loop_through_model_scenario ( [ 2], [ 2], r'2017SwedenList.csv', 'report.txt' )
+    loop_through_model_scenario ( [ 1,2,3,4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report.txt' )
