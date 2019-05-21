@@ -1,2 +1,2 @@
-lake_id,subid,name,ebhex,area,depth,longitude,latitude,volume,depth.mean,sedimentArea,Mean_calculated
+ ,subid,name,ebhex,area,depth,longitude,latitude,volume,depth.mean,sedimentArea,Mean_calculated
 14939,11507,Västra Skälsjön,0xd2d6cd,391746,18.9,15.552944,59.934751,2670000,3.33,12212351543,5.943268734
