@@ -68,8 +68,17 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder):
                 out.writerow(temp_list)
                 temp_list.clear()
 
-def get_dates_of_simulation():
-    pass
+def get_dates_of_simulation(start_year, stop_year):
+    date_list = []
+    for i in range(start_year, stop_year + 1):
+        if i % 400 == 0 or (i % 4 == 0 and i % 100 != 0):
+            for x in range(367):
+                date_list.append(int(str(i) + str(x)))
+        else:
+            for x in range(366):
+                date_list.append(int(str(i) + str(x)))
+
+    return date_list
 
 
 def make_comparison_file(output_folder):
@@ -82,6 +91,9 @@ def make_comparison_file(output_folder):
             reader = csv.reader(observation_file)
             depth_levels.append(reader[0][2])
             depth_levels.append(reader[0][-2])
+            start_year = reader[0][2][:4]
+            end_year = reader[-1][2][:4]
+            
             for obs in reader[1:]:
                 observation_dict[obs[0]] = [obs[2], obs[-2]]
 
