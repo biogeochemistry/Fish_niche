@@ -74,59 +74,133 @@ def get_dates_of_simulation(start_year, stop_year):
         if i % 400 == 0 or (i % 4 == 0 and i % 100 != 0):
             for x in range(1, 367):
                 date = 0
+                str_x = str(x)
+
                 if x <= 31:
-                    date = int(str(start_year) + "01" + str(x))
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "01" + str_x)
                 elif 31 < x <= 60:
-                    date = int(str(start_year) + "02" + str(x))
+                    str_x = str(int(str_x) - 31)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "02" + str_x)
                 elif 60 < x <= 91:
-                    date = int(str(start_year) + "03" + str(x))
+                    str_x = str(int(str_x) - 60)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "03" + str_x)
                 elif 91 < x <= 121:
-                    date = int(str(start_year) + "04" + str(x))
+                    str_x = str(int(str_x) - 91)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "04" + str_x)
                 elif 121 < x <= 152:
-                    date = int(str(start_year) + "05" + str(x))
+                    str_x = str(int(str_x) - 121)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "05" + str_x)
                 elif 152 < x <= 182:
-                    date = int(str(start_year) + "06" + str(x))
+                    str_x = str(int(str_x) - 152)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "06" + str_x)
                 elif 182 < x <= 213:
-                    date = int(str(start_year) + "07" + str(x))
+                    str_x = str(int(str_x) - 182)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "07" + str_x)
                 elif 213 < x <= 243:
-                    date = int(str(start_year) + "08" + str(x))
+                    str_x = str(int(str_x) - 213)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "08" + str_x)
                 elif 243 < x <= 274:
-                    date = int(str(start_year) + "09" + str(x))
+                    str_x = str(int(str_x) - 243)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "09" + str_x)
                 elif 274 < x <= 305:
-                    date = int(str(start_year) + "10" + str(x))
+                    str_x = str(int(str_x) - 274)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "10" + str_x)
                 elif 305 < x <= 335:
-                    date = int(str(start_year) + "11" + str(x))
+                    str_x = str(int(str_x) - 305)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "11" + str_x)
                 elif 335 < x <= 366:
-                    date = int(str(start_year) + "12" + str(x))
+                    str_x = str(int(str_x) - 335)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "12" + str_x)
 
                 date_list.append(date)
         else:
             for x in range(1, 366):
                 date = 0
+                str_x = str(x)
+
                 if x <= 31:
-                    date = int(str(start_year) + "01" + str(x))
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "01" + str_x)
                 elif 31 < x <= 59:
-                    date = int(str(start_year) + "02" + str(x))
+                    str_x = str(int(str_x) - 31)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "02" + str_x)
                 elif 59 < x <= 90:
-                    date = int(str(start_year) + "03" + str(x))
+                    str_x = str(int(str_x) - 59)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "03" + str_x)
                 elif 90 < x <= 120:
-                    date = int(str(start_year) + "04" + str(x))
+                    str_x = str(int(str_x) - 90)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "04" + str_x)
                 elif 120 < x <= 151:
-                    date = int(str(start_year) + "05" + str(x))
+                    str_x = str(int(str_x) - 120)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "05" + str_x)
                 elif 151 < x <= 181:
-                    date = int(str(start_year) + "06" + str(x))
+                    str_x = str(int(str_x) - 151)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "06" + str_x)
                 elif 181 < x <= 212:
-                    date = int(str(start_year) + "07" + str(x))
+                    str_x = str(int(str_x) - 181)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "07" + str_x)
                 elif 212 < x <= 242:
-                    date = int(str(start_year) + "08" + str(x))
+                    str_x = str(int(str_x) - 212)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "08" + str_x)
                 elif 242 < x <= 273:
-                    date = int(str(start_year) + "09" + str(x))
+                    str_x = str(int(str_x) - 242)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "09" + str_x)
                 elif 273 < x <= 304:
-                    date = int(str(start_year) + "10" + str(x))
+                    str_x = str(int(str_x) - 273)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "10" + str_x)
                 elif 304 < x <= 334:
-                    date = int(str(start_year) + "11" + str(x))
+                    str_x = str(int(str_x) - 304)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "11" + str_x)
                 elif 334 < x <= 365:
-                    date = int(str(start_year) + "12" + str(x))
+                    str_x = str(int(str_x) - 334)
+                    if len(str_x) == 1:
+                        str_x = "0" + str_x
+                    date = int(str(start_year) + "12" + str_x)
 
                 date_list.append(date)
 
@@ -134,33 +208,36 @@ def get_dates_of_simulation(start_year, stop_year):
 
 
 def make_comparison_file(output_folder):
-    with open("{}/T_comparison.csv".format(output_folder), "w") as file:
+    with open("{}/T_comparison.csv".format(output_folder), "w", newline="\n") as file:
         observation_dict = {}
         simulation_dict = {}
         depth_levels = []
 
-        with open("{}/Observed_Temperatures.csv".format(output_folder), "r") as observation_file:
-            reader = csv.reader(observation_file)
+        with open("{}/observed_temp.csv".format(output_folder), "r") as observation_file:
+            reader = list(csv.reader(observation_file))
             depth_levels.append(reader[0][2])
             depth_levels.append(reader[0][-2])
-            start_year = reader[0][2][:4]
-            end_year = reader[-1][2][:4]
+            start_year = int(reader[1][0][:4])
+            end_year = int(reader[-1][0][:4])
 
             for obs in reader[1:]:
-                observation_dict[obs[0]] = [obs[2], obs[-2]]
+                observation_dict[int(obs[0])] = [obs[2], obs[-2]]
 
         sims_dates = get_dates_of_simulation(start_year, end_year)
 
         with open("{}/Tzt.csv".format(output_folder), "r") as simulation_file:
-            reader = csv.reader(simulation_file)
-            for sim, date in reader, sims_dates:
-                simulation_dict[date] = [sim[1], sim[-2]]
+            reader = list(csv.reader(simulation_file))
+            for sim in reader:
+                simulation_dict[sims_dates[reader.index(sim)]] = [sim[1], sim[-2]]
 
-        csvFile = csv.reader(file)
-        csvFile.writerow("Date, Observations:,  {}, {}, Simulations:, {}, {}".format(depth_levels[0], depth_levels[1], depth_levels[0], depth_levels[1]))
+        csvFile = csv.writer(file)
+        csvFile.writerow(["Date", "Observations",  depth_levels[0], depth_levels[1], "Simulations", depth_levels[0], depth_levels[1]])
         for date in sims_dates:
-            csvFile.writerow("{},, {}, {},, {}, {}".format(date, observation_dict[date][0], observation_dict[date]))
+            if date in observation_dict.keys():
+                csvFile.writerow([date, '', observation_dict[date][0], observation_dict[date][1], '', simulation_dict[date][0], simulation_dict[date][1]])
 
+        print(observation_dict.keys())
 
 if __name__ == "__main__":
-    temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
+    #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
+    make_comparison_file("output/NO/Langtjern")
