@@ -69,6 +69,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder):
                 temp_list.clear()
 
 def get_dates_of_simulation(start_year, stop_year):
+
     date_list = []
     for i in range(start_year, stop_year + 1):
         if i % 400 == 0 or (i % 4 == 0 and i % 100 != 0):
@@ -236,7 +237,29 @@ def make_comparison_file(output_folder):
             if date in observation_dict.keys():
                 csvFile.writerow([date, '', observation_dict[date][0], observation_dict[date][1], '', simulation_dict[date][0], simulation_dict[date][1]])
 
-        print(observation_dict.keys())
+def performance_analysis(output_folder):
+    with open("{}/T_comparison.csv".format(output_folder), "r") as file:
+        reader = list(csv.reader(file))
+
+        date_list = []
+        obs_list_1 = []
+        obs_list_2 = []
+        sims_list_1 = []
+        sims_list_2 = []
+        depth_levels = [reader[0][2], reader[0][3]]
+
+    for item in reader[1:]:
+        date_list.append(item[0])
+        obs_list_1.append(item[2])
+        obs_list_2.append(item[3])
+        sims_list_1.append(item[5])
+        sims_list_2.append(item[6])
+
+    print("Analysis of {}.".format(output_folder))
+    print("Sums of squares : {}".format(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
+
+def sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+    pass
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
