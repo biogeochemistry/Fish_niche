@@ -1,5 +1,6 @@
 import csv
 import os
+from math import sqrt
 import numpy
 import datetime
 import netCDF4 as ncdf
@@ -255,12 +256,22 @@ def performance_analysis(output_folder):
         sims_list_1.append(item[5])
         sims_list_2.append(item[6])
 
-    print("Analysis of {}.".format(output_folder))
+    print("Analysis of {}.".format(output_folder[10:]))
     print("Sums of squares : {}".format(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
+    print("RMSE : {}".format(root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
 
 def sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
-    pass
+    sum = 0
+    for x in range(len(obs_list_1)):
+        sum += (float(obs_list_1[x]) - float(sims_list_1[x]))**2 + (float(obs_list_2[x]) - float(sims_list_2[x]))**2
+
+    return sum
+
+def root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+    lenght = len(obs_list_1) + len(obs_list_2) + len(sims_list_1) + len(sims_list_2)
+    return sqrt(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)/lenght)
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
-    make_comparison_file("output/NO/Langtjern")
+    #make_comparison_file("output/NO/Langtjern")
+    performance_analysis("output/NO/Langtjern")
