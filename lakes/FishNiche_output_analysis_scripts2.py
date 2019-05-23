@@ -1155,12 +1155,40 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
                     # maxbyday['%0_O22'] = 100-maxbyday['%0_O2']
                     # minbyday['%0_PAR2'] = 100 - minbyday['%0_PAR']
                     # maxbyday['%0_PAR2'] = 100 - maxbyday['%0_PAR']
-                    datahabitable = pd.concat([(abs(meanbyday['%0_O2']-meanbyday['%0_PAR'])+meanbyday['%0_PAR']),
-                                               (stdbyday['%0_O2']+stdbyday['%0_T']+stdbyday['%0_PAR']),
-                                               (medianbyday['%0_O2']+medianbyday['%0_T']+medianbyday['%0_PAR']), 
-                                               (minbyday['%0_O2']+minbyday['%0_T']+minbyday['%0_PAR']),
-                                               (maxbyday['%0_O2']+maxbyday['%0_T']+maxbyday['%0_PAR'])], 
-                axis=1, keys=['mean', 'std','median', 'min','max'])
+                    datahabitable = pd.DataFrame()
+                    datahabitable['%0_O2'] = meanbyday['%0_O2']
+                    meanbyday.loc[meanbyday['%0_O2']>meanbyday['%0_PAR'],'mean'] = meanbyday['%0_O2']+ meanbyday['%0_T']
+                    meanbyday.loc[meanbyday['%0_O2']<=meanbyday['%0_PAR'],'mean'] = meanbyday['%0_PAR']+ meanbyday['%0_T']
+                    datahabitable['mean']= meanbyday['mean']
+                    #datahabitable.loc[datahabitable['mean']>100,'mean'] = 100
+                    
+                    stdbyday.loc[stdbyday['%0_O2']>stdbyday['%0_PAR'],'std'] = stdbyday['%0_O2']+ stdbyday['%0_T']
+                    stdbyday.loc[stdbyday['%0_O2']<=stdbyday['%0_PAR'],'std'] = stdbyday['%0_PAR']+ stdbyday['%0_T']
+                    datahabitable['std']= stdbyday['std']
+                    #datahabitable.loc[datahabitable['std']>100,'mean'] = 100
+                    
+                    medianbyday.loc[medianbyday['%0_O2']>medianbyday['%0_PAR'],'median'] = medianbyday['%0_O2']+ medianbyday['%0_T']
+                    medianbyday.loc[medianbyday['%0_O2']<=medianbyday['%0_PAR'],'median'] = medianbyday['%0_PAR']+ medianbyday['%0_T']
+                    datahabitable['median']= medianbyday['median']
+                    #datahabitable.loc[datahabitable['median']>100,'mean'] = 100
+                    
+                    minbyday.loc[minbyday['%0_O2']>minbyday['%0_PAR'],'min'] = minbyday['%0_O2']+ minbyday['%0_T']
+                    minbyday.loc[minbyday['%0_O2']<=minbyday['%0_PAR'],'min'] = minbyday['%0_PAR']+ minbyday['%0_T']
+                    datahabitable['min']= minbyday['min']
+                    #datahabitable.loc[datahabitable['min']>100,'mean'] = 100
+                    
+                    
+                    datahabitable['max']= np.nan
+                    datahabitable['%0_O2']= maxbyday['%0_O2']
+                    datahabitable['%0_PAR']= maxbyday['%0_PAR']
+                    datahabitable['%0_T']= maxbyday['%0_T']
+                    datahabitable['max'] = datahabitable['%0_O2']+ datahabitable['%0_T']
+                    
+                    datahabitable.loc[datahabitable['%0_O2']<= datahabitable['%0_PAR'],'max'] = datahabitable['%0_PAR']+ datahabitable['%0_T']
+                    
+                    #datahabitable.loc[datahabitable['max']>100,'mean'] = 100
+                    
+                    
                     datahabitable.to_csv(path.join(datafolder, 'data_habitable_g%s_s%s_m%s.csv'%(group,scenario,model)),index=False)
 
                     stats.norm.ppf(q=0.025)
