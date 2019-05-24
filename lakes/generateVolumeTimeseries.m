@@ -9,7 +9,7 @@ path(path, '../output')
 path(path, 'G:\output-06-08-2018')
 
 warning('off', 'all') 
-y2B = y1B;
+y2B = y1B+4;
 startdate = [y1A, 1, 1];
 i=0;
 %datastart = datenum(startdate);
@@ -91,7 +91,7 @@ for lakenum = 1:nlakes
 				if T(time, depth) < 15
 					volume_T_below_15(time) = volume_T_below_15(time) + area_at_depth(depth);
 				end
-				if Iz_calculated(time,depth) >= 8
+				if Iz_calculated(time,depth) >= (8*0.0079)
 				volume_Iz_above_8(time) = volume_Iz_above_8(time) + area_at_depth(depth);
 				end
 				%if Attn(time, depth) >= 0.01 * surface_attn
@@ -122,7 +122,7 @@ for lakenum = 1:nlakes
 	
 end
 if i >= 1
-	exportVolumeTimeseries(sprintf('%s/fish_niche_export_%s.csv',outputdir,d4),timeseries_records,startdate)
+	exportVolumeTimeseries(sprintf('%s/fish_niche_export1_%s.csv',outputdir,d4),timeseries_records,startdate)
 	end
 end
 
