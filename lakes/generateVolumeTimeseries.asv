@@ -38,7 +38,7 @@ for lakenum = 1:nlakes
     d4 = sprintf('EUR-11_%s_%s-%s_%s_%d0101-%d1231', m1, exA, exB, m2, y1A, y2B);
     lakedir = strcat(outputdir2, d4, '\');
 	disp(lakedir)
-	try
+	%try
 		O2   = csvread(strcat(lakedir, 'O2zt.csv'));
 		T    = csvread(strcat(lakedir, 'Tzt.csv'));
 		lambdazt = csvread(strcat(lakedir, 'lambdazt.csv'));
@@ -73,7 +73,8 @@ for lakenum = 1:nlakes
 		volume_all_three     = zeros(tlen, 1);
 		total_volume = zeros(tlen,1);
         meanlambda = mean(lambdazt,2);
-        
+        meanlambda1 = mean(lambdazt,1);
+		
         for time = 1:tlen
 			avg_O2_above(time) = mean(O2(time, 1:maxgrad_depth(time)));
 			avg_O2_below(time) = mean(O2(time, (maxgrad_depth(time)+1):end));
@@ -83,7 +84,7 @@ for lakenum = 1:nlakes
 				
 			%surface_attn = Attn(time, 1);
 			for depth = 1:zlen
-				Iz_calculated(time,depth) = (Qst(time)*exp(-meanlambda(time)*depth))*(1-Ice(time));%Iz
+				Iz_calculated(time,depth) = (Qst(time)*exp(-meanlambda*depth))*(1-Ice(time));%Iz
 				total_volume(time)= total_volume(time)+area_at_depth(depth);
 				if O2(time, depth) > 3000 
 					volume_O2_above_3000(time) = volume_O2_above_3000(time) + area_at_depth(depth);
@@ -115,14 +116,14 @@ for lakenum = 1:nlakes
 		timeseries_records{1+lakenum, 11} = total_volume;
 		i = i + 1;
 	
-    catch
+    %catch
 		warning('O2zt contain NaN')
 		
-	end
+	%end
 	
 end
 if i >= 1
-	exportVolumeTimeseries(sprintf('%s/fish_niche_export_%s.csv',outputdir,d4),timeseries_records,startdate)
+	exportVolumeTimeseries(sprintf('%s/1fish_niche_export_%s.csv',outputdir,d4),timeseries_records,startdate)
 	end
 end
 
