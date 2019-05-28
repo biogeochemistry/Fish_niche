@@ -380,7 +380,7 @@ def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_d
 
 
 
-def run_myLake(observations_path, input_directory, region, lakeName, modelid, scenarioid, k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
+def run_myLake(observations_path, input_directory, region, lakeName, modelid, scenarioid):
     """
     Runs the MyLake simulation using the input, init and parameters files. Makes a single run for a combination of lake,
     model and scenario.

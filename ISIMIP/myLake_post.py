@@ -10,10 +10,10 @@ import netCDF4 as ncdf
 def temperatures_by_depth(observation_folder, lakeName, output_folder):
     """
     Creates a new csv file with the observed temperatures separated in columns by depths.
-    :param observation_folder:
-    :param lakeName:
-    :param output_folder:
-    :return:
+    :param observation_folder: String
+    :param lakeName: String
+    :param output_folder: String
+    :return: None
     """
     observation_path = os.path.join(observation_folder, lakeName)
 
@@ -70,7 +70,13 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder):
                 temp_list.clear()
 
 def get_dates_of_simulation(start_year, stop_year):
-
+    """
+    Finds the dates for each day of simulation. The dates are found by beginning at the first of january of the given
+    start year and adding a day until the 31st of december of the stop year, accounting for leap years.
+    :param start_year: An integer, the chosen year for the beginning of the simulation.
+    :param stop_year: An integer, the chosen year for the end of the simulation.
+    :return: A list of all the dates of simulation, in order from first to last. Dates are integers in the form YYYYMMDD.
+    """
     date_list = []
     for i in range(start_year, stop_year + 1):
         if i % 400 == 0 or (i % 4 == 0 and i % 100 != 0):
@@ -210,6 +216,13 @@ def get_dates_of_simulation(start_year, stop_year):
 
 
 def make_comparison_file(output_folder):
+    """
+    Search a given output folder for an observation file, containing mesured temperatures for a lake on a finite period,
+    and a simulated temperatures file. Then writes corresponding observed and simulated temperatures to a csv file,
+    where each column is a list of temperatures for a given depth.
+    :param output_folder: A string containing the folder to search and write to.
+    :return: None
+    """
     with open("{}/T_comparison.csv".format(output_folder), "w", newline="\n") as file:
         observation_dict = {}
         simulation_dict = {}
@@ -239,6 +252,11 @@ def make_comparison_file(output_folder):
                 csvFile.writerow([date, '', observation_dict[date][0], observation_dict[date][1], '', simulation_dict[date][0], simulation_dict[date][1]])
 
 def performance_analysis(output_folder):
+    """
+    Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
+    :param output_folder: A string, containing the folder containing the comparison file.
+    :return: None
+    """
     with open("{}/T_comparison.csv".format(output_folder), "r") as file:
         reader = list(csv.reader(file))
 
@@ -261,6 +279,14 @@ def performance_analysis(output_folder):
     print("RMSE : {}".format(root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
 
 def sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+    """
+    Finds the sums of squares for all temperatures listed in the comparison file.
+    :param obs_list_1: A list of observed temperatures.
+    :param obs_list_2: A list of observed temperatures.
+    :param sims_list_1: A list of simulated temperatures.
+    :param sims_list_2: A list of simulated temperatures.
+    :return: The result of the sums of square as a float.
+    """
     sum = 0
     for x in range(len(obs_list_1)):
         sum += (float(obs_list_1[x]) - float(sims_list_1[x]))**2 + (float(obs_list_2[x]) - float(sims_list_2[x]))**2
@@ -268,8 +294,19 @@ def sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
     return sum
 
 def root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+    """
+    Finds the root_mean_square for the temperatures listed in the comparison file.
+    :param obs_list_1: A list of observed temperatures.
+    :param obs_list_2: A list of observed temperatures.
+    :param sims_list_1: A list of simulated temperatures.
+    :param sims_list_2: A list of simulated temperatures.
+    :return: The result of the root mean square as a float.
+    """
     lenght = len(obs_list_1) + len(obs_list_2) + len(sims_list_1) + len(sims_list_2)
     return sqrt(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)/lenght)
+
+def r_squared(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+    pass
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
