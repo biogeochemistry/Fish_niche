@@ -1,9 +1,12 @@
 import csv
 import os
 from math import sqrt
+import sys
 import numpy
 import datetime
 import netCDF4 as ncdf
+from sklearn import linear_model
+import run_myLake_ISIMIP
 
 "Post-processing script for myLake simulations. For ISIMIP."
 
@@ -277,6 +280,7 @@ def performance_analysis(output_folder):
     print("Analysis of {}.".format(output_folder[10:]))
     print("Sums of squares : {}".format(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
     print("RMSE : {}".format(root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
+    print("R squared : {}".format(r_squared(date_list, obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
 
 def sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
     """
@@ -305,8 +309,79 @@ def root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
     lenght = len(obs_list_1) + len(obs_list_2) + len(sims_list_1) + len(sims_list_2)
     return sqrt(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)/lenght)
 
-def r_squared(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
-    pass
+def r_squared(dates, obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+    """
+    Find the R squared for the simulations compared to the expected observations
+    :param dates: the list of dates
+    :param obs_list_1: A list of observed temperatures.
+    :param obs_list_2: A list of observed temperatures.
+    :param sims_list_1: A list of simulated temperatures.
+    :param sims_list_2: A list of simulated temperatures.
+    :return: r squared, as a float
+    """
+    linear = linear_model.LinearRegression()
+
+    obs = obs_list_1
+    sims = sims_list_1
+
+    for i in range(len(obs_list_2)):
+        obs.append(obs_list_2[i])
+        sims.append(sims_list_2[i])
+
+    x = []
+    y = []
+    date_index = 0
+
+    for i in obs:
+        if date_index == 0:
+            x.append([float(dates[obs.index(i)]), float(i)])
+            if obs.index(i) == dates.index(dates[-1]): date_index = 1
+        else:
+            x.append([float(dates[obs.index(i) - len(obs)//2]), float(i)])
+
+    date_index = 0
+
+    for i in sims:
+        if date_index == 0:
+            y.append([float(dates[sims.index(i)]), float(i)])
+            if sims.index(i) == dates.index(dates[-1]): date_index = 1
+        else:
+            y.append([float(dates[sims.index(i) - len(sims)//2]), float(i)])
+
+    linear.fit(x, y)
+
+    return linear.score(x, y)
+
+
+def optimise_lake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
+    """
+    This function launches simulations with a number of predefined parameters, calls post-processing functions for each
+    run, and records the results in a log file for visualisation and further optimisation.
+    :param lake_name:
+    :param forcing_data_directory:
+    :param outdir:
+    :return:
+    """
+    orig_stdout = sys.stdout
+
+    with open("{}/optimisation_log.txt".format(outdir), "w") as log:
+        sys.stdout = log
+
+        for x in range(y): #find lenght of range
+            run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                        run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                        lake_name,outdir, param[x])
+
+            run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
+
+            temperatures_by_depth(observation_path, lake_name, outdir)
+
+            make_comparison_file(outdir)
+
+            performance_analysis(outdir)
+
+    sys.stdout = orig_stdout
+
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
