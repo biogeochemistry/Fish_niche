@@ -11,13 +11,24 @@
     <option name="HIGHLIGHT_NON_ACTIVE_CHANGELIST" value="false" />
     <option name="LAST_RESOLUTION" value="IGNORE" />
   </component>
+  <component name="FUSProjectUsageTrigger">
+    <session id="-242101437">
+      <usages-collector id="statistics.lifecycle.project">
+        <counts>
+          <entry key="project.closed" value="1" />
+          <entry key="project.open.time.6" value="1" />
+          <entry key="project.opened" value="1" />
+        </counts>
+      </usages-collector>
+    </session>
+  </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/run_parallel_mylake.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="323">
-              <caret line="172" column="74" lean-forward="true" selection-start-line="172" selection-start-column="74" selection-end-line="172" selection-end-column="74" />
+            <state relative-caret-position="476">
+              <caret line="181" column="74" selection-start-line="181" selection-start-column="74" selection-end-line="181" selection-end-column="74" />
               <folding>
                 <element signature="e#563#585#0" expanded="true" />
               </folding>
@@ -37,17 +48,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="212">
-              <caret line="1476" column="9" selection-start-line="1476" selection-start-column="9" selection-end-line="1476" selection-end-column="9" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://E:/Fish_niche/lakes/FishNiche_output_analysis_scripts2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25211">
-              <caret line="1505" selection-start-line="1505" selection-end-line="3297" />
+            <state relative-caret-position="25721">
+              <caret line="1513" column="9" selection-start-line="1513" selection-start-column="9" selection-end-line="1513" selection-end-column="9" />
             </state>
           </provider>
         </entry>
@@ -156,9 +158,9 @@
     </option>
   </component>
   <component name="ProjectFrameBounds">
-    <option name="x" value="-9" />
-    <option name="width" value="1333" />
-    <option name="height" value="1047" />
+    <option name="x" value="-10" />
+    <option name="width" value="1334" />
+    <option name="height" value="1048" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -185,6 +187,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -196,7 +199,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -441,9 +443,9 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-9" y="0" width="1333" height="1047" extended-state="0" />
+    <frame x="-8" y="0" width="1067" height="838" extended-state="0" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.035521235" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.0351377" />
       <window_info id="Favorites" order="1" side_tool="true" />
       <window_info id="Structure" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
@@ -455,7 +457,7 @@
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32837528" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49678457" weight="0.32816228" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.14440155" side_tool="true" visible="true" weight="0.2866521" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.14440155" side_tool="true" visible="true" weight="0.2857143" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49785176" weight="0.32918552" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -483,6 +485,9 @@
       <window_info anchor="right" id="Data View" order="3" visible="true" weight="0.0088417325" />
     </layout-to-restore>
   </component>
+  <component name="VcsContentAnnotationSettings">
+    <option name="myLimit" value="2678400000" />
+  </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="test_commit_by_pycharm" />
     <MESSAGE value="modification to command line" />
@@ -505,7 +510,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>344</line>
+          <line>346</line>
           <option name="timeStamp" value="200" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -545,32 +550,32 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>2832</line>
+          <line>2981</line>
           <option name="timeStamp" value="407" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1740</line>
+          <line>1889</line>
           <option name="timeStamp" value="496" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>868</line>
+          <line>870</line>
           <option name="timeStamp" value="570" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1236</line>
+          <line>1273</line>
           <option name="timeStamp" value="656" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1564</line>
+          <line>1708</line>
           <option name="timeStamp" value="660" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1313</line>
+          <line>1350</line>
           <option name="timeStamp" value="662" />
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
@@ -580,7 +585,7 @@
         </line-breakpoint>
         <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
           <url>file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py</url>
-          <line>1481</line>
+          <line>1518</line>
           <option name="timeStamp" value="693" />
         </line-breakpoint>
       </breakpoints>
@@ -655,6 +660,17 @@
     <entry file="file://$PROJECT_DIR$/a_faire_rouler_rmse.py" />
     <entry file="file://$PROJECT_DIR$/a_faire_rouler.py" />
     <entry file="file://D:/Fish_niche1/MDN_FishNiche_2017/lakes/FishNiche_output_analysis_scripts2.py" />
+    <entry file="file://E:/Fish_niche/lakes/FishNiche_output_analysis_scripts2.py" />
+    <entry file="file://$PROJECT_DIR$/run_parallel_mylake.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="476">
+          <caret line="181" column="74" selection-start-line="181" selection-start-column="74" selection-end-line="181" selection-end-column="74" />
+          <folding>
+            <element signature="e#563#585#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/run_mylakeGoran.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="6987">
@@ -662,27 +678,10 @@
         </state>
       </provider>
     </entry>
-    <entry file="file://E:/Fish_niche/lakes/FishNiche_output_analysis_scripts2.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25211">
-          <caret line="1505" selection-start-line="1505" selection-end-line="3297" />
-        </state>
-      </provider>
-    </entry>
     <entry file="file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="212">
-          <caret line="1476" column="9" selection-start-line="1476" selection-start-column="9" selection-end-line="1476" selection-end-column="9" />
-        </state>
-      </provider>
-    </entry>
-    <entry file="file://$PROJECT_DIR$/run_parallel_mylake.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="323">
-          <caret line="172" column="74" lean-forward="true" selection-start-line="172" selection-start-column="74" selection-end-line="172" selection-end-column="74" />
-          <folding>
-            <element signature="e#563#585#0" expanded="true" />
-          </folding>
+        <state relative-caret-position="25721">
+          <caret line="1513" column="9" selection-start-line="1513" selection-start-column="9" selection-end-line="1513" selection-end-column="9" />
         </state>
       </provider>
     </entry>
