@@ -3164,8 +3164,8 @@ def FishNiche_secchi_graph(scenarioid, modelid, lakelistfile, calivari, k_BOD):
     # lakeswehavedatafor = [6950, 67035, 31895, 310, 32276, 99045]
 
     for lakenum in np.arange(1, nlakes):
-        lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
-            = lakes[lakenum].strip().split(',')
+        lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment = lakes[lakenum].strip().split(',')
+        
         if int(lake_id)in lakeswehavedatafor:
 
             # getOutputPathFromEbHex
@@ -3208,7 +3208,7 @@ def FishNiche_secchi_graph(scenarioid, modelid, lakelistfile, calivari, k_BOD):
                         secchi_data = secchiraw[ii]
                         secchi_calculated = []
                         for i in [1.4, 1.5, 1.6, 1.7]:
-                            secchi_calculated.append((i /(np.mean(lambdamodel.loc[dateindex, 0:4]))))
+                            secchi_calculated.append((i /(np.mean(lambdamodel.loc[dateindex, :]))))
                         secchi_model = secchi_calculated
 
                         if not isnan(secchi_data):
@@ -3641,7 +3641,7 @@ if __name__ == '__main__':
     # FishNiche_graph_temp_time(2, 4, r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\test.csv')
     # plt.show()
     #FishNiche_plot_volume_param('His',r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
-    generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],r'D:\Fish_niche\lakes\2017SwedenList.csv',datafolder)
+    #generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],r'D:\Fish_niche\lakes\2017SwedenList.csv',datafolder)
     #FishNiche_plot_volume(r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     # 
     #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'D:\Fish_niche\lakes\2017SwedenList.csv', datafolder)
@@ -3651,4 +3651,4 @@ if __name__ == '__main__':
     #     2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     # 
     #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'C:\Users\Administrateur\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', datafolder)
-
+    FishNiche_secchi_graph(2, 2, r'C:\Users\Administrateur\Documents\GitHub\Fish_niche\lakes\2017SwedenList_only_validation_12lakes.csv', 100, 10)
