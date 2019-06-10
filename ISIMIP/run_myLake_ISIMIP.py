@@ -247,7 +247,7 @@ def missing_temp(temp_list, depth_levels):
 
     return temp_list
 
-def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=1,k_BOD=0.01,k_SOD=100,I_scDOC=1):
+def mylakepar(longitude, latitude, lake_name, outdir, c_shelter = "NaN", alb_melt_ice = 0.3, alb_melt_snow = 0.55, i_scv = 1, i_sct = 0, swa_b0 = 2.5, swa_b1=1,k_BOD=0.01,k_SOD=100,I_scDOC=1):
     """
     Creates MyLake parameter file. If the file LAE_para_all1.txt is present, it will be used to prepare the parameters.
     Otherwise, the string in this function while be used.
@@ -256,13 +256,23 @@ def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=1,k_BOD=0.01,k_SOD=1
     :param latitude: Type int. Latitude coordinate of Mylake in degrees
     :param outpath: Type str. Filename where a file of Mylake parameters will be written. In a typical run, this is the
     return value of mylakeinit function
+    :param lake_name: Type str. Name of the Lake.
+    :param outdir: Type str. Output folder.
+    :param c_shelter: Type str. Wind correction, a fraction between 0 and 1.
+    :param alb_melt_ice: Type float. Albedo ice, a fraction between 0 and 1.
+    :param alb_melt_snow: Type float. Albedo snow, a fraction between 0 and 1.
+    :param i_scv: Type float. Scaler volume inflow, multiplicative.
+    :param i_sct: Type float. Scaler temperature inflow, additive.
+    :param swa_b0: Type float. Water colour, 200-800 nm.
+    :param  swa_b1: Type float. Water colour.
+
     :return: None
     """
 
     if (os.path.isfile ( "LAE_para_all1.txt" )): #this file allows change of the four coefficients, if nothing is given, will uses initial values
         print('using file')
         with open ( "LAE_para_all1.txt", "r" ) as infile:
-            out = infile.read () % (latitude, longitude, I_scDOC, swa_b1, k_BOD, k_SOD)
+            out = infile.read () % (latitude, longitude, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, I_scDOC, swa_b0, swa_b1, k_BOD, k_SOD)
 
     else:
         out = '''-999	"Mylake parameters"			
@@ -271,27 +281,27 @@ def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=1,k_BOD=0.01,k_SOD=1
     Kz_ak	NaN	NaN	NaN	(-)
     Kz_ak_ice	0.0009	NaN	NaN	(-)
     Kz_N0	7.00E-05	NaN	NaN	s-2
-    C_shelter	NaN	NaN	NaN	(-)
+    C_shelter	%s	NaN	NaN	(-)
     latitude	%.5f	NaN	NaN	dec.deg
     longitude	%.5f	NaN	NaN	dec.deg
-    alb_melt_ice	0.3	NaN	NaN	(-)
-    alb_melt_snow	0.55	NaN	NaN	(-)
+    alb_melt_ice	%f	NaN	NaN	(-)
+    alb_melt_snow	%f	NaN	NaN	(-)
     PAR_sat	3.00E-05	1.00E-05	1.00E-04	mol m-2 s-1
     f_par	0.89	NaN	NaN	(-)
     beta_chl	0.015	0.005	0.045	m2 mg-1
     lamgbda_I	5	NaN	NaN	m-1
     lambda_s	15	NaN	NaN	m-1
     sed_sld	0.36	NaN	NaN	(m3/m3)
-    I_scV 	1	NaN	NaN	(-)
-    I_scT	0	NaN	NaN	deg C
+    I_scV 	%f	NaN	NaN	(-)
+    I_scT	%f	NaN	NaN	deg C
     I_scC	1	NaN	NaN	(-)
     I_scS	1	1.1	1.9	(-)
     I_scTP	1	0.4	0.8	(-)
     I_scDOP	1	NaN	NaN	(-)
     I_scChl	1	NaN	NaN	(-)
     I_scDOC	%s	NaN	NaN	(-)
-    swa_b0	2.5	NaN	NaN	m-1
-    swa_b1	%s	0.8	1.3	m-1
+    swa_b0	%f	NaN	NaN	m-1
+    swa_b1	%f	0.8	1.3	m-1
     S_res_epi	3.30E-07	7.30E-08	1.82E-06	m d-1 (dry mass)
     S_res_hypo	3.30E-08	NaN	NaN	m d-1 (dry mass)
     H_sed	0.03	NaN	NaN	m
@@ -327,7 +337,7 @@ def mylakepar(longitude, latitude, lake_name, outdir,swa_b1=1,k_BOD=0.01,k_SOD=1
     density_org_H_nc	1.95	NaN NaN 58
     density_inorg_H_nc	2.65	NaN NaN 59
     I_scO	1	NaN NaN (-)
-    ''' % (latitude, longitude, I_scDOC, swa_b1, k_BOD, k_SOD)
+    ''' % (c_shelter, latitude, longitude, alb_melt_ice, alb_melt_snow, i_scv, i_sct, I_scDOC, swa_b0, swa_b1, k_BOD, k_SOD)
 
     outpath = outdir + "\{}_par".format(lake_name[:3])
 
@@ -406,23 +416,25 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
-
+    """
     if os.path.exists ( os.path.join ( outfolder, 'RunComplete' ) ):
         print ( 'lake {} is already completed'.format(lakeName) )
         ret = 0
-    else:
-        cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
-        print ( cmd )
-        os.system ( cmd )
+    """
 
-        expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'lambdazt.csv']
-        flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
 
-        if all(flags):
-            with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
-                f.write(datetime.datetime.now().isoformat())
-            ret = 0
-        ret = 0 if all(flags) else 100
+    cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
+    print ( cmd )
+    os.system ( cmd )
+
+    expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'lambdazt.csv']
+    flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
+
+    if all(flags):
+        with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
+            f.write(datetime.datetime.now().isoformat())
+        ret = 0
+    ret = 0 if all(flags) else 100
     return ret
 
 

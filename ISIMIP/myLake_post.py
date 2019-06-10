@@ -5,10 +5,20 @@ import sys
 import numpy
 import datetime
 import netCDF4 as ncdf
+import datetime
 from sklearn import linear_model
 import run_myLake_ISIMIP
 
 "Post-processing script for myLake simulations. For ISIMIP."
+
+test_cases = 10
+parameters = {"Swa_b0" : [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
+              "Swa_b1" : [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
+              "C_shelter" : [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+              "I_ScV" : [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8],
+              "I_ScT" : [0, 0.2, 0.4, 0.6, 0.8, 1, 1.2, 1.4, 1.6, 1.8],
+              "Alb_melt_ice" : [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
+              "Alb_melt_snow" : [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]}
 
 def temperatures_by_depth(observation_folder, lakeName, output_folder):
     """
@@ -231,7 +241,7 @@ def make_comparison_file(output_folder):
         simulation_dict = {}
         depth_levels = []
 
-        with open("{}/observed_temp.csv".format(output_folder), "r") as observation_file:
+        with open("{}/Observed_Temperatures.csv".format(output_folder), "r") as observation_file:
             reader = list(csv.reader(observation_file))
             depth_levels.append(reader[0][2])
             depth_levels.append(reader[0][-2])
@@ -317,7 +327,7 @@ def r_squared(dates, obs_list_1, obs_list_2, sims_list_1, sims_list_2):
     :param obs_list_2: A list of observed temperatures.
     :param sims_list_1: A list of simulated temperatures.
     :param sims_list_2: A list of simulated temperatures.
-    :return: r squared, as a float
+    :return: results of R squared, as a float
     """
     linear = linear_model.LinearRegression()
 
@@ -362,28 +372,253 @@ def optimise_lake(lake_name, observation_path, input_directory, region, forcing_
     :param outdir:
     :return:
     """
+
     orig_stdout = sys.stdout
 
     with open("{}/optimisation_log.txt".format(outdir), "w") as log:
         sys.stdout = log
 
-        for x in range(y): #find lenght of range
-            run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
-                                        run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
-                                        lake_name,outdir, param[x])
+        print("Optimisation log for {}.\n\n".format(lake_name))
 
-            run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
+        for x in range(len(parameters)):
+            for y in range(test_cases):
+                print("Run # {}_{} at {}, using the following parameters:".format(x, y, datetime.datetime.now()))
+                if x is 0:
+                    print("C_shelter: {}\tAlb_melt_ice: {}\tAlb_melt_snow: {}\tI_ScV: {}\tI_ScT: {}\tSwa_b0: {}\tSwa_b1: {}".format(
+                        parameters["C_shelter"][y],
+                        parameters["Alb_melt_ice"][x],
+                        parameters["Alb_melt_snow"][x],
+                        parameters["I_ScV"][x],
+                        parameters["I_ScT"][x],
+                        parameters["Swa_b0"][x],
+                        parameters["Swa_b1"][x]))
 
-            temperatures_by_depth(observation_path, lake_name, outdir)
+                    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                                lake_name,input_directory,
+                                                parameters["C_shelter"][y],
+                                                parameters["Alb_melt_ice"][x],
+                                                parameters["Alb_melt_snow"][x],
+                                                parameters["I_ScV"][x],
+                                                parameters["I_ScT"][x],
+                                                parameters["Swa_b0"][x],
+                                                parameters["Swa_b1"][x]
+                                                )
 
-            make_comparison_file(outdir)
+                elif x is 1:
+                    print("C_shelter: {}\tAlb_melt_ice: {}\tAlb_melt_snow: {}\tI_ScV: {}\tI_ScT: {}\tSwa_b0: {}\tSwa_b1: {}".format(
+                        parameters["C_shelter"][x],
+                        parameters["Alb_melt_ice"][y],
+                        parameters["Alb_melt_snow"][x],
+                        parameters["I_ScV"][x],
+                        parameters["I_ScT"][x],
+                        parameters["Swa_b0"][x],
+                        parameters["Swa_b1"][x]))
 
-            performance_analysis(outdir)
+                    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                                lake_name, input_directory,
+                                                parameters["C_shelter"][x],
+                                                parameters["Alb_melt_ice"][y],
+                                                parameters["Alb_melt_snow"][x],
+                                                parameters["I_ScV"][x],
+                                                parameters["I_ScT"][x],
+                                                parameters["Swa_b0"][x],
+                                                parameters["Swa_b1"][x]
+                                                )
+                elif x is 2:
+                    print("C_shelter: {}\tAlb_melt_ice: {}\tAlb_melt_snow: {}\tI_ScV: {}\tI_ScT: {}\tSwa_b0: {}\tSwa_b1: {}".format(
+                        parameters["C_shelter"][x],
+                        parameters["Alb_melt_ice"][x],
+                        parameters["Alb_melt_snow"][y],
+                        parameters["I_ScV"][x],
+                        parameters["I_ScT"][x],
+                        parameters["Swa_b0"][x],
+                        parameters["Swa_b1"][x]))
+
+                    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                                lake_name, input_directory,
+                                                parameters["C_shelter"][x],
+                                                parameters["Alb_melt_ice"][x],
+                                                parameters["Alb_melt_snow"][y],
+                                                parameters["I_ScV"][x],
+                                                parameters["I_ScT"][x],
+                                                parameters["Swa_b0"][x],
+                                                parameters["Swa_b1"][x]
+                                                )
+                elif x is 3:
+                    print("C_shelter: {}\tAlb_melt_ice: {}\tAlb_melt_snow: {}\tI_ScV: {}\tI_ScT: {}\tSwa_b0: {}\tSwa_b1: {}".format(
+                        parameters["C_shelter"][x],
+                        parameters["Alb_melt_ice"][x],
+                        parameters["Alb_melt_snow"][x],
+                        parameters["I_ScV"][y],
+                        parameters["I_ScT"][x],
+                        parameters["Swa_b0"][x],
+                        parameters["Swa_b1"][x]))
+
+                    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                                lake_name, input_directory,
+                                                parameters["C_shelter"][x],
+                                                parameters["Alb_melt_ice"][x],
+                                                parameters["Alb_melt_snow"][x],
+                                                parameters["I_ScV"][y],
+                                                parameters["I_ScT"][x],
+                                                parameters["Swa_b0"][x],
+                                                parameters["Swa_b1"][x]
+                                                )
+                elif x is 4:
+                    print("C_shelter: {}\tAlb_melt_ice: {}\tAlb_melt_snow: {}\tI_ScV: {}\tI_ScT: {}\tSwa_b0: {}\tSwa_b1: {}".format(
+                        parameters["C_shelter"][x],
+                        parameters["Alb_melt_ice"][x],
+                        parameters["Alb_melt_snow"][x],
+                        parameters["I_ScV"][x],
+                        parameters["I_ScT"][y],
+                        parameters["Swa_b0"][x],
+                        parameters["Swa_b1"][x]))
+
+                    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                                lake_name, input_directory,
+                                                parameters["C_shelter"][x],
+                                                parameters["Alb_melt_ice"][x],
+                                                parameters["Alb_melt_snow"][x],
+                                                parameters["I_ScV"][x],
+                                                parameters["I_ScT"][y],
+                                                parameters["Swa_b0"][x],
+                                                parameters["Swa_b1"][x]
+                                                )
+                elif x is 5:
+                    print("C_shelter: {}\tAlb_melt_ice: {}\tAlb_melt_snow: {}\tI_ScV: {}\tI_ScT: {}\tSwa_b0: {}\tSwa_b1: {}".format(
+                            parameters["C_shelter"][x],
+                            parameters["Alb_melt_ice"][x],
+                            parameters["Alb_melt_snow"][x],
+                            parameters["I_ScV"][x],
+                            parameters["I_ScT"][x],
+                            parameters["Swa_b0"][y],
+                            parameters["Swa_b1"][x]))
+
+                    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                                lake_name, input_directory,
+                                                parameters["C_shelter"][x],
+                                                parameters["Alb_melt_ice"][x],
+                                                parameters["Alb_melt_snow"][x],
+                                                parameters["I_ScV"][x],
+                                                parameters["I_ScT"][x],
+                                                parameters["Swa_b0"][y],
+                                                parameters["Swa_b1"][x]
+                                                )
+                elif x is 6:
+                    print("C_shelter: {}\tAlb_melt_ice: {}\tAlb_melt_snow: {}\tI_ScV: {}\tI_ScT: {}\tSwa_b0: {}\tSwa_b1: {}".format(
+                        parameters["C_shelter"][x],
+                        parameters["Alb_melt_ice"][x],
+                        parameters["Alb_melt_snow"][x],
+                        parameters["I_ScV"][x],
+                        parameters["I_ScT"][x],
+                        parameters["Swa_b0"][x],
+                        parameters["Swa_b1"][y]))
+
+                    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                                lake_name, input_directory,
+                                                parameters["C_shelter"][x],
+                                                parameters["Alb_melt_ice"][x],
+                                                parameters["Alb_melt_snow"][x],
+                                                parameters["I_ScV"][x],
+                                                parameters["I_ScT"][x],
+                                                parameters["Swa_b0"][x],
+                                                parameters["Swa_b1"][y]
+                                                )
+
+                try:
+
+                    run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
+
+                    temperatures_by_depth(observation_path, lake_name, outdir)
+
+                    make_comparison_file(outdir)
+
+                    performance_analysis(outdir)
+
+                    print("\nEnd of case.\n\n")
+
+                except KeyError:
+                    print("\nCould not run MyLake simulation with these parameters.\nEnd of case.\n\n")
+                except IndexError:
+                    print("\nError in optimisation function.\nEnd of case.\n\n")
+
+
 
     sys.stdout = orig_stdout
+
+    find_best_parameters("{}/optimisation_log.txt".format(outdir))
+
+
+def make_optimisation_dictionnary(log_file):
+    comparison_dict = {}
+    with open(log_file, "r") as log:
+        file_content = log.readlines()
+
+        opt_list = []
+        param = ""
+        for line in file_content:
+            if "C_shelter" in line:
+                param = line
+
+            elif "Sums of squares" in line:
+                opt_list.append(float(line[18:]))
+
+            elif "RMSE" in line:
+                opt_list.append(float(line[7:]))
+
+            elif "R squared" in line:
+                opt_list.append(float(line[12:]))
+
+            if param != "" and len(opt_list) == 3:
+                comparison_dict[param] = opt_list
+                param = ""
+                opt_list = []
+
+            elif "End of case" in line:
+                param = ""
+                opt_list = []
+
+
+    return comparison_dict
+
+def find_best_parameters(log_file):
+    comparison_dict = make_optimisation_dictionnary(log_file)
+    list_score = []
+    best_SoS = ("", 1000000)
+    best_RMSE = ("", 50)
+    best_r_squared = ("", 0)
+    best_score = ("", 99999999)
+
+    for param in comparison_dict:
+        if comparison_dict[param][0] < best_SoS[1]:
+            best_SoS = (param, comparison_dict[param][0])
+        if comparison_dict[param][1] < best_RMSE[1]:
+            best_RMSE = (param, comparison_dict[param][1])
+        if comparison_dict[param][2] > best_r_squared[1]:
+            best_r_squared = (param, comparison_dict[param][2])
+
+        score = comparison_dict[param][0]/100 + comparison_dict[param][1]*100 + (1 - comparison_dict[param][2]) * 1000
+        list_score.append((param, score))
+
+        if score < best_score[1]:
+            best_score = (param, score)
+
+    print("Best sums of squares: {}".format(best_SoS))
+    print("Best RMSE: {}".format(best_RMSE))
+    print("Best r squared: {}".format(best_r_squared))
+    print("Best overall score: {}".format(best_score))
 
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
     #make_comparison_file("output/NO/Langtjern")
-    performance_analysis("output/NO/Langtjern")
+    #performance_analysis("output/NO/Langtjern")
+    #optimise_lake("Langtjern", "observations/NO_Lan", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
+    find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
