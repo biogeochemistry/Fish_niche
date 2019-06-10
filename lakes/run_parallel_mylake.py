@@ -159,12 +159,12 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         scenarioid: scenario id (one of the keys of the dictionary "scenarios")
     """
 
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated \
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment \
         = lines[i].strip().split(',')
-
+    mean_calculated = mean_depth
     print('running lake %s' % ebh)
     if mean_depth != '' and (float(depth) - float(mean_depth)) > 0:
-        swa_b1 = math.exp(-0.95670 * float(mean_depth) + 1.36359)
+        swa_b1 = math.exp(-0.95670 * math.log(float(mean_depth)) + 1.36359)
         # swa_b1 = OLD EQUATION: 3.6478*float(depthmean)**-0.945
         #                        0.796405*math.exp(-0.016045*float(depth))
         #                       -0.3284*math.log(float(depth)) + 1.6134
@@ -175,7 +175,7 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         # k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304
         #                     0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
     else:
-        swa_b1 = math.exp(-0.95670 * float(mean_calculated) + 1.36359)
+        swa_b1 = math.exp(-0.95670 * math.log(float(mean_depth)) + 1.36359)
         k_BOD = math.exp(-0.25290 * float(mean_calculated) - 1.36966)
 
     print('BOD %s' % k_BOD)
@@ -200,5 +200,5 @@ if __name__ == '__main__':
     # runlakesGoran_par(csvf, modeli, scenarioi)
 
     # Line used to run regional scale simulation with all model-scenario combinations
-    #loop_through_model_scenario ( [ 2], [ 2], r'2017SwedenList.csv', 'report.txt' )
-    loop_through_model_scenario ( [ 1,2,3,4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report.txt' )
+    loop_through_model_scenario ( [ 2], [ 2], r'2017SwedenList_only_validation_12lakes.csv', 'report_12.txt' )
+    #loop_through_model_scenario ( [1,2,3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report_end.txt' )
