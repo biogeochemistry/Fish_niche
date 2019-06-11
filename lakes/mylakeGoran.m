@@ -39,7 +39,7 @@ try
     global sed_par_file;
     sed_par_file = 'sediment_parameters.txt';
 
-    [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,PARzt,Attn_zt,P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,oxygenflux,CO2_eqt,~,O2_eqt,K0_O2t,CO2_ppmt,dO2Chlt,dO2BODt,dphotoDOCt,delC_org3,testi1t,testi2t,testi3t, sediments_data_basin1] = ...
+    [DayFrac,zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,PARzt,Attn_zt,P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,oxygenflux,CO2_eqt,~,O2_eqt,K0_O2t,CO2_ppmt,dO2Chlt,dO2BODt,dphotoDOCt,delC_org3,testi1t,testi2t,testi3t, sediments_data_basin1] = ...
     solvemodel_v2_modified(m_start,m_stop,initfile,'lake', inputfile,'timeseries', parfile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Depositions);
 
     % NOTE: All writing of out data takes a few seconds for each file, so it should be conservative, especially in optimization runs
@@ -47,17 +47,17 @@ try
     f1_name = (strcat(outdir, '\Tzt.csv')); % b = binary mode, z = archived file
     dlmwrite(f1_name, Tzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f5_name = (strcat(outdir, '\O2zt.csv'));
-    dlmwrite(f5_name, O2zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f2_name = (strcat(outdir, '\O2zt.csv'));
+    dlmwrite(f2_name, O2zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f7_name =(strcat(outdir, '\lambdazt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f7_name, lambdazt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f3_name =(strcat(outdir, '\lambdazt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
+    dlmwrite(f3_name, lambdazt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f2_name =(strcat(outdir, '\PARzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f2_name, PARzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f4_name =(strcat(outdir, '\PARzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
+    dlmwrite(f4_name, PARzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f8_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f8_name, DOCzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f5_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
+    dlmwrite(f5_name, DOCzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f6_name =(strcat(outdir, '\Qst.csv'));%MC add to ensure creation of 2017REDOCOMPLETE
     dlmwrite(f6_name, Qst(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
@@ -65,8 +65,11 @@ try
     f7_name =(strcat(outdir, '\Attn_zt.csv'));%MC 2018-05-31 add to comparaison with SDD
     dlmwrite(f7_name, Attn_zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f9_name =(strcat(outdir, '\His.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
-    dlmwrite(f9_name,His(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f8_name =(strcat(outdir, '\His.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
+    dlmwrite(f8_name,His(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+
+    f9_name =(strcat(outdir, '\DayFrac.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
+    dlmwrite(f9_name,DayFrac(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 catch
 end
 end          
