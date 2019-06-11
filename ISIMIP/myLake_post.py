@@ -549,14 +549,19 @@ def optimise_lake(lake_name, observation_path, input_directory, region, forcing_
                 except IndexError:
                     print("\nError in optimisation function.\nEnd of case.\n\n")
 
-
-
-    sys.stdout = orig_stdout
+    print("Optimisation results: \n")
 
     find_best_parameters("{}/optimisation_log.txt".format(outdir))
-
+    sys.stdout = orig_stdout
 
 def make_optimisation_dictionnary(log_file):
+    """
+    Reads the log file and makes a dictionary where the keys are a string containing the parameters for the given
+     simulation, and the values are lists of 3 floats, containing the results of sums of squares, RMSE and r squared for
+     the simulation, always in that sequence.
+    :param log_file: Type string. The log file containing the information on all calibration runs.
+    :return: The comparison dictionary
+    """
     comparison_dict = {}
     with open(log_file, "r") as log:
         file_content = log.readlines()
@@ -589,6 +594,12 @@ def make_optimisation_dictionnary(log_file):
     return comparison_dict
 
 def find_best_parameters(log_file):
+    """
+    Using the comparison dictionary, finds the set of parameters giving the best sums of squares, best RMSE, best r
+    squared and best overall performances.
+    :param log_file: Type string. The log file containing the information on all calibration runs.
+    :return: None
+    """
     comparison_dict = make_optimisation_dictionnary(log_file)
     list_score = []
     best_SoS = ("", 1000000)
