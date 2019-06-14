@@ -2,11 +2,12 @@ import csv
 import os
 from math import sqrt
 import sys
-import numpy
+import numpy as np
 import datetime
 import netCDF4 as ncdf
 import datetime
 from sklearn import linear_model
+from scipy.optimize import minimize
 import run_myLake_ISIMIP
 
 "Post-processing script for myLake simulations. For ISIMIP."
@@ -287,10 +288,18 @@ def performance_analysis(output_folder):
         sims_list_1.append(item[5])
         sims_list_2.append(item[6])
 
+    sos = sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)
+    rms = root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2)
+    r_squ = r_squared(date_list, obs_list_1, obs_list_2, sims_list_1, sims_list_2)
+    score = sos/100 + rms * 100 + (1 - r_squ) * 1000
+
     print("Analysis of {}.".format(output_folder[10:]))
-    print("Sums of squares : {}".format(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
-    print("RMSE : {}".format(root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
-    print("R squared : {}".format(r_squared(date_list, obs_list_1, obs_list_2, sims_list_1, sims_list_2)))
+    print("Sums of squares : {}".format(sos))
+    print("RMSE : {}".format(rms))
+    print("R squared : {}".format(r_squ))
+    print("Score : {}".format(score))
+
+    return score
 
 def sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
     """
@@ -626,10 +635,68 @@ def find_best_parameters(log_file):
     print("Best r squared: {}".format(best_r_squared))
     print("Best overall score: {}".format(best_score))
 
+def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
+    """
+    Alternative optimizing function using scipy.optimize.minimize
+
+    :param lake_name: Type string. The name of the lake to optimise
+    :param observation_path: Type string. Observed temperatures file
+    :param input_directory: Type string. The folder containing all input files (input, parameters, init)
+    :param region: Type string. The abreviation for the lake's region (Ex: United-States = US, Norway = NO)
+    :param forcing_data_directory: Type string. The folder containing all forcing data for the given lake
+    :param outdir: Type string. The output folder
+    :param modelid: Type string. Prediction model used.
+    :param scenarioid: Type string. The prediction scenario. For optimization purpose this is always historical
+    :return: None
+    """
+
+    func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid, params)
+    params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
+
+    res = minimize(func, params_0, method= "nelder-mead", options={'xtol':0, 'disp': True })
+
+    print(res)
+    return res
+
+def run_optimization_Mylake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid, params):
+    """
+
+    :param lake_name: Type string. The name of the lake to optimise
+    :param observation_path: Type string. Observed temperatures file
+    :param input_directory: Type string. The folder containing all input files (input, parameters, init)
+    :param region: Type string. The abreviation for the lake's region (Ex: United-States = US, Norway = NO)
+    :param forcing_data_directory: Type string. The folder containing all forcing data for the given lake
+    :param outdir: Type string. The output folder
+    :param modelid: Type string. Prediction model used.
+    :param scenarioid: Type string. The prediction scenario. For optimization purpose this is always historical
+    :param swa_b0:
+    :param swa_b1:
+    :param c_shelter:
+    :param i_scv:
+    :param i_sct:
+    :param alb_melt_ice:
+    :param alb_melt_snow:
+    :return: performance analysis, which itself returns a score as float
+    """
+
+    c_shelter, alb_melt_snow, alb_melt_ice, i_scv, i_sct, swa_b0, swa_b1 = params
+
+    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
+                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
+                                lake_name, input_directory, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
+
+    run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
+
+    temperatures_by_depth(observation_path, lake_name, outdir)
+
+    make_comparison_file(outdir)
+
+    return performance_analysis(outdir)
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
     #make_comparison_file("output/NO/Langtjern")
     #performance_analysis("output/NO/Langtjern")
     #optimise_lake("Langtjern", "observations/NO_Lan", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
-    find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
+    #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
+    optimize_Nelder_Meald("Langtjern", "observations/NO_Lan", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
