@@ -1,11 +1,4 @@
 *.rar
 *.h5
 *.nc
-*.csv
-*.xls
-*.xlsx
 scratch.py
-ISIMIP/test/*
-ISIMIP/output/*
-ISIMIP/input/*
-ISIMIP/observations/*

@@ -288,89 +288,71 @@ def performance_analysis(output_folder):
         sims_list_1.append(item[5])
         sims_list_2.append(item[6])
 
-    sos = sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)
-    rms = root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2)
-    r_squ = r_squared(date_list, obs_list_1, obs_list_2, sims_list_1, sims_list_2)
-    score = sos/100 + rms * 100 + (1 - r_squ) * 1000
+    sos1 = sums_of_squares(obs_list_1, sims_list_1)
+    sos2 = sums_of_squares(obs_list_2, sims_list_2)
+    rms1 = root_mean_square(obs_list_1, sims_list_1)
+    rms2 = root_mean_square(obs_list_2, sims_list_2)
+    r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)
+    r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
+    score = (sos1 + sos2)/100 + (rms1 + rms2 )* 100 + (((1 - r_squ1) + (1 - r_squ2)) * 1000)
 
     print("Analysis of {}.".format(output_folder[10:]))
-    print("Sums of squares : {}".format(sos))
-    print("RMSE : {}".format(rms))
-    print("R squared : {}".format(r_squ))
+    print("Sums of squares : {}, {}".format(sos1, sos2))
+    print("RMSE : {}, {}".format(rms1, rms2))
+    print("R squared : {}, {}".format(r_squ1, r_squ2))
     print("Score : {}".format(score))
 
     return score
 
-def sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+def sums_of_squares(obs_list, sims_list):
     """
     Finds the sums of squares for all temperatures listed in the comparison file.
-    :param obs_list_1: A list of observed temperatures.
-    :param obs_list_2: A list of observed temperatures.
-    :param sims_list_1: A list of simulated temperatures.
-    :param sims_list_2: A list of simulated temperatures.
+    :param obs_list: A list of observed temperatures.
+    :param sims_list: A list of simulated temperatures.
     :return: The result of the sums of square as a float.
     """
     sum = 0
-    for x in range(len(obs_list_1)):
-        sum += (float(obs_list_1[x]) - float(sims_list_1[x]))**2 + (float(obs_list_2[x]) - float(sims_list_2[x]))**2
+    for x in range(len(obs_list)):
+        sum += (float(obs_list[x]) - float(sims_list[x]))**2
 
     return sum
 
-def root_mean_square(obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+def root_mean_square(obs_list, sims_list):
     """
     Finds the root_mean_square for the temperatures listed in the comparison file.
-    :param obs_list_1: A list of observed temperatures.
-    :param obs_list_2: A list of observed temperatures.
-    :param sims_list_1: A list of simulated temperatures.
-    :param sims_list_2: A list of simulated temperatures.
+    :param obs_list: A list of observed temperatures.
+    :param sims_list: A list of simulated temperatures.
     :return: The result of the root mean square as a float.
     """
-    lenght = len(obs_list_1) + len(obs_list_2) + len(sims_list_1) + len(sims_list_2)
-    return sqrt(sums_of_squares(obs_list_1, obs_list_2, sims_list_1, sims_list_2)/lenght)
+    lenght = len(obs_list) + len(sims_list)
+    return sqrt(sums_of_squares(obs_list, sims_list)/lenght)
 
-def r_squared(dates, obs_list_1, obs_list_2, sims_list_1, sims_list_2):
+def r_squared(dates, obs_list, sims_list):
     """
     Find the R squared for the simulations compared to the expected observations
     :param dates: the list of dates
-    :param obs_list_1: A list of observed temperatures.
-    :param obs_list_2: A list of observed temperatures.
-    :param sims_list_1: A list of simulated temperatures.
-    :param sims_list_2: A list of simulated temperatures.
+    :param obs_list: A list of observed temperatures.
+    :param sims_list: A list of simulated temperatures.
     :return: results of R squared, as a float
     """
     linear = linear_model.LinearRegression()
 
-    obs = obs_list_1
-    sims = sims_list_1
-
-    for i in range(len(obs_list_2)):
-        obs.append(obs_list_2[i])
-        sims.append(sims_list_2[i])
-
     x = []
     y = []
-    date_index = 0
 
-    for i in obs:
-        if date_index == 0:
-            x.append([float(dates[obs.index(i)]), float(i)])
-            if obs.index(i) == dates.index(dates[-1]): date_index = 1
-        else:
-            x.append([float(dates[obs.index(i) - len(obs)//2]), float(i)])
+    for i in obs_list:
+        try:
+            x.append([float(dates[obs_list.index(i)]), float(i)])
+        except IndexError: break
 
-    date_index = 0
-
-    for i in sims:
-        if date_index == 0:
-            y.append([float(dates[sims.index(i)]), float(i)])
-            if sims.index(i) == dates.index(dates[-1]): date_index = 1
-        else:
-            y.append([float(dates[sims.index(i) - len(sims)//2]), float(i)])
+    for i in sims_list:
+        try:
+            y.append([float(dates[sims_list.index(i)]), float(i)])
+        except IndexError : break
 
     linear.fit(x, y)
 
     return linear.score(x, y)
-
 
 def optimise_lake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
     """
@@ -653,7 +635,7 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
     func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid, params)
     params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
 
-    res = minimize(func, params_0, method= "nelder-mead", options={'xtol':0, 'disp': True })
+    res = minimize(func, params_0, method= "nelder-mead", options={'xtol':0, 'disp': True})
 
     print(res)
     return res
@@ -692,6 +674,7 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     make_comparison_file(outdir)
 
     return performance_analysis(outdir)
+
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")

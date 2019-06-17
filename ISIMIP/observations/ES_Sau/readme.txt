@@ -1,0 +1,1 @@
+the zero depth is surface, and there is a lot of surface water oscillations in this system. This means that the withdrawal depth (in fact we have three of them) is also variable. We have all the info on water surface elevation, so we can reconstruct water level oscillations easily. Just let me know.
