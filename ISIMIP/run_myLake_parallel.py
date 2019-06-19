@@ -1,14 +1,16 @@
+"""
+run_mylake_parallel.py
 
+Module that allows running multiple simulations or calibrations in parallel.
+"""
 import run_myLake_ISIMIP
 import myLake_post
 import sys
 import math
 from joblib import Parallel, delayed
-import multiprocessing
+import multiprocessing as mp
 
-"""
-Module that allows running multiple simulations or calibrations in parallel.
-"""
+num_cores = mp.cpu_count()
 
 lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin",
              "Crystal", "CrystalBog", "Delavan", "Dickie", "Eagle", "Ekoln", "Erken", "EsthwaiteWater", "FallingCreek",
@@ -18,12 +20,32 @@ lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMu
              "Sammamish", "Sau", "Sparkling", "Stechlin", "Sunapee", "Tahoe", "Tarawera", "Taupo", "Toolik", "Trout", "TroutBog",
              "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra", "Zlutice"]
 
-def mylake_loop():
+models = ["GFDL-ESM2M",
+          "HadGEM2-ES",
+          "IPSL-CM5A-LR",
+          "MIROC5"
+          ]
+scenarios = ["historical",
+             "piControl",
+             "rcp26",
+             "rcp60"
+             ]
+
+def model_scenario_loop():
     """
-    Loops through all lakes and runs
+    Loops through all models and scenarios
     :return:
     """
 
     pass
 
-def calibration_loop():
+def calibration_parallel():
+
+
+
+
+    Parallel(n_jobs=num_cores, verbose=10) (delayed (myLake_post.optimize_Nelder_Meald) (lake, "observations/{}_{}".format(region, lake),
+            "input/{}/{}".format(region, lake), region, "forcing_data/{}".format(lake), "output/{}/{}".format(region, lake), model, scenario)
+            for (lake, model, scenario) in (lake_list, models, scenarios))
+
+    pass

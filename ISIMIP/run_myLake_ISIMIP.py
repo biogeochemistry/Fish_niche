@@ -23,23 +23,12 @@ variables = ["hurs",
              "sfcWind",
              "tas"
              ]
-models = ["GFDL-ESM2M"#,
-          #"HadGEM2-ES",
-          #"IPSL-CM5A-LR",
-          #"MIROC5"
-          ]
-scenarios = ["historical"#,
-             #"piControl",
-             #"rcp26",
-             #"rcp60"
-             ]
 
-
-def myLake_input(lake_name, forcing_data_directory, output_directory):
+def myLake_input(lake_name, model, scenario, forcing_data_directory, output_directory):
     """
-    Creates input files for myLake model from forcing data. Forcing data is assumed to be in netCDF format. Variables,
-    models and scenarios can be changed as needed. The naming scheme of forcing data files is assumed to be the standard
-    for ISIMIP. No return value.
+    Creates input files for myLake model from forcing data. Forcing data is assumed to be in netCDF format. Variables
+    can be changed as needed. The naming scheme of forcing data files is assumed to be the standardfor ISIMIP.
+    No return value.
 
     :param lake_name: Type string. The name of the lake for which the input files are being prepared.
     :param forcing_data_directory: Type string. The folder containing the netCDF files for forcing data for a single lake.
@@ -47,59 +36,58 @@ def myLake_input(lake_name, forcing_data_directory, output_directory):
     :param output_directory: Type string. In a typical run, this is the return value of mylakeinit function.
     :return: No value
     """
-    for model in models:
-        for scenario in scenarios:
-            print("Outputing {}_{}_{}_input".format(lake_name[:3], model, scenario))
 
-            list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
+    print("Outputing {}_{}_{}_input".format(lake_name[:3], model, scenario))
 
-            with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
+    list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
 
-                input_file.writelines(["-999\tMyLake Input\n", "Year\tMonth\tDay\tGlobal radiation (MJ/m2)\tCloud cover(-)\t"
-                                        "Air temperature (deg C)\tRelative humidity (%)\tAir pressure (hPa)\tWind speed (m/s)\t"
-                                        "Precipitation (mm/day)\tInflow (m3/day)\tInflow_T (deg C)\tInflow_C\tInflow_S (kg/m3)\t"
-                                        "Inflow_TP (mg/m3)\tInflow_DOP (mg/m3)\tInflow_Chla (mg/m3)\tInflow_DOC (mg/m3)\t"
-                                        "DIC\tDO\tNO3\tNH4\tSO4\tFe2\tCa\tpH\tCH4\tFe3\tAl3\tSiO4\tSiO2\tdiatom\n"])
+    with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
 
-                for variable in variables:
-                    ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
+        input_file.writelines(["-999\tMyLake Input\n", "Year\tMonth\tDay\tGlobal radiation (MJ/m2)\tCloud cover(-)\t"
+                                "Air temperature (deg C)\tRelative humidity (%)\tAir pressure (hPa)\tWind speed (m/s)\t"
+                                "Precipitation (mm/day)\tInflow (m3/day)\tInflow_T (deg C)\tInflow_C\tInflow_S (kg/m3)\t"
+                                "Inflow_TP (mg/m3)\tInflow_DOP (mg/m3)\tInflow_Chla (mg/m3)\tInflow_DOC (mg/m3)\t"
+                                "DIC\tDO\tNO3\tNH4\tSO4\tFe2\tCa\tpH\tCH4\tFe3\tAl3\tSiO4\tSiO2\tdiatom\n"])
+
+        for variable in variables:
+            ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
 
 
-                    for x in ncdf_file.variables[variable][:]:
-                        if variable == "tas":
-                            temp = float(x) - 273.15
-                            list_dict[variable].append(temp)
+            for x in ncdf_file.variables[variable][:]:
+                if variable == "tas":
+                    temp = float(x) - 273.15
+                    list_dict[variable].append(temp)
 
-                        elif variable == "ps":
-                            press = float(x)/100
-                            list_dict[variable].append(press)
+                elif variable == "ps":
+                    press = float(x)/100
+                    list_dict[variable].append(press)
 
-                        else : list_dict[variable].append(float(x))
+                else : list_dict[variable].append(float(x))
 
-                    if variable is variables[0]:
-                        for y in ncdf_file.variables["time"][:]:
-                            list_dict["Year"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[0:4])
-                            list_dict["Month"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[5:7])
-                            list_dict["Day"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[8:10])
+            if variable is variables[0]:
+                for y in ncdf_file.variables["time"][:]:
+                    list_dict["Year"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[0:4])
+                    list_dict["Month"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[5:7])
+                    list_dict["Day"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[8:10])
 
-                    ncdf_file.close()
+            ncdf_file.close()
 
-                input_file.write("\n".join(["\t".join(["%s" % year, "%s" % month, "%s" % day, "%f" % rsds,
-                                            "0", "%f" % tas, "%f" % hurs, "%f" % ps, "%f" % sfcwind, "%f" % pr,
-                                            "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
-                                            "0", "0", "0", "0", "0", "0", "0"])
-                                            for year, month, day, hurs, pr, ps, rsds, sfcwind, tas in zip(
-                                            list_dict["Year"],
-                                            list_dict["Month"],
-                                            list_dict["Day"],
-                                            list_dict["hurs"],
-                                            list_dict["pr"],
-                                            list_dict["ps"],
-                                            list_dict["rsds"],
-                                            list_dict["sfcWind"],
-                                            list_dict["tas"])]))
+        input_file.write("\n".join(["\t".join(["%s" % year, "%s" % month, "%s" % day, "%f" % rsds,
+                                    "0", "%f" % tas, "%f" % hurs, "%f" % ps, "%f" % sfcwind, "%f" % pr,
+                                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
+                                    "0", "0", "0", "0", "0", "0", "0"])
+                                    for year, month, day, hurs, pr, ps, rsds, sfcwind, tas in zip(
+                                    list_dict["Year"],
+                                    list_dict["Month"],
+                                    list_dict["Day"],
+                                    list_dict["hurs"],
+                                    list_dict["pr"],
+                                    list_dict["ps"],
+                                    list_dict["rsds"],
+                                    list_dict["sfcWind"],
+                                    list_dict["tas"])]))
 
-            print("{}_{}_{}_input Done".format(lake_name[:3], model, scenario))
+    print("{}_{}_{}_input Done".format(lake_name[:3], model, scenario))
 
 
 
@@ -372,7 +360,7 @@ def get_latitude(lake_name, forcing_data_directory):
 
 
 
-def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_data_directory, longitude, latitude):
+def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_data_directory, longitude, latitude, model, scenario):
     """
     Creates all files needed for a run of mylake model with a single lake. The input function will generate ALL needed
     input files(one for each combination of scenario, model and variable)
@@ -386,7 +374,7 @@ def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_d
     """
     outdir = mylakeinit(init_info(hypsometry_path, temperature_path))
     mylakepar(longitude, latitude, lake_name, outdir)
-    myLake_input(lake_name, forcing_data_directory, outdir)
+    myLake_input(lake_name, model, scenario, forcing_data_directory, outdir)
 
 
 
@@ -440,5 +428,5 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
 if __name__ == "__main__":
 
-    #generate_input_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"))
+    #generate_input_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "historical")
     run_myLake("observations/NO_Lan", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")

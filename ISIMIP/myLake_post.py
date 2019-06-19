@@ -635,7 +635,7 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
     func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid, params)
     params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
 
-    res = minimize(func, params_0, method= "nelder-mead", options={'xtol':0, 'disp': True})
+    res = minimize(func, params_0, method= "nelder-mead", bounds=[(0, 1), (0, 1), (0, 1), (0, 2), (0, 2), (0, 5), (0, 5)], options={'xtol':0, 'disp': True})
 
     print(res)
     return res
