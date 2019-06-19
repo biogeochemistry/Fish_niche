@@ -294,7 +294,7 @@ def performance_analysis(output_folder):
     rms2 = root_mean_square(obs_list_2, sims_list_2)
     r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)
     r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
-    score = (sos1 + sos2)/100 + (rms1 + rms2 )* 100 + (((1 - r_squ1) + (1 - r_squ2)) * 1000)
+    score = (sos1 + sos2)/100 + (rms1 + rms2 )* 100 + (((1 - r_squ1) * 1000 + (1 - r_squ2)) * 1000)
 
     print("Analysis of {}.".format(output_folder[10:]))
     print("Sums of squares : {}, {}".format(sos1, sos2))
