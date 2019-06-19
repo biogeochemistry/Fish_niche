@@ -407,7 +407,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     parameter_file = os.path.join(input_directory, "{}_par".format(lakeName[:3]))
     input_file = os.path.join(input_directory, "{}_{}_{}_input".format(lakeName[:3], modelid, scenarioid))
 
-    outfolder = os.path.join("output", region, lakeName)
+    outfolder = os.path.join("output", region, lakeName, modelid, scenarioid)
 
     with open("{}/{}_temperature.csv".format(observations_path, lakeName), "r") as obs:
         reader = list(csv.reader(obs))[1:]
