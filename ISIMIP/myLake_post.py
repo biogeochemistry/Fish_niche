@@ -265,12 +265,31 @@ def make_comparison_file(output_folder):
             if date in observation_dict.keys():
                 csvFile.writerow([date, '', observation_dict[date][0], observation_dict[date][1], '', simulation_dict[date][0], simulation_dict[date][1]])
 
-def performance_analysis(output_folder):
+def performance_analysis(lake_name, input_folder, output_folder):
     """
     Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
     :param output_folder: A string, containing the folder containing the comparison file.
     :return: None
     """
+
+    with open("{}/{}_par".format(input_folder, lake_name), "r") as param_file:
+        for line in param_file.readlines():
+            if "C_shelter" in line:
+                if list(line)[1] <= 0: return 900
+            elif "Swa_b0" in line:
+                if list(line)[1] <= 0: return 900
+            elif "Swa_b01" in line:
+                if list(line)[1] <= 0: return 900
+            elif "I_ScV" in line:
+                if list(line)[1] <= 0: return 900
+            elif "I_ScT" in line:
+                if list(line)[1] <= 0: return 900
+            elif "Alb_melt_ice" in line:
+                if list(line)[1] <= 0: return 900
+            elif "Alb_melt_snow" in line:
+                if list(line)[1] <= 0: return 900
+
+
     with open("{}/T_comparison.csv".format(output_folder), "r") as file:
         reader = list(csv.reader(file))
 
