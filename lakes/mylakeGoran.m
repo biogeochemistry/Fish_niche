@@ -1,6 +1,6 @@
 function mylakeGoran(initfile, parfile, inputfile, m_start2, m_stop2, outdir)
 
-path(path, 'C:\Users\macot620\Documents\GitHub\Fish_niche\MyLake_O_simple')%change directory from mylake folder to Mylake_O_simple
+path(path, 'C:\Users\macot620\Documents\GitHub\MyLake_O_simple')%change directory from mylake folder to Mylake_O_simple
 path(path, '../sediments')
 
 warning('off', 'all') 
@@ -39,7 +39,7 @@ try
     global sed_par_file;
     sed_par_file = 'sediment_parameters.txt';
 
-    [DayFrac,zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,PARzt,Attn_zt,P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,oxygenflux,CO2_eqt,~,O2_eqt,K0_O2t,CO2_ppmt,dO2Chlt,dO2BODt,dphotoDOCt,delC_org3,testi1t,testi2t,testi3t, sediments_data_basin1] = ...
+    [DayFrac,zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,Attn_zt,PARzt,P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,oxygenflux,CO2_eqt,~,O2_eqt,K0_O2t,CO2_ppmt,dO2Chlt,dO2BODt,dphotoDOCt,delC_org3,testi1t,testi2t,testi3t, sediments_data_basin1] = ...
     solvemodel_v2_modified(m_start,m_stop,initfile,'lake', inputfile,'timeseries', parfile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Depositions);
 
     % NOTE: All writing of out data takes a few seconds for each file, so it should be conservative, especially in optimization runs
@@ -68,8 +68,6 @@ try
     f8_name =(strcat(outdir, '\His.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
     dlmwrite(f8_name,His(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f9_name =(strcat(outdir, '\DayFrac.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
-    dlmwrite(f9_name,DayFrac(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 catch
 end
 end          
