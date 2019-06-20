@@ -57,10 +57,14 @@ SOD_plot
 
 
 fit4 <-lm(log(dontest$k_SOD) ~  dontest$Max + log(dontest$Area))
+hist(SOD_lm$residuals, breaks = 4)
+qqnorm(SOD_lm$residuals)
+qqline(SOD_lm$residuals)
+shapiro.test(SOD_lm$residuals)
 library(car)
 library(MASS)
 avPlots(fit4)
-summary(fit4)
+summary(SOD_lm)
 hist(fit4$residuals, breaks = 4)
 qqnorm(fit4$residuals)
 qqline(fit4$residuals)

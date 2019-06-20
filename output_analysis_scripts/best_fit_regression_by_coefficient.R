@@ -64,13 +64,13 @@ subsets(leaps, statistic="adjr2")
 fit <- lm(SWA_B1  ~ 1 , data=data)
 
 fit1 <- lm(SWA_B1 ~ log(MaxDepth) , data=data)
-fit2 <- lm(SWA_B1 ~ log(MaxDepth) + log(RatioC.A), data=data)
+fit2 <- lm(SWA_B1 ~ log(MeanDepth), data=data)
 fit3 <- lm(SWA_B1 ~ log(MaxDepth) + log(Area), data=data)
 fit4 <- lm(SWA_B1 ~ log(MaxDepth) + log(Volume), data=data)
 fit5 <- lm(SWA_B1 ~ log(Volume)+ log(Area), data=data)
 
 anova(fit,fit1)
-anova(fit1,fit2)
+anova(fit,fit2)
 anova(fit1,fit3)
 anova(fit1,fit4)
 anova(fit1,fit5)
@@ -81,12 +81,12 @@ qqline(fit1$residuals)
 shapiro.test(fit1$residuals)
 
 #Visualization
-plot(SWA_B1 ~ log(MaxDepth) + log(Volume), data=data)
-abline(lm(SWA_B1 ~ log(MaxDepth) + log(Volume), data=data))
+plot(SWA_B1 ~ log(MaxDepth), data=data)
+abline(lm(SWA_B1 ~ log(MaxDepth) , data=data))
 
 
 #BEST FIT TEST (10 Lakes)
-data_10 <- don[don[,11]>10000000,]
+data_10 <- data[data[,11]>10000000,]
 leaps<-regsubsets(SWA_B1 ~ MeanDepth + MaxDepth + Area + Aire_sedimentaire + Ratio.RatioC.A+Volume, data=don,nbest=10)
 summary(leaps)
 # models are ordered by the selection statistic.
