@@ -20,6 +20,17 @@ lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMu
              "Sammamish", "Sau", "Sparkling", "Stechlin", "Sunapee", "Tahoe", "Tarawera", "Taupo", "Toolik", "Trout", "TroutBog",
              "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra", "Zlutice"]
 
+regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Laramie", "Mendota", "Monona",
+                  "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
+                  "Washington", "Wingra"],
+           "CH": ["Biel", "LowerLakeZurich", "Neuchatel", ],
+           "PT": ["Alqueva"],
+           "FR": ["Annecy", "Bourget", "Geneva"],
+           "AU": ["Argyle", "BurleyGriffin", "MtBold"],
+           "CA": ["Dickie", "Eagle", "Harp"],
+           "SE": ["Ekoln", "Erken"],
+           "UK": ["EsthwaiteWater", "Windermere"]}
+
 models = ["GFDL-ESM2M",
           "HadGEM2-ES",
           "IPSL-CM5A-LR",
@@ -49,3 +60,9 @@ def calibration_parallel():
             for (lake, model, scenario) in (lake_list, models, scenarios))
 
     pass
+
+def run_calibrations():
+
+    region = lake[]
+
+    return myLake_post.optimize_Nelder_Meald(lake)
