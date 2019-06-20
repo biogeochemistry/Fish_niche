@@ -275,19 +275,19 @@ def performance_analysis(lake_name, input_folder, output_folder):
     with open("{}/{}_par".format(input_folder, lake_name[:3]), "r") as param_file:
         for line in param_file.readlines():
             if "C_shelter" in line:
-                if float(line.split('\t')[1]) < 0: return 900
+                if float(line.split('\t')[1]) < 0: return 10000
             elif "swa_b0" in line:
-                if float(line.split('\t')[1]) < 0: return 900
+                if float(line.split('\t')[1]) < 0: return 10000
             elif "swa_b01" in line:
-                if float(line.split('\t')[1]) < 0: return 900
+                if float(line.split('\t')[1]) < 0: return 10000
             elif "I_scV" in line:
-                if float(line.split('\t')[1]) < 0: return 900
+                if float(line.split('\t')[1]) < 0: return 10000
             elif "I_scT" in line:
-                if float(line.split('\t')[1]) < 0: return 900
+                if float(line.split('\t')[1]) < 0: return 10000
             elif "alb_melt_ice" in line:
-                if float(line.split('\t')[1]) < 0: return 900
+                if float(line.split('\t')[1]) < 0: return 10000
             elif "alb_melt_snow" in line:
-                if float(line.split('\t')[1]) < 0: return 900
+                if float(line.split('\t')[1]) < 0: return 10000
 
 
     with open("{}/T_comparison.csv".format(output_folder), "r") as file:
@@ -657,6 +657,10 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
     res = minimize(func, params_0, method= "nelder-mead", options={'xtol':0, 'disp': True})
 
     print(res)
+
+    with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
+        end_file.writelines(["Calibration results:", res])
+
     return res
 
 def run_optimization_Mylake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid, params):
@@ -696,9 +700,9 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
 
 
 if __name__ == "__main__":
-    #temperatures_by_depth("observations/NO_Lan", "Langtjern", "output/NO/Langtjern")
+    #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern")
     #make_comparison_file("output/NO/Langtjern")
     #performance_analysis("output/NO/Langtjern")
-    #optimise_lake("Langtjern", "observations/NO_Lan", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
+    #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
-    optimize_Nelder_Meald("Langtjern", "observations/NO_Lan", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")

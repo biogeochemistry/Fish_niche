@@ -7,6 +7,7 @@ import run_myLake_ISIMIP
 import myLake_post
 import sys
 import math
+import os
 from joblib import Parallel, delayed
 import multiprocessing as mp
 
@@ -23,13 +24,25 @@ lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMu
 regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Laramie", "Mendota", "Monona",
                   "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
                   "Washington", "Wingra"],
-           "CH": ["Biel", "LowerLakeZurich", "Neuchatel", ],
+           "CH": ["Biel", "LowerLakeZurich", "Neuchatel"],
            "PT": ["Alqueva"],
            "FR": ["Annecy", "Bourget", "Geneva"],
            "AU": ["Argyle", "BurleyGriffin", "MtBold"],
            "CA": ["Dickie", "Eagle", "Harp"],
            "SE": ["Ekoln", "Erken"],
-           "UK": ["EsthwaiteWater", "Windermere"]}
+           "UK": ["EsthwaiteWater", "Windermere"],
+           "IE": ["Feeagh"],
+           "FI": ["Kilpisjarvi", "Kuivajarvi", "Paajarvi"],
+           "IL": ["Kinneret"],
+           "RW": ["Kivu"],
+           "CZ": ["Klicava", "Rimov", "Zlutice"],
+           "NO": ["Langtjern"],
+           "RU": ["Mozaisk", "Vendyurskoe"],
+           "DE": ["Muggelsee", "Rappbode", "Stechlin"],
+           "CN": ["Ngoring"],
+           "EE": ["NohipaloMustjarv", "NohipaloValgejarv", "Vortsjarv"],
+           "ES": ["Sau"],
+           "NZ": ["Rotura", "Tarawera", "Taupo", "Waahi"]}
 
 models = ["GFDL-ESM2M",
           "HadGEM2-ES",
@@ -42,27 +55,38 @@ scenarios = ["historical",
              "rcp60"
              ]
 
+
+
 def model_scenario_loop():
-    """
-    Loops through all models and scenarios
-    :return:
-    """
+
 
     pass
 
 def calibration_parallel():
+    """
+    Simple function to call a parallel calibration of all lakes.
+    :return:
+    """
 
+    Parallel(n_jobs=num_cores, verbose=10) (delayed (run_calibrations) (lake) for lake in lake_list)
 
+def run_calibrations(lake):
+    """
+    Intermediary function to call nelder-mead optimisation function for a single lake.
 
+    :param lake: Type string. The name of the lake to calibrate.
+    :return: If Calibration_Complete file is found, returns None. Else, return the nelder-mead optimisation function
+    from myLake_post module for the given lake.
+    """
 
-    Parallel(n_jobs=num_cores, verbose=10) (delayed (myLake_post.optimize_Nelder_Meald) (lake, "observations/{}_{}".format(region, lake),
-            "input/{}/{}".format(region, lake), region, "forcing_data/{}".format(lake), "output/{}/{}".format(region, lake), model, scenario)
-            for (lake, model, scenario) in (lake_list, models, scenarios))
+    for region in regions:
+        if lake in regions[region]:
+            if os.path.exists("output/{}/{}/GFDL-ESM2M/historical/Calibration_Complete.txt".format(region, lake)):
+                print("Calibration for {} is already complete.\n".format(lake))
+                return None
 
-    pass
-
-def run_calibrations():
-
-    region = lake[]
-
-    return myLake_post.optimize_Nelder_Meald(lake)
+            return myLake_post.optimize_Nelder_Meald(lake, "observations/{}_{}".format(region, lake),
+                                                     "input/{}/{}".format(region, lake), region,
+                                                     "forcing_data/{}".format(lake), "output/{}/{}".format(region, lake),
+                                                     "GFDL-ESM2M", "historical")
+    print("Cannot find specified lake's region")

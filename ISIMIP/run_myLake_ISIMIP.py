@@ -429,4 +429,4 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 if __name__ == "__main__":
 
     #generate_input_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "historical")
-    run_myLake("observations/NO_Lan", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")
+    run_myLake("observations/Langtjern", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")
