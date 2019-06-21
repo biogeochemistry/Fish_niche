@@ -55,12 +55,41 @@ scenarios = ["historical",
              "rcp60"
              ]
 
+def mylake_parallel():
+
+    Parallel(n_jobs=num_cores, verbose=10)(delayed(model_scenario_loop(lake)) for lake in lake_list)
 
 
-def model_scenario_loop():
+def model_scenario_loop(lake):
 
 
+    reg = None
+    for region in regions:
+        if lake in regions[region]:
+            reg = region
+            break
+
+    if reg == None:
+        print("Cannot find specified lake's region")
+        return None
+
+    for model in models:
+        for scenario in scenarios:
+            if os.path.exists("output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
+                print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
+                return None
+            else:
+                print("Running {} {} {}.\n".format(lake, model, scenario))
+                return run_myLake_ISIMIP.run_myLake("observations/{}".format(lake), "input/{}/{}".format(reg, lake[:3]), reg, lake, model, scenario)
+
+def make_parameters_file_parallel():
+
+    Parallel(n_jobs=num_cores, verbose=10)(delayed(get_best_parameters(lake)) for lake in lake_list)
+
+def get_best_parameters(lake):
     pass
+
+
 
 def calibration_parallel():
     """

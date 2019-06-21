@@ -36,7 +36,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder):
         depthLevels = list(range(maxDepth + 1))
 
 
-    with open("{}_temperature.csv".format(observation_path)) as obs_file:
+    with open("{}_temp_daily.csv".format(observation_path)) as obs_file:
         reader = list(csv.reader(obs_file))[1:]
 
 
@@ -665,6 +665,8 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
 
 def run_optimization_Mylake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid, params):
     """
+    Intermediary function calling mylakepar function to generate new parameters, then running myLake with these parameters,
+    and finally
 
     :param lake_name: Type string. The name of the lake to optimise
     :param observation_path: Type string. Observed temperatures file
@@ -674,13 +676,7 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     :param outdir: Type string. The output folder
     :param modelid: Type string. Prediction model used.
     :param scenarioid: Type string. The prediction scenario. For optimization purpose this is always historical
-    :param swa_b0:
-    :param swa_b1:
-    :param c_shelter:
-    :param i_scv:
-    :param i_sct:
-    :param alb_melt_ice:
-    :param alb_melt_snow:
+
     :return: performance analysis, which itself returns a score as float
     """
 
@@ -700,9 +696,9 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
 
 
 if __name__ == "__main__":
-    #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern")
-    #make_comparison_file("output/NO/Langtjern")
+    temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical")
+    make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/historical")
     #performance_analysis("output/NO/Langtjern")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
-    optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    #optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")

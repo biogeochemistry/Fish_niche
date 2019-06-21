@@ -397,18 +397,14 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
     outfolder = os.path.join("output", region, lakeName, modelid, scenarioid)
 
-    with open("{}/{}_temperature.csv".format(observations_path, lakeName), "r") as obs:
+    with open("{}/{}_temp_daily.csv".format(observations_path, lakeName), "r") as obs:
         reader = list(csv.reader(obs))[1:]
         y1 = int(reader[0][2][:4])
         y2 = int(reader[-1][2][:4]) + 1
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
-    """
-    if os.path.exists ( os.path.join ( outfolder, 'RunComplete' ) ):
-        print ( 'lake {} is already completed'.format(lakeName) )
-        ret = 0
-    """
+
 
 
     cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
