@@ -23,9 +23,8 @@ import multiprocessing
 import datetime
 import time
 import os
-num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to choose the number of cores used.
-
-#cordexfolder = 'G:cordex'  # needs to be changed depending where the meteorological files are.
+num_cores = multiprocessing.cpu_count()-6 # needs to be modified if you want to choose the number of cores used.
+#cordexfolder = 'E:cordex'  # needs to be changed depending where the meteorological files are.
 outputfolder = '../output'
 timeformat = '%Y-%m-%d %H:%M:%S'
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
@@ -90,7 +89,7 @@ def loop_through_model_scenario(listofmodels, listofscenarios, lakelistfile, rep
                         with open(report, 'a') as f:
                             f.write('\n-------Start-------\n%s\n'%(st))
                             f.close()
-                try:
+                #try:
                     
                     with open(report, 'a') as f:
                         times = datetime.datetime.fromtimestamp(time.time()).strftime(timeformat)
@@ -102,10 +101,10 @@ def loop_through_model_scenario(listofmodels, listofscenarios, lakelistfile, rep
                     with open(report, 'a') as f:
                         f.write('run of mylake completed for _EUR-11_%s_%s_%s_%s-%s\n' % (m0, s0[0], m1, s0[1], s1[2]))
                         f.close()
-                except:
-                    with open(report, 'a') as f:
-                        f.write('\nunable to run mylake for _EUR-11_%s_%s_%s_%s-%s\n' % (m0, s0[0], m1, s0[1], s1[2]))
-                        f.close()
+#                except:
+#                    with open(report, 'a') as f:
+#                        f.write('\nunable to run mylake for _EUR-11_%s_%s_%s_%s-%s\n' % (m0, s0[0], m1, s0[1], s1[2]))
+#                        f.close()
 
             else:
                 try:
@@ -143,7 +142,7 @@ def runlakesGoran_par(model_id, scenario_id, csvf):
         lines = f.readlines()
         nlines = len(lines)
         ii = range(1, nlines)
-
+        
     #for i in ii:
     #    loop_through_lakes_list(i,lines,model_id,scenario_id)
     Parallel(n_jobs=num_cores)(delayed(loop_through_lakes_list)(i, lines, model_id, scenario_id) for i in ii)
@@ -159,9 +158,9 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         scenarioid: scenario id (one of the keys of the dictionary "scenarios")
     """
 
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment \
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment,mean_calculated \
         = lines[i].strip().split(',')
-    mean_calculated = mean_depth
+    
     print('running lake %s' % ebh)
     if mean_depth != '' and (float(depth) - float(mean_depth)) > 0:
         swa_b1 = math.exp(-0.95670 * math.log(float(mean_depth)) + 1.36359)
@@ -175,7 +174,7 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         # k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304
         #                     0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
     else:
-        swa_b1 = math.exp(-0.95670 * math.log(float(mean_depth)) + 1.36359)
+        swa_b1 = math.exp(-0.95670 * math.log(float(mean_calculated)) + 1.36359)
         k_BOD = math.exp(-0.25290 * float(mean_calculated) - 1.36966)
 
     print('BOD %s' % k_BOD)
@@ -200,5 +199,5 @@ if __name__ == '__main__':
     # runlakesGoran_par(csvf, modeli, scenarioi)
 
     # Line used to run regional scale simulation with all model-scenario combinations
-    loop_through_model_scenario ( [ 2], [ 2], r'2017SwedenList_only_validation_12lakes.csv', 'report_12.txt' )
+    loop_through_model_scenario ( [ 2], [ 2], r'2017SwedenList.csv', 'report_120.txt' )
     #loop_through_model_scenario ( [1,2,3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report_end.txt' )
