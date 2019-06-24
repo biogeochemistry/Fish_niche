@@ -1,6 +1,5 @@
 *.rar
 output/
-output_analysis_scripts/Fish_Niche_output_plot_Analysis_script.ipynb
 .idea/
 .Rproj.user
-output/THE OUTPUT DATA WILL BE SAVED HERE WHEN THE APPLICATION IS RUN
+output1/

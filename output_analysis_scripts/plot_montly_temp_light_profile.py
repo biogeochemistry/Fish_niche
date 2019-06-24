@@ -8,12 +8,14 @@
 """
 
 import multiprocessing
+from matplotlib.gridspec import GridSpec
 from statistics import mean
 from os import path
 from matplotlib.dates import YearLocator, MonthLocator, DateFormatter, DayLocator, WeekdayLocator, MONDAY
-# import matplotlib as mpl
-from datetime import date, datetime
+import matplotlib as mpl
+from datetime import datetime
 import csv
+import numpy as np
 import pandas as pd
 import rpy2.robjects as ro
 from math import exp
@@ -22,6 +24,7 @@ num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to c
 
 
 outputfolder = 'E:\output-05-23-2019'
+outputfolder = 'D:\Fish_niche\output'
 timeformat = '%Y-%m-%d %H:%M:%S'
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
 models = {1: ('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
@@ -163,8 +166,137 @@ def montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
                 writer.writerows(listlakeIzepday) 
            
 def price(x):
-    return '$%1.2f' % x                
-def plot_montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile): 
+    return '$%1.2f' % x  
+
+def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile): 
+    plt.rcParams.update({'font.size': 20})
+    exA, y1A, exB, y1B = scenarios[scenarioid]
+    m1, m2 = models[modelid]
+    y2B = y1B + 4
+    with open(lakelistfile, 'rU')as f:
+        lakes = f.readlines()
+        nlakes = len(lakes)
+    
+    for lakenum in np.arange(1, nlakes):
+        lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment,mean_calculated \
+        = lakes[lakenum].strip().split(',')
+        
+        # getOutputPathFromEbHex
+        eh = eh[2:] if eh[:2] == '0x' else eh
+        
+        while len(eh)< 6:
+            eh = '0' + eh
+        
+        d1, d2, d3 = eh[:2], eh[:4], eh[:6]
+        
+        outdir = path.join(outputfolder, d1, d2, d3,'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
+        print(outdir)
+
+        # read *.cvs
+        Par = pd.read_csv(path.join(outdir, 'Parzt.csv'), header=None)
+        T = pd.read_csv(path.join(outdir, 'Tzt.csv'), header=None)
+        
+        months = MonthLocator()
+        date = pd.date_range(start='2001-01-01', end='2010-12-31')
+        
+        Par['Date'] = date
+        T['Date'] = date
+        Par.set_index('Date', inplace=True)
+        T.set_index('Date', inplace=True)
+       
+        tt = pd.date_range(start='2000-01-01', end='2000-12-31')
+        meantemp = T.groupby([T.index.month, T.index.day]).mean()
+        meanpar =  Par.groupby([Par.index.month, Par.index.day]).mean()
+        stdtemp =  T.groupby([T.index.month, T.index.day]).std()
+        stdpar =   Par.groupby([Par.index.month, Par.index.day]).std()
+        
+        #    medtemph = datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.5)
+        #    medtempe = datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.5)
+        #    medlamh =  datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.5)
+        #    medlame =  datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).quantile(0.5)
+        #    
+        #    mintemph =  datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.25)
+        #    mintempe =  datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.25)
+        #    minlamh =   datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.25)
+        #    minlame =   datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).quantile(0.25)
+        #    
+        #    maxtemph =  datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.75)
+        #    maxtempe =  datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.75)
+        #    maxlamh =   datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.75)
+        #    maxlame =   datasheet4.groupby([datasheet4.index.month, datasheet4.index.day]).quantile(0.75)
+        
+        
+        fig1 = plt.figure(figsize=(22, 15))
+        gs=GridSpec(2,30)
+        x = np.arange(0, int(float(depth)))
+        
+        
+        color_idx = np.linspace(0, 1, int(float(depth)))
+        ax1 = fig1.add_subplot(gs[0,:28])
+        for i,color_i in zip(x,color_idx):
+            plt.plot_date(tt, meantemp.iloc[:,i],'-',color=plt.cm.coolwarm_r(color_i))
+            
+            #plt.fill_between(tt, meantemp + stdtemp, meantemp - stdtemp,  alpha='0.5')
+        plt.text(0.01, 0.97,'Max depth: %s'%(depth),horizontalalignment='left',verticalalignment='top',transform = ax1.transAxes)
+       
+        ax1.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
+        ax1.fmt_xdata = DateFormatter('%Y-%m-%d')
+        ax1.xaxis.set_major_locator(months)
+        ax1.xaxis.set_minor_locator(mondays)
+        ax1.xaxis.set_major_formatter(weekFormatter)
+        ax1.fmt_ydata = price
+        ax1.yaxis.grid(True)
+        plt.ylabel("Temperature [°C]")
+                    
+        #plt.xlabel("Date")
+        plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
+        plt.tight_layout()
+        #plt.legend()
+        
+        ax2 = fig1.add_subplot(gs[1,:28])
+        for i,color_i in zip(x,color_idx):
+            plt.plot_date(tt, meanpar.iloc[:,i],'-',color=plt.cm.coolwarm_r(color_i))
+           
+        ax2.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
+        ax2.fmt_xdata = DateFormatter('%Y-%m-%d')
+        ax2.xaxis.set_major_locator(months)
+        ax2.xaxis.set_minor_locator(mondays)
+        ax2.xaxis.set_major_formatter(weekFormatter)
+        ax2.fmt_ydata = price
+        ax2.yaxis.grid(True)
+        plt.ylabel("Photosynthetic photon flux density (PPFD)\n [μmol/m2/s]")
+                
+        plt.xlabel("Date")
+        plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
+        plt.tight_layout()
+        #plt.legend()
+        #fig1.savefig("%s\Figure_mean_temp_%s.png" %(outputfolder,lake_id))
+        #plt.show()
+#        
+        #fig2 = plt.figure(figsize=(20, 10))
+        
+        #plt.fill_between(tt, meanpar + stdpar, meanpar - stdpar,  alpha='0.5')
+        #plt.text(0.01, 0.97,'Max depth: %s'%(depth),horizontalalignment='left',verticalalignment='top',transform = ax2.transAxes)
+        cmap = mpl.cm.get_cmap('coolwarm', int(float(depth)))
+        
+        
+        if int(float(depth))>40:
+            steps = 2
+        else: steps=1
+        
+        norm = mpl.colors.BoundaryNorm(np.arange(0.5,int(float(depth)+1),steps), cmap.N)
+        ax3=fig1.add_subplot(gs[:,28])
+        if int(float(depth))>30:
+            steps = 30
+        else: steps=int(float(depth))
+        
+        mpl.colorbar.ColorbarBase(ax3, cmap=cmap,norm=norm,orientation='vertical',ticks=np.linspace( 1,int(float(depth)), steps, endpoint=True))  
+        plt.ylabel("Depth(m)")
+        print(lake_id)
+        fig1.savefig("%s\Figure_%s_Mensuel_Mean_PPDF_T.png" %(outputfolder,lake_id))
+        plt.show()
+              
+def plot_montly_thermo_temp_light_profile(listofmodels, listofscenarios, lakelistfile): 
     months = MonthLocator()
     datasheet1 = pd.read_csv('E:\output-05-23-2019\mean_temp_hypo.csv')
     datasheet2 = pd.read_csv('E:\output-05-23-2019\mean_temp_epi.csv')
@@ -265,4 +397,4 @@ def plot_montly_temp_light_profile(listofmodels, listofscenarios, lakelistfile):
     plt.show()
                 
 if __name__ == '__main__':
-    montly_temp_light_profile([2], [2], 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')
+    plot_montly_temp_light_profile(2, 2, 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')
