@@ -204,11 +204,12 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         Par.set_index('Date', inplace=True)
         T.set_index('Date', inplace=True)
        
-        tt = pd.date_range(start='2000-01-01', end='2000-12-31')
-        meantemp = T.groupby([T.index.month, T.index.day]).mean()
-        meanpar =  Par.groupby([Par.index.month, Par.index.day]).mean()
-        stdtemp =  T.groupby([T.index.month, T.index.day]).std()
-        stdpar =   Par.groupby([Par.index.month, Par.index.day]).std()
+        #tt = pd.date_range(start='2000-01-01', end='2000-12-31')
+        tt = pd.date_range('2000-01-01','2001-01-01' , freq='1M')-pd.offsets.MonthBegin(1)
+        meantemp = T.groupby([T.index.month]).mean()
+        meanpar =  Par.groupby([Par.index.month]).mean()
+        stdtemp =  T.groupby([T.index.month]).std()
+        stdpar =   Par.groupby([Par.index.month]).std()
         
         #    medtemph = datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.5)
         #    medtempe = datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.5)
@@ -239,10 +240,10 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
             #plt.fill_between(tt, meantemp + stdtemp, meantemp - stdtemp,  alpha='0.5')
         plt.text(0.01, 0.97,'Max depth: %s'%(depth),horizontalalignment='left',verticalalignment='top',transform = ax1.transAxes)
        
-        ax1.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
+        ax1.set_xlim([datetime(2000, 1,1), datetime(2000, 12,1)])
         ax1.fmt_xdata = DateFormatter('%Y-%m-%d')
         ax1.xaxis.set_major_locator(months)
-        ax1.xaxis.set_minor_locator(mondays)
+        #ax1.xaxis.set_minor_locator(mondays)
         ax1.xaxis.set_major_formatter(weekFormatter)
         ax1.fmt_ydata = price
         ax1.yaxis.grid(True)
@@ -257,10 +258,10 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         for i,color_i in zip(x,color_idx):
             plt.plot_date(tt, meanpar.iloc[:,i],'-',color=plt.cm.coolwarm_r(color_i))
            
-        ax2.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
+        ax2.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 1)])
         ax2.fmt_xdata = DateFormatter('%Y-%m-%d')
         ax2.xaxis.set_major_locator(months)
-        ax2.xaxis.set_minor_locator(mondays)
+        #ax2.xaxis.set_minor_locator(mondays)
         ax2.xaxis.set_major_formatter(weekFormatter)
         ax2.fmt_ydata = price
         ax2.yaxis.grid(True)
@@ -277,20 +278,15 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         
         #plt.fill_between(tt, meanpar + stdpar, meanpar - stdpar,  alpha='0.5')
         #plt.text(0.01, 0.97,'Max depth: %s'%(depth),horizontalalignment='left',verticalalignment='top',transform = ax2.transAxes)
-        cmap = mpl.cm.get_cmap('coolwarm', int(float(depth)))
+        cmap = mpl.cm.get_cmap('coolwarm_r', int(float(depth)))
         
-        
-        if int(float(depth))>40:
-            steps = 2
-        else: steps=1
-        
-        norm = mpl.colors.BoundaryNorm(np.arange(0.5,int(float(depth)+1),steps), cmap.N)
+        norm = mpl.colors.BoundaryNorm(np.arange(0.5,int(float(depth))+1,1), cmap.N)
         ax3=fig1.add_subplot(gs[:,28])
-        if int(float(depth))>30:
-            steps = 30
+        if int(float(depth))>20:
+            steps = 20
         else: steps=int(float(depth))
+        mpl.colorbar.ColorbarBase(ax3, cmap=cmap,norm=norm,orientation='vertical',format=mpl.ticker.FormatStrFormatter('%.d'),ticks=np.linspace( 1,int(float(depth)), steps, endpoint=True))  
         
-        mpl.colorbar.ColorbarBase(ax3, cmap=cmap,norm=norm,orientation='vertical',ticks=np.linspace( 1,int(float(depth)), steps, endpoint=True))  
         plt.ylabel("Depth(m)")
         print(lake_id)
         fig1.savefig("%s\Figure_%s_Mensuel_Mean_PPDF_T.png" %(outputfolder,lake_id))
