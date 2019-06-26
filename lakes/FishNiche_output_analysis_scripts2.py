@@ -39,8 +39,8 @@ pandas.plotting._converter.register()
 plt.style.use('seaborn-poster')
 
 outputfolderdata = r'..\figure_calibration\Figure_test_oxygen'
-datafolder = r'E:\output-05-23-2019'
-outputfolder = r'C:\Users\Marianne\Documents\Fish_niche2\MDN_FishNiche_2017/output'
+datafolder = r'C:\Users\macot620\Documents\GitHub\Fish_niche\output'
+outputfolder = r'C:\Users\macot620\Documents\GitHub\Fish_niche\output'
 models = {1:('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
           2:('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1_day'),
           3:('MPI-M-MPI-ESM-LR', 'r1i1p1_CLMcom-CCLM4-8-17_v1_day'),
@@ -1288,7 +1288,7 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
 
             plt.legend(loc='upper center', bbox_to_anchor=(0.5, -0.2), fancybox=True, shadow=True, ncol=1,
                          handles=interet)
-            plt.show()
+            #plt.show()
             # fig1.savefig(path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.png" %(group, scenario)))
             fig1.savefig(
                 path.join(datafolder, "Figure_synthese_A1_group_%s_scenario_%s_mean.png" %(group, scenario)))
@@ -1773,44 +1773,44 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                                  'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
             tzt_dir = path.join(outdir, 'Tzt.csv')
             # print(tzt_dir)
-            if path.exists(path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+            if not path.exists(path.join(datafolder, 'fish_niche_export1_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
                     m1, exA, exB, m2, y1A, y2B))):
-                # if os.path.exists(os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
-                print(tzt_dir)
-                if os.path.exists(tzt_dir):
-                    cmd = 'matlab -wait -r -nosplash -nodesktop generateVolumeTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' %(lakelistfile, m1, m2, exA, y1A, exB, y1B, datafolder)
-                    print(cmd)
-                    os.system(cmd)
+                # # if os.path.exists(os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
+                # print(tzt_dir)
+                # if os.path.exists(tzt_dir):
+                    # cmd = 'matlab -wait -r -nosplash -nodesktop generateVolumeTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' %(lakelistfile, m1, m2, exA, y1A, exB, y1B, datafolder)
+                    # print(cmd)
+                    # os.system(cmd)
                 print('nan')
             else:
 
-#                datasheet = path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
-#                    m1, exA, exB, m2, y1A, y2B))
-#                print(datasheet)
-#                timeseries = pd.read_csv(datasheet)
-#                timeseries['Date'] = pd.to_datetime(timeseries['Date'], format="%d.%m.%Y")
-#                timeseries_select = pd.DataFrame(
-#                    columns=['Date', 'Model', 'Scenario', 'Lake_group', '%_T', '%_O2', '%_PAR', 'Total Volume','%_habitable'])
-#                timeseries_select['Date'] = timeseries['Date']
-#                timeseries_select['Model'] = model
-#                timeseries_select['Scenario'] = exA
-#                timeseries_select['Lake_group'] = 2
-#                timeseries_select['Total Volume'] = timeseries['Total Volume']
-#                timeseries_select.loc[timeseries['Total Volume'] < 1.0e7, 'Lake_group'] = 1
-#                timeseries_select.loc[timeseries['Total Volume'] > 5.0e9, 'Lake_group'] = 3
-#                timeseries_select['%_T'] = timeseries['Volume with T < 15 C'] / timeseries['Total Volume']
-#                timeseries_select['%_O2'] = timeseries['Volume with O2 > 3000'] / timeseries['Total Volume']
-#                timeseries_select['%_PAR'] = timeseries['Volume with PAR > 1% of surface PAR'] / timeseries['Total Volume']
-#                timeseries_select['%_habitable'] = timeseries_select['%_T']+timeseries_select['%_O2']+timeseries_select['%_PAR']
-#                timeseries_select.loc[timeseries_select['%_habitable']> 1,'%_habitable'] = 1
-                 print('completed')
-#                if i == 0:
-#                    complete_data = timeseries_select
-#                    print('first')
-#                    i += 1
-#                else:
-#                    complete_data = complete_data.append(timeseries_select, ignore_index=True)
-#                    print('added')
+               datasheet = path.join(datafolder, 'fish_niche_export1_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+                   m1, exA, exB, m2, y1A, y2B))
+               #print(datasheet)
+               timeseries = pd.read_csv(datasheet)
+               timeseries['Date'] = pd.to_datetime(timeseries['Date'], format="%d.%m.%Y")
+               timeseries_select = pd.DataFrame(
+                   columns=['Date', 'Model', 'Scenario', 'Lake_group', '%_T', '%_O2', '%_PAR', 'Total Volume','%_habitable'])
+               timeseries_select['Date'] = timeseries['Date']
+               timeseries_select['Model'] = model
+               timeseries_select['Scenario'] = exA
+               timeseries_select['Lake_group'] = 2
+               timeseries_select['Total Volume'] = timeseries['Total Volume']
+               timeseries_select.loc[timeseries['Total Volume'] < 1.0e7, 'Lake_group'] = 1
+               timeseries_select.loc[timeseries['Total Volume'] > 5.0e9, 'Lake_group'] = 3
+               timeseries_select['%_T'] = timeseries['Volume with T < 15 C'] / timeseries['Total Volume']
+               timeseries_select['%_O2'] = timeseries['Volume with O2 > 3000'] / timeseries['Total Volume']
+               timeseries_select['%_PAR'] = timeseries['Volume with PPFD > 1%'] / timeseries['Total Volume']
+               timeseries_select['%_habitable'] = timeseries_select['%_T']+timeseries_select['%_O2']+timeseries_select['%_PAR']
+               timeseries_select.loc[timeseries_select['%_habitable']> 1,'%_habitable'] = 1
+               print('completed')
+               if i == 0:
+                   complete_data = timeseries_select
+                   print('first')
+                   i += 1
+               else:
+                   complete_data = complete_data.append(timeseries_select, ignore_index=True)
+                   print('added')
     complete_data.loc[complete_data['Lake_group'] == 1].to_csv(path.join(datafolder, 'complete_data_11.csv'),
                                                                  index=False)
     print('1_save')
@@ -3162,7 +3162,7 @@ def FishNiche_secchi_graph(scenarioid, modelid, lakelistfile, calivari, k_BOD):
     # lakeswehavedatafor = [698]
     lakeswehavedatafor = [32276, 310, 14939, 30704, 31895, 6950, 99045, 33590, 33494, 16765, 698, 67035]
     # lakeswehavedatafor = [6950, 67035, 31895, 310, 32276, 99045]
-
+    meansamples=[]
     for lakenum in np.arange(1, nlakes):
         lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment = lakes[lakenum].strip().split(',')
         
@@ -3192,7 +3192,7 @@ def FishNiche_secchi_graph(scenarioid, modelid, lakelistfile, calivari, k_BOD):
             dates = worksheet['date']
             depthdata = worksheet['depth(max)']
             O2raw = worksheet['O2(mg/l)'] * 1000
-            secchiraw = worksheet['Siktdjup(m)']
+            secchiraw = worksheet['Siktdjup (m)']
 
             anydata_secchi, anydata_o = False, False
             O2_model_samples, O2_data_samples, O2_depths = [], [], []
@@ -3207,8 +3207,8 @@ def FishNiche_secchi_graph(scenarioid, modelid, lakelistfile, calivari, k_BOD):
                     if dateindex >= 1 and dateindex <= timestep:
                         secchi_data = secchiraw[ii]
                         secchi_calculated = []
-                        for i in [1.4, 1.5, 1.6, 1.7]:
-                            secchi_calculated.append((i /(np.mean(lambdamodel.loc[dateindex, :]))))
+                        for i in [1,2,3,4]:
+                            secchi_calculated.append((1.48 /(np.mean(lambdamodel.loc[dateindex, :]))))
                         secchi_model = secchi_calculated
 
                         if not isnan(secchi_data):
@@ -3279,6 +3279,7 @@ def FishNiche_secchi_graph(scenarioid, modelid, lakelistfile, calivari, k_BOD):
             variable = [1.4, 1.5, 1.6, 1.7]
 
             if secchi_model_samples != []:
+                meansample = st.mean(secchi_data_samples)
                 fig1 = plt.figure(k_BOD * 10, figsize=(18.0, 10.0))
                 for i in np.arange(1, len(secchi_model_samples[0]), 1):
                     model_data = [item[i] for item in secchi_model_samples]
@@ -3347,6 +3348,7 @@ def FishNiche_secchi_graph(scenarioid, modelid, lakelistfile, calivari, k_BOD):
             plt.ylabel("model_samples", fontsize=14)
             plt.subplots_adjust(hspace=0.6, wspace=0.3)
             plt.tick_params(axis='both', which='major', labelsize=14)
+            meansamples.append(meansample)
 
     fig2.savefig(path.join(datafolder, "Figure 2 Secchi all_%s.png" %(calivari)))
     fig1.savefig(path.join(datafolder, "Figure 1 Secchi_%s.png" %(calivari)))
@@ -3641,8 +3643,8 @@ if __name__ == '__main__':
     # FishNiche_graph_temp_time(2, 4, r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\test.csv')
     # plt.show()
     #FishNiche_plot_volume_param('His',r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
-    #generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],r'D:\Fish_niche\lakes\2017SwedenList.csv',datafolder)
-    #FishNiche_plot_volume(r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
+    #generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',datafolder)
+    FishNiche_plot_volume(r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     # 
     #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'D:\Fish_niche\lakes\2017SwedenList.csv', datafolder)
     # FishNiche_plot_volume_param('His', r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
@@ -3651,4 +3653,4 @@ if __name__ == '__main__':
     #     2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     # 
     #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'C:\Users\Administrateur\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', datafolder)
-    FishNiche_secchi_graph(2, 2, r'C:\Users\Administrateur\Documents\GitHub\Fish_niche\lakes\2017SwedenList_only_validation_12lakes.csv', 100, 10)
+    #FishNiche_secchi_graph(2, 2, r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList_only_validation_12lakes.csv', 100, 10)
