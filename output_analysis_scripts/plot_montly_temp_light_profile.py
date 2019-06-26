@@ -210,8 +210,8 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         meanpar =  Par.groupby([Par.index.month]).mean()
         stdtemp =  T.groupby([T.index.month]).std()
         stdpar =   Par.groupby([Par.index.month]).std()
-        meantemp.to_csv("%s\%s_Monthly_Mean_T_2001-2010.csv"%(outputfolder,lake_id),header=False,index=False)
-        meanpar.to_csv("%s\%s_Monthly_Mean_PPFD_2001-2010.csv"%(outputfolder,lake_id),header=False,index=False)
+        
+        
         #    medtemph = datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.5)
         #    medtempe = datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.5)
         #    medlamh =  datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.5)
@@ -295,6 +295,15 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         plt.ylabel("Depth(m)")
         print(lake_id)
         fig1.savefig("%s\Figure_%s_Montly_Mean_PPFD_T_2001-2010.png" %(outputfolder,lake_id))
+        meantemp.rename(columns=lambda x: str(int(x)+1), inplace=True)
+        meantemp.insert(loc=0, column='Date', value=["2010/01/01","2010/02/01","2010/03/01","2010/04/01","2010/05/01","2010/06/01","2010/07/01"
+        ,"2010/08/01","2010/09/01","2010/10/01","2010/11/01","2010/12/01"])
+        meanpar.rename(columns=lambda x: str(int(x)+1), inplace=True)
+        meanpar.insert(loc=0, column='Date', value=["2010/01/01","2010/02/01","2010/03/01","2010/04/01","2010/05/01","2010/06/01","2010/07/01"
+        ,"2010/08/01","2010/09/01","2010/10/01","2010/11/01","2010/12/01"])
+        
+        meantemp.to_csv("%s\%s_Monthly_Mean_T_2001-2010.csv"%(outputfolder,lake_id),header=True,index=False)
+        meanpar.to_csv("%s\%s_Monthly_Mean_PPFD_2001-2010.csv"%(outputfolder,lake_id),header=True,index=False)
         #plt.show()
               
 def plot_montly_thermo_temp_light_profile(listofmodels, listofscenarios, lakelistfile): 
