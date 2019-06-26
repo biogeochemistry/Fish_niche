@@ -17,14 +17,14 @@ from datetime import datetime
 import csv
 import numpy as np
 import pandas as pd
-import rpy2.robjects as ro
+#import rpy2.robjects as ro
 from math import exp
 import matplotlib.pyplot as plt
 num_cores = multiprocessing.cpu_count()  # needs to be modified if you want to choose the number of cores used.
 
 
 outputfolder = 'E:\output-05-23-2019'
-outputfolder = 'D:\Fish_niche\output'
+outputfolder = r'C:\Users\macot620\Documents\GitHub\Fish_niche\output'
 timeformat = '%Y-%m-%d %H:%M:%S'
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
 models = {1: ('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
@@ -210,7 +210,8 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         meanpar =  Par.groupby([Par.index.month]).mean()
         stdtemp =  T.groupby([T.index.month]).std()
         stdpar =   Par.groupby([Par.index.month]).std()
-        
+        meantemp.to_csv("%s\%s_Monthly_Mean_T_2001-2010.csv"%(outputfolder,lake_id),header=False,index=False)
+        meanpar.to_csv("%s\%s_Monthly_Mean_PPFD_2001-2010.csv"%(outputfolder,lake_id),header=False,index=False)
         #    medtemph = datasheet1.groupby([datasheet1.index.month, datasheet1.index.day]).quantile(0.5)
         #    medtempe = datasheet2.groupby([datasheet2.index.month, datasheet2.index.day]).quantile(0.5)
         #    medlamh =  datasheet3.groupby([datasheet3.index.month, datasheet3.index.day]).quantile(0.5)
@@ -237,6 +238,7 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         for i,color_i in zip(x,color_idx):
             plt.plot_date(tt, meantemp.iloc[:,i],'-',color=plt.cm.coolwarm_r(color_i))
             
+            
             #plt.fill_between(tt, meantemp + stdtemp, meantemp - stdtemp,  alpha='0.5')
         plt.text(0.01, 0.97,'Max depth: %s'%(depth),horizontalalignment='left',verticalalignment='top',transform = ax1.transAxes)
        
@@ -247,6 +249,7 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         ax1.xaxis.set_major_formatter(weekFormatter)
         ax1.fmt_ydata = price
         ax1.yaxis.grid(True)
+        
         plt.ylabel("Temperature [°C]")
                     
         #plt.xlabel("Date")
@@ -257,6 +260,7 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         ax2 = fig1.add_subplot(gs[1,:28])
         for i,color_i in zip(x,color_idx):
             plt.plot_date(tt, meanpar.iloc[:,i],'-',color=plt.cm.coolwarm_r(color_i))
+            ax2.set_yscale('log')
            
         ax2.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 1)])
         ax2.fmt_xdata = DateFormatter('%Y-%m-%d')
@@ -265,6 +269,7 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         ax2.xaxis.set_major_formatter(weekFormatter)
         ax2.fmt_ydata = price
         ax2.yaxis.grid(True)
+        
         plt.ylabel("Photosynthetic photon flux density (PPFD)\n [μmol/m2/s]")
                 
         plt.xlabel("Date")
@@ -289,8 +294,8 @@ def plot_montly_temp_light_profile(modelid, scenarioid, lakelistfile):
         
         plt.ylabel("Depth(m)")
         print(lake_id)
-        fig1.savefig("%s\Figure_%s_Mensuel_Mean_PPDF_T.png" %(outputfolder,lake_id))
-        plt.show()
+        fig1.savefig("%s\Figure_%s_Montly_Mean_PPFD_T_2001-2010.png" %(outputfolder,lake_id))
+        #plt.show()
               
 def plot_montly_thermo_temp_light_profile(listofmodels, listofscenarios, lakelistfile): 
     months = MonthLocator()
@@ -393,4 +398,4 @@ def plot_montly_thermo_temp_light_profile(listofmodels, listofscenarios, lakelis
     plt.show()
                 
 if __name__ == '__main__':
-    plot_montly_temp_light_profile(2, 2, 'D:\\Fish_niche\\lakes\\2017SwedenList.csv')
+    plot_montly_temp_light_profile(2, 2, r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv')
