@@ -42,6 +42,7 @@ for lakenum = 1:nlakes
 		O2   = csvread(strcat(lakedir, 'O2zt.csv'));
 		T    = csvread(strcat(lakedir, 'Tzt.csv'));
 		PARzt = csvread(strcat(lakedir, 'PARzt.csv'));
+        PARMaxt = csvread(strcat(lakedir, 'PARMaxt.csv'));
 		%add to calculate optical habitat (incident radiation Iz)
 		%His = csvread(strcat(lakedir, 'His.csv'));
         Qzt = csvread(strcat(lakedir, 'Qst.csv'));
@@ -81,7 +82,7 @@ for lakenum = 1:nlakes
 			avg_O2_below(time) = mean(O2(time, (maxgrad_depth(time)+1):end));
 			avg_T_above(time)  = mean(T(time, 1:maxgrad_depth(time)));
 			avg_T_below(time)  = mean(T(time, (maxgrad_depth(time)+1):end));
-			
+			one_Pourcent = PARMaxt(time)*0.01;
 				
 			%surface_attn = Attn(time, 1);
 			for depth = 1:zlen
@@ -94,7 +95,7 @@ for lakenum = 1:nlakes
 					volume_T_below_15(time) = volume_T_below_15(time) + area_at_depth(depth);
                 end
                 
-                if PARzt(time, depth) > 0.01*(((3/2) / (e_par * DayFrac)) * f_par * Qst(time)) 
+                if PARzt(time, depth) > one_Pourcent
 					volume_PAR_above_1(time) = volume_PAR_above_1(time) + area_at_depth(depth);
 				end
 				%if Iz_calculated(time,depth) >= (8*0.0079)
