@@ -92,7 +92,10 @@ def get_dates_of_simulation(start_year, stop_year):
     :return: A list of all the dates of simulation, in order from first to last. Dates are integers in the form YYYYMMDD.
     """
     date_list = []
-    for i in range(start_year, stop_year + 1):
+    year = start_year
+    nb_year = stop_year - start_year
+
+    for i in range(0, nb_year):
         if i % 400 == 0 or (i % 4 == 0 and i % 100 != 0):
             for x in range(1, 367):
                 date = 0
@@ -101,62 +104,62 @@ def get_dates_of_simulation(start_year, stop_year):
                 if x <= 31:
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "01" + str_x)
+                    date = int(str(year) + "01" + str_x)
                 elif 31 < x <= 60:
                     str_x = str(int(str_x) - 31)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "02" + str_x)
+                    date = int(str(year) + "02" + str_x)
                 elif 60 < x <= 91:
-                    str_x = str(int(str_x) - 60)
+                    str_x = str(int(year) - 60)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "03" + str_x)
+                    date = int(str(year) + "03" + str_x)
                 elif 91 < x <= 121:
-                    str_x = str(int(str_x) - 91)
+                    str_x = str(int(year) - 91)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "04" + str_x)
+                    date = int(str(year) + "04" + str_x)
                 elif 121 < x <= 152:
                     str_x = str(int(str_x) - 121)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "05" + str_x)
+                    date = int(str(year) + "05" + str_x)
                 elif 152 < x <= 182:
                     str_x = str(int(str_x) - 152)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "06" + str_x)
+                    date = int(str(year) + "06" + str_x)
                 elif 182 < x <= 213:
                     str_x = str(int(str_x) - 182)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "07" + str_x)
+                    date = int(str(year) + "07" + str_x)
                 elif 213 < x <= 243:
                     str_x = str(int(str_x) - 213)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "08" + str_x)
+                    date = int(str(year) + "08" + str_x)
                 elif 243 < x <= 274:
                     str_x = str(int(str_x) - 243)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "09" + str_x)
+                    date = int(str(year) + "09" + str_x)
                 elif 274 < x <= 305:
                     str_x = str(int(str_x) - 274)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "10" + str_x)
+                    date = int(str(year) + "10" + str_x)
                 elif 305 < x <= 335:
                     str_x = str(int(str_x) - 305)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "11" + str_x)
+                    date = int(str(year) + "11" + str_x)
                 elif 335 < x <= 366:
                     str_x = str(int(str_x) - 335)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "12" + str_x)
+                    date = int(str(year) + "12" + str_x)
 
                 date_list.append(date)
         else:
@@ -167,65 +170,65 @@ def get_dates_of_simulation(start_year, stop_year):
                 if x <= 31:
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "01" + str_x)
+                    date = int(str(year) + "01" + str_x)
                 elif 31 < x <= 59:
                     str_x = str(int(str_x) - 31)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "02" + str_x)
+                    date = int(str(year) + "02" + str_x)
                 elif 59 < x <= 90:
                     str_x = str(int(str_x) - 59)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "03" + str_x)
+                    date = int(str(year) + "03" + str_x)
                 elif 90 < x <= 120:
                     str_x = str(int(str_x) - 90)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "04" + str_x)
+                    date = int(str(year) + "04" + str_x)
                 elif 120 < x <= 151:
                     str_x = str(int(str_x) - 120)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "05" + str_x)
+                    date = int(str(year) + "05" + str_x)
                 elif 151 < x <= 181:
                     str_x = str(int(str_x) - 151)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "06" + str_x)
+                    date = int(str(year) + "06" + str_x)
                 elif 181 < x <= 212:
                     str_x = str(int(str_x) - 181)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "07" + str_x)
+                    date = int(str(year) + "07" + str_x)
                 elif 212 < x <= 242:
                     str_x = str(int(str_x) - 212)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "08" + str_x)
+                    date = int(str(year) + "08" + str_x)
                 elif 242 < x <= 273:
                     str_x = str(int(str_x) - 242)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "09" + str_x)
+                    date = int(str(year) + "09" + str_x)
                 elif 273 < x <= 304:
                     str_x = str(int(str_x) - 273)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "10" + str_x)
+                    date = int(str(year) + "10" + str_x)
                 elif 304 < x <= 334:
                     str_x = str(int(str_x) - 304)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "11" + str_x)
+                    date = int(str(year) + "11" + str_x)
                 elif 334 < x <= 365:
                     str_x = str(int(str_x) - 334)
                     if len(str_x) == 1:
                         str_x = "0" + str_x
-                    date = int(str(start_year) + "12" + str_x)
+                    date = int(str(year) + "12" + str_x)
 
                 date_list.append(date)
-
+        year += 1
     return date_list
 
 
@@ -263,13 +266,17 @@ def make_comparison_file(output_folder):
         csvFile.writerow(["Date", "Observations",  depth_levels[0], depth_levels[1], "Simulations", depth_levels[0], depth_levels[1]])
         for date in sims_dates:
             if date in observation_dict.keys():
-                csvFile.writerow([date, '', observation_dict[date][0], observation_dict[date][1], '', simulation_dict[date][0], simulation_dict[date][1]])
+                try:
+                    csvFile.writerow([date, '', observation_dict[date][0], observation_dict[date][1], '', simulation_dict[date][0], simulation_dict[date][1]])
+
+                except KeyError:
+                    continue
 
 def performance_analysis(lake_name, input_folder, output_folder):
     """
     Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
     :param output_folder: A string, containing the folder containing the comparison file.
-    :return: None
+    :return: Score, a float representing the overall performance of the current simulation.
     """
 
     with open("{}/{}_par".format(input_folder, lake_name[:3]), "r") as param_file:
@@ -295,30 +302,30 @@ def performance_analysis(lake_name, input_folder, output_folder):
 
         date_list = []
         obs_list_1 = []
-        obs_list_2 = []
+        #obs_list_2 = []
         sims_list_1 = []
-        sims_list_2 = []
+        #sims_list_2 = []
         depth_levels = [reader[0][2], reader[0][3]]
 
     for item in reader[1:]:
         date_list.append(item[0])
         obs_list_1.append(item[2])
-        obs_list_2.append(item[3])
+        #obs_list_2.append(item[3])
         sims_list_1.append(item[5])
-        sims_list_2.append(item[6])
+        #sims_list_2.append(item[6])
 
     sos1 = sums_of_squares(obs_list_1, sims_list_1)
-    sos2 = sums_of_squares(obs_list_2, sims_list_2)
+    #sos2 = sums_of_squares(obs_list_2, sims_list_2)
     rms1 = root_mean_square(obs_list_1, sims_list_1)
-    rms2 = root_mean_square(obs_list_2, sims_list_2)
-    r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)
-    r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
-    score = (sos1 + sos2)/100 + (rms1 + rms2 )* 100 + (((1 - r_squ1) * 1000 + (1 - r_squ2)) * 1000)
+    #rms2 = root_mean_square(obs_list_2, sims_list_2)
+    #r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)     #For r square, if needed
+    #r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
+    score = (sos1)/100 + (rms1)* 100
 
     print("Analysis of {}.".format(output_folder[10:]))
-    print("Sums of squares : {}, {}".format(sos1, sos2))
-    print("RMSE : {}, {}".format(rms1, rms2))
-    print("R squared : {}, {}".format(r_squ1, r_squ2))
+    print("Sums of squares : {}".format(sos1))
+    print("RMSE : {}".format(rms1))
+    #print("R squared : {}, {}".format(r_squ1, r_squ2))
     print("Score : {}".format(score))
 
     return score
@@ -332,6 +339,8 @@ def sums_of_squares(obs_list, sims_list):
     """
     sum = 0
     for x in range(len(obs_list)):
+        if obs_list[x] == 'None':
+            continue
         sum += (float(obs_list[x]) - float(sims_list[x]))**2
 
     return sum
@@ -694,11 +703,34 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
 
     return performance_analysis(lake_name, input_directory, outdir)
 
+"""
+#test functions for the algorithm
+
+def optimize_test():
+    func = lambda params : test_function(params)
+    params_0 = np.array([10, 5])
+    res = minimize(func, params_0, method="nelder-mead", options={'xtol': 0, 'disp': True})
+
+    print(res)
+    return res
+
+def test_function(params):
+    x, y = params
+    var1 = x**2
+    var2 = y**3
+    calcul = 3*var1/var2
+    if calcul > 10:
+        score = calcul - 10
+    else:
+        score = 10 - calcul
+
+    return score
+"""
 
 if __name__ == "__main__":
-    temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical")
-    make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/historical")
+    #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical")
+    #make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/historical")
     #performance_analysis("output/NO/Langtjern")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
-    #optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")

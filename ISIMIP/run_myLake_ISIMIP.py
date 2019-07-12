@@ -397,16 +397,23 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
     outfolder = os.path.join("output", region, lakeName, modelid, scenarioid)
 
+
+    #Years have to be changed manualy here for now
+    #Automatic lenght for calibrations:
+
     with open("{}/{}_temp_daily.csv".format(observations_path, lakeName), "r") as obs:
-        reader = list(csv.reader(obs))[1:]
+        reader = list(csv.reader(obs))[1:]  
         y1 = int(reader[0][2][:4])
         y2 = int(reader[-1][2][:4]) + 1
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
+    """
 
-
-
+    #hard-coded for actual runs:
+    y1 = 1661
+    y2 = 2299
+    """
     cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
     print ( cmd )
     os.system ( cmd )

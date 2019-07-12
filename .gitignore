@@ -3,3 +3,4 @@
 *.nc
 scratch.py
 ISIMIP/observations
+ISIMIP/input
