@@ -397,20 +397,23 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
     outfolder = os.path.join("output", region, lakeName, modelid, scenarioid)
 
-    with open("{}/{}_temperature.csv".format(observations_path, lakeName), "r") as obs:
-        reader = list(csv.reader(obs))[1:]
+
+    #Years have to be changed manualy here for now
+    #Automatic lenght for calibrations:
+
+    with open("{}/{}_temp_daily.csv".format(observations_path, lakeName), "r") as obs:
+        reader = list(csv.reader(obs))[1:]  
         y1 = int(reader[0][2][:4])
         y2 = int(reader[-1][2][:4]) + 1
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
     """
-    if os.path.exists ( os.path.join ( outfolder, 'RunComplete' ) ):
-        print ( 'lake {} is already completed'.format(lakeName) )
-        ret = 0
+
+    #hard-coded for actual runs:
+    y1 = 1661
+    y2 = 2299
     """
-
-
     cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
     print ( cmd )
     os.system ( cmd )
@@ -429,4 +432,4 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 if __name__ == "__main__":
 
     #generate_input_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "historical")
-    run_myLake("observations/NO_Lan", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")
+    run_myLake("observations/Langtjern", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")
