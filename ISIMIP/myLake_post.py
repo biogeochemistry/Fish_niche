@@ -668,7 +668,7 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
     print(res)
 
     with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
-        end_file.writelines(["Calibration results:", res])
+        end_file.writelines(["Calibration results:", str(res)])
 
     return res
 
@@ -711,7 +711,7 @@ def optimize_test():
     params_0 = np.array([10, 5])
     res = minimize(func, params_0, method="nelder-mead", options={'xtol': 0, 'disp': True})
 
-    print(res)
+    print(str(res))
     return res
 
 def test_function(params):
@@ -728,9 +728,10 @@ def test_function(params):
 """
 
 if __name__ == "__main__":
-    #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical")
-    #make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/historical")
+    #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
+    #make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/rcp26")
     #performance_analysis("output/NO/Langtjern")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
     optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    #optimize_test()

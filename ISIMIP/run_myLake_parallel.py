@@ -84,12 +84,25 @@ def model_scenario_loop(lake):
                 run_myLake_ISIMIP.run_myLake("observations/{}".format(lake), "input/{}/{}".format(reg, lake[:3]), reg, lake, model, scenario)
 
 def make_parameters_file_parallel():
-
+    """
+    Parallelise the function get_best_parameters.
+    """
     Parallel(n_jobs=num_cores, verbose=10)(delayed(get_best_parameters(lake)) for lake in lake_list)
 
 def get_best_parameters(lake):
-    pass
+    """
+    Looks for the results of calibration for a lake and returns the value for the parameters.
+    :param lake:
+    :return:
+    """
+    reg = ''
+    for region in regions:
+        if lake in regions[region]:
+            reg = region
+            break
 
+    with open("output/{}/{}/GFDL-ESM2M/historical".format(reg, lake)) as results:
+        pass
 
 
 def calibration_parallel():
@@ -115,7 +128,8 @@ def run_calibrations(lake):
                 print("Calibration for {} is already complete.\n".format(lake))
                 return None
 
-            return myLake_post.optimize_Nelder_Meald(lake, "observations/{}_{}".format(region, lake),
+            else:
+                return myLake_post.optimize_Nelder_Meald(lake, "observations/{}_{}".format(region, lake),
                                                      "input/{}/{}".format(region, lake), region,
                                                      "forcing_data/{}".format(lake), "output/{}/{}".format(region, lake),
                                                      "GFDL-ESM2M", "historical")
@@ -123,4 +137,4 @@ def run_calibrations(lake):
 
 if __name__ == "__main__":
 
-    model_scenario_loop("Langtjern")
+    #model_scenario_loop("Langtjern")

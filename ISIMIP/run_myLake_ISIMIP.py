@@ -40,6 +40,9 @@ def myLake_input(lake_name, model, scenario, forcing_data_directory, output_dire
     print("Outputing {}_{}_{}_input".format(lake_name[:3], model, scenario))
 
     list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
+    start_time = "2006-01-01"
+    if scenario == "historical": start_time = "1861-01-01"
+    elif scenario == "piControl": start_time = "1661-01-01"
 
     with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
 
@@ -54,21 +57,29 @@ def myLake_input(lake_name, model, scenario, forcing_data_directory, output_dire
 
 
             for x in ncdf_file.variables[variable][:]:
-                if variable == "tas":
+                if variable == "tas":   #converting from Kelvins to Celsius
                     temp = float(x) - 273.15
                     list_dict[variable].append(temp)
 
-                elif variable == "ps":
+                elif variable == "ps":  #converting from Pa to hPa
                     press = float(x)/100
                     list_dict[variable].append(press)
+
+                elif variable == "pr":  #converting from kg/m**2/s to mm/day
+                    prec = float(x) * 86400
+                    list_dict[variable].append(prec)
+
+                elif variable == "rsds":    #converting from W/m**2 to MJ/m**2
+                    rsds = float(x) * 24 * 60 *60 / 1000000
+                    list_dict[variable].append(rsds)
 
                 else : list_dict[variable].append(float(x))
 
             if variable is variables[0]:
                 for y in ncdf_file.variables["time"][:]:
-                    list_dict["Year"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[0:4])
-                    list_dict["Month"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[5:7])
-                    list_dict["Day"].append(str(ncdf.num2date(y, "days since 1900-01-01"))[8:10])
+                    list_dict["Year"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[0:4])
+                    list_dict["Month"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[5:7])
+                    list_dict["Day"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[8:10])
 
             ncdf_file.close()
 
@@ -242,8 +253,6 @@ def mylakepar(longitude, latitude, lake_name, outdir, c_shelter = "NaN", alb_mel
 
     :param longitude: Type int. Longitude coordinate of Mylake in degrees.
     :param latitude: Type int. Latitude coordinate of Mylake in degrees
-    :param outpath: Type str. Filename where a file of Mylake parameters will be written. In a typical run, this is the
-    return value of mylakeinit function
     :param lake_name: Type str. Name of the Lake.
     :param outdir: Type str. Output folder.
     :param c_shelter: Type str. Wind correction, a fraction between 0 and 1.
@@ -376,7 +385,15 @@ def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_d
     mylakepar(longitude, latitude, lake_name, outdir)
     myLake_input(lake_name, model, scenario, forcing_data_directory, outdir)
 
+def simulation_years(scenarioid):
+    if scenarioid == 'piControl':
+        y1, y2 = 1661, 1860
+    elif scenarioid == 'Historical':
+        y1, y2 = 1860, 2005
+    else:
+        y1, y2 = 2006, 2300
 
+    return y1, y2
 
 def run_myLake(observations_path, input_directory, region, lakeName, modelid, scenarioid):
     """
@@ -398,7 +415,6 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     outfolder = os.path.join("output", region, lakeName, modelid, scenarioid)
 
 
-    #Years have to be changed manualy here for now
     #Automatic lenght for calibrations:
 
     with open("{}/{}_temp_daily.csv".format(observations_path, lakeName), "r") as obs:
@@ -409,10 +425,9 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
     """
-
-    #hard-coded for actual runs:
-    y1 = 1661
-    y2 = 2299
+    #Automatic lenght for simulation runs
+    
+    y1, y2 = simulation_years(scenarioid)
     """
     cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
     print ( cmd )
@@ -430,6 +445,6 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
 
 if __name__ == "__main__":
-
-    #generate_input_files("observations/NO_Lan/Langtjern_hypsometry.csv", "observations/NO_Lan/Langtjern_temperature.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "historical")
-    run_myLake("observations/Langtjern", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "historical")
+    #myLake_input("Langtjern", "GFDL-ESM2M", "historical", "forcing_data/Langtjern", "input\\NO\Lan")
+    #generate_input_files("observations/Langtjern/Langtjern_hypsometry.csv", "observations/Langtjern/Langtjern_temp_daily.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "rcp26")
+    run_myLake("observations\Langtjern", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "rcp26")
