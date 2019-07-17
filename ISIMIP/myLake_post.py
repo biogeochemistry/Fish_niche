@@ -7,7 +7,7 @@ import datetime
 import netCDF4 as ncdf
 import datetime
 from sklearn import linear_model
-from scipy.optimize import minimize
+from scipy.optimize import minimize, differential_evolution
 import run_myLake_ISIMIP
 
 "Post-processing script for myLake simulations. For ISIMIP."
@@ -275,6 +275,9 @@ def make_comparison_file(output_folder):
 def performance_analysis(lake_name, input_folder, output_folder):
     """
     Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
+
+    :param
+    :param
     :param output_folder: A string, containing the folder containing the comparison file.
     :return: Score, a float representing the overall performance of the current simulation.
     """
@@ -302,29 +305,29 @@ def performance_analysis(lake_name, input_folder, output_folder):
 
         date_list = []
         obs_list_1 = []
-        #obs_list_2 = []
+        obs_list_2 = []
         sims_list_1 = []
-        #sims_list_2 = []
-        depth_levels = [reader[0][2], reader[0][3]]
+        sims_list_2 = []
+
 
     for item in reader[1:]:
         date_list.append(item[0])
         obs_list_1.append(item[2])
-        #obs_list_2.append(item[3])
+        obs_list_2.append(item[3])
         sims_list_1.append(item[5])
-        #sims_list_2.append(item[6])
+        sims_list_2.append(item[6])
 
     sos1 = sums_of_squares(obs_list_1, sims_list_1)
-    #sos2 = sums_of_squares(obs_list_2, sims_list_2)
+    sos2 = sums_of_squares(obs_list_2, sims_list_2)
     rms1 = root_mean_square(obs_list_1, sims_list_1)
-    #rms2 = root_mean_square(obs_list_2, sims_list_2)
+    rms2 = root_mean_square(obs_list_2, sims_list_2)
     #r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)     #For r square, if needed
     #r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
-    score = (sos1)/100 + (rms1)* 100
+    score = (sos1 + sos2) + (rms1 + rms2) * 1000
 
     print("Analysis of {}.".format(output_folder[10:]))
-    print("Sums of squares : {}".format(sos1))
-    print("RMSE : {}".format(rms1))
+    print("Sums of squares : {}".format(sos1 + sos2))
+    print("RMSE : {}".format(rms1 + rms2))
     #print("R squared : {}, {}".format(r_squ1, r_squ2))
     print("Score : {}".format(score))
 
@@ -689,7 +692,9 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     :return: performance analysis, which itself returns a score as float
     """
 
-    c_shelter, alb_melt_snow, alb_melt_ice, i_scv, i_sct, swa_b0, swa_b1 = params
+    c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
+    i_scv = 1
+    i_sct = 0
 
     run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
                                 run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
@@ -702,6 +707,22 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     make_comparison_file(outdir)
 
     return performance_analysis(lake_name, input_directory, outdir)
+
+def optimize_differential_evolution(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
+
+
+    func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region,
+                                                  forcing_data_directory, outdir, modelid, scenarioid, params)
+    params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
+    bounds = [(0, 1), (0.4, 1), (0.4, 1), (0.4, 4), (0.4, 2)]
+
+    res = differential_evolution(func, bounds, tol= 10, disp= True)
+    print(res)
+
+    with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
+        end_file.writelines(["Calibration results:", str(res)])
+
+    return res
 
 """
 #test functions for the algorithm
@@ -733,5 +754,6 @@ if __name__ == "__main__":
     #performance_analysis("output/NO/Langtjern")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
-    optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    #optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    optimize_differential_evolution("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26", "GFDL-ESM2M", "rcp26")
     #optimize_test()

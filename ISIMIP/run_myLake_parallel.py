@@ -56,6 +56,10 @@ scenarios = ["historical",
              "rcp60"
              ]
 
+def input_files_parallel():
+    Parallel(n_jobs=num_cores, verbose=10)(delayed() for lake in lake_list)
+
+
 def mylake_parallel():
 
     Parallel(n_jobs=num_cores, verbose=10)(delayed(model_scenario_loop(lake)) for lake in lake_list)
