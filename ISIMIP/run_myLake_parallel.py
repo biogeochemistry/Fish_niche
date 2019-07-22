@@ -57,8 +57,20 @@ scenarios = ["historical",
              ]
 
 def input_files_parallel():
-    Parallel(n_jobs=num_cores, verbose=10)(delayed() for lake in lake_list)
+    Parallel(n_jobs=num_cores, verbose=10)(delayed(input_files_loop(lake)) for lake in lake_list)
 
+def input_files_loop(lake):
+
+
+    forcing_data_dir = 0
+    for model in models:
+        for scenario in scenarios:
+            run_myLake_ISIMIP.generate_input_files("observations/{}/{}_hypsometry.csv".format(lake, lake),
+                                                   "observations/{}/{}_temp_daily.csv".format(lake, lake), lake,
+                                                   "forcing_data/{}".format(lake),
+                                                   run_myLake_ISIMIP.get_longitude(lake, "forcing_data/{}".format(lake)),
+                                                   run_myLake_ISIMIP.get_latitude(lake, "forcing_data/{}".format(lake)),
+                                                   model, scenario)
 
 def mylake_parallel():
 

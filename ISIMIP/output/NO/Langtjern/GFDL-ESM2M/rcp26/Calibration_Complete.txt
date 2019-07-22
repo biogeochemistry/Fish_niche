@@ -1,6 +1,6 @@
-Calibration results:     fun: 436.14466713860736
+Calibration results:     fun: 6043.91224333043
  message: 'Optimization terminated successfully.'
     nfev: 156
      nit: 1
  success: True
-       x: array([0.69620704, 0.41877364, 0.41020833, 3.45513423, 0.76464429])
+       x: array([0.0101644 , 0.45176727, 0.48259346, 3.83079325, 1.97816977])

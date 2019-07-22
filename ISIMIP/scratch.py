@@ -1,9 +1,10 @@
+import pysftp
 from netCDF4 import Dataset
-file = Dataset("forcing_data/Langtjern/rsds_GFDL-ESM2M_rcp26_Langtjern.allTS.nc", "r", format = "NETCDF4")
-#print(file)
 
-#print(file.variables)
-joules = 300*86400
-Mjoules = joules / 10**6
-print("300 * 86400 = {}/10**6 = {}".format(joules,Mjoules))
+with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
+    print("Connected")
+    sftp.cwd("/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
+    print(sftp.getcwd())
+    print(sftp.listdir())
+    #data = Dataset('Langtjern/hurs_GFDL-ESM2M_EWEMBI-ISIMIP3BASD_rcp60_Langtjern.allTS.nc', "r", format = "NETCDF4")
 

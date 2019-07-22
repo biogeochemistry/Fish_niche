@@ -260,7 +260,10 @@ def make_comparison_file(output_folder):
         with open("{}/Tzt.csv".format(output_folder), "r") as simulation_file:
             reader = list(csv.reader(simulation_file))
             for sim in reader:
-                simulation_dict[sims_dates[reader.index(sim)]] = [sim[1], sim[-2]]
+                try:
+                    simulation_dict[sims_dates[reader.index(sim)]] = [sim[1], sim[-2]]
+                except IndexError:
+                    continue
 
         csvFile = csv.writer(file)
         csvFile.writerow(["Date", "Observations",  depth_levels[0], depth_levels[1], "Simulations", depth_levels[0], depth_levels[1]])

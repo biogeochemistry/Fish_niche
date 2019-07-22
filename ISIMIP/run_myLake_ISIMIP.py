@@ -414,7 +414,6 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
     outfolder = os.path.join("output", region, lakeName, modelid, scenarioid)
 
-
     #Automatic lenght for calibrations:
 
     with open("{}/{}_temp_daily.csv".format(observations_path, lakeName), "r") as obs:
@@ -424,6 +423,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
+
     """
     #Automatic lenght for simulation runs
     
