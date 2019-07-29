@@ -7,6 +7,7 @@ import datetime
 import netCDF4 as ncdf
 import datetime
 from sklearn import linear_model
+from sklearn.metrics import r2_score
 from scipy.optimize import minimize, differential_evolution
 import run_myLake_ISIMIP
 
@@ -324,14 +325,14 @@ def performance_analysis(lake_name, input_folder, output_folder):
     sos2 = sums_of_squares(obs_list_2, sims_list_2)
     rms1 = root_mean_square(obs_list_1, sims_list_1)
     rms2 = root_mean_square(obs_list_2, sims_list_2)
-    #r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)     #For r square, if needed
-    #r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
+    r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)     #For r square, if needed add to score
+    r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
     score = (sos1 + sos2) + (rms1 + rms2) * 1000
 
     print("Analysis of {}.".format(output_folder[10:]))
-    print("Sums of squares : {}".format(sos1 + sos2))
-    print("RMSE : {}".format(rms1 + rms2))
-    #print("R squared : {}, {}".format(r_squ1, r_squ2))
+    print("Sums of squares : {}, {}".format(sos1, sos2))
+    print("RMSE : {}, {}".format(rms1, rms2))
+    print("R squared : {}, {}".format(r_squ1, r_squ2))
     print("Score : {}".format(score))
 
     return score
@@ -369,24 +370,21 @@ def r_squared(dates, obs_list, sims_list):
     :param sims_list: A list of simulated temperatures.
     :return: results of R squared, as a float
     """
-    linear = linear_model.LinearRegression()
 
     x = []
     y = []
 
     for i in obs_list:
         try:
-            x.append([float(dates[obs_list.index(i)]), float(i)])
+
+            x.append(float(i))
+            y.append(float(sims_list[obs_list.index(i)]))
+
+        except ValueError: continue
         except IndexError: break
 
-    for i in sims_list:
-        try:
-            y.append([float(dates[sims_list.index(i)]), float(i)])
-        except IndexError : break
 
-    linear.fit(x, y)
-
-    return linear.score(x, y)
+    return r2_score(x, y)
 
 def optimise_lake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
     """
@@ -754,9 +752,9 @@ def test_function(params):
 if __name__ == "__main__":
     #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
     #make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/rcp26")
-    #performance_analysis("output/NO/Langtjern")
+    performance_analysis("Langtjern", "input/NO/Lan", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
     #optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
-    optimize_differential_evolution("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26", "GFDL-ESM2M", "rcp26")
+    #optimize_differential_evolution("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26", "GFDL-ESM2M", "rcp26")
     #optimize_test()

@@ -1,4 +1,6 @@
 import pysftp
+import os
+
 from netCDF4 import Dataset
 
 with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
@@ -6,5 +8,16 @@ with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFa
     sftp.cwd("/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
     print(sftp.getcwd())
     print(sftp.listdir())
-    #data = Dataset('Langtjern/hurs_GFDL-ESM2M_EWEMBI-ISIMIP3BASD_rcp60_Langtjern.allTS.nc', "r", format = "NETCDF4")
+    lake = 'Langtjern'
+    file = 'hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc'
+
+    sftp.get("{}/{}".format(lake, file), localpath="C:\\Users\\User\Documents\GitHub\Fish_niche\ISIMIP\\forcing_data\\{}".format(file))
+
+nc = Dataset("forcing_data\\hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc", "r", format="NETCDF4")
+print(nc.variables)
+
+nc.close()
+
+os.remove("forcing_data\\hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc")
+
 
