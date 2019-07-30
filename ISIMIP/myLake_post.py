@@ -3,10 +3,9 @@ import os
 from math import sqrt
 import sys
 import numpy as np
-import datetime
+import statistics
 import netCDF4 as ncdf
 import datetime
-from sklearn import linear_model
 from sklearn.metrics import r2_score
 from scipy.optimize import minimize, differential_evolution
 import run_myLake_ISIMIP
@@ -325,14 +324,15 @@ def performance_analysis(lake_name, input_folder, output_folder):
     sos2 = sums_of_squares(obs_list_2, sims_list_2)
     rms1 = root_mean_square(obs_list_1, sims_list_1)
     rms2 = root_mean_square(obs_list_2, sims_list_2)
-    r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)     #For r square, if needed add to score
-    r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
+    r_squ1 = r_squared(obs_list_1, sims_list_1)
+    r_squ2 = r_squared(obs_list_2, sims_list_2)
     score = (sos1 + sos2) + (rms1 + rms2) * 1000
 
     print("Analysis of {}.".format(output_folder[10:]))
     print("Sums of squares : {}, {}".format(sos1, sos2))
     print("RMSE : {}, {}".format(rms1, rms2))
     print("R squared : {}, {}".format(r_squ1, r_squ2))
+    print("RMSE/SD : {}, {}".format(rmse_by_sd(obs_list_1, rms1), rmse_by_sd(obs_list_2, rms2)))
     print("Score : {}".format(score))
 
     return score
@@ -362,10 +362,9 @@ def root_mean_square(obs_list, sims_list):
     lenght = len(obs_list) + len(sims_list)
     return sqrt(sums_of_squares(obs_list, sims_list)/lenght)
 
-def r_squared(dates, obs_list, sims_list):
+def r_squared(obs_list, sims_list):
     """
     Find the R squared for the simulations compared to the expected observations
-    :param dates: the list of dates
     :param obs_list: A list of observed temperatures.
     :param sims_list: A list of simulated temperatures.
     :return: results of R squared, as a float
@@ -385,6 +384,29 @@ def r_squared(dates, obs_list, sims_list):
 
 
     return r2_score(x, y)
+
+def standard_deviation(obs_list):
+    """
+    Find the standard deviation of the observations
+    :param obs_list: Type list. The list of observed temperatures
+    :return: The standard deviation of obs_list
+    """
+    observations = []
+    for obs in obs_list:
+        try:
+            observations.append(float(obs))
+        except ValueError: continue
+
+    return statistics.stdev(observations)
+
+def rmse_by_sd(obs_list, rmse):
+    """
+    Divides RMSE of the simulations by the SD of the observations
+    :param obs_list: A list of observed temperatures.
+    :param rmse: Float
+    :return: A float, RMSE / SD
+    """
+    return rmse/standard_deviation(obs_list)
 
 def optimise_lake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
     """
