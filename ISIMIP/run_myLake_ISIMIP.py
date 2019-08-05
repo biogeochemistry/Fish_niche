@@ -369,7 +369,7 @@ def get_latitude(lake_name, forcing_data_directory):
 
 
 
-def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_data_directory, longitude, latitude, model, scenario):
+def generate_input_files(hypsometry_path, temperature_path, lake_name, f_lake_name, forcing_data_directory, longitude, latitude, model, scenario):
     """
     Creates all files needed for a run of mylake model with a single lake. The input function will generate ALL needed
     input files(one for each combination of scenario, model and variable)
@@ -383,7 +383,7 @@ def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_d
     """
     outdir = mylakeinit(init_info(hypsometry_path, temperature_path))
     mylakepar(longitude, latitude, lake_name, outdir)
-    myLake_input(lake_name, model, scenario, forcing_data_directory, outdir)
+    myLake_input(f_lake_name, model, scenario, forcing_data_directory, outdir)
 
 def simulation_years(scenarioid):
     if scenarioid == 'piControl':
@@ -446,6 +446,6 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
 if __name__ == "__main__":
     #myLake_input("Langtjern", "GFDL-ESM2M", "historical", "forcing_data/Langtjern", "input\\NO\Lan")
-    #generate_input_files("observations/Langtjern/Langtjern_hypsometry.csv", "observations/Langtjern/Langtjern_temp_daily.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "rcp26")
+    #generate_input_files("observations/Langtjern/Langtjern_hypsometry.csv", "observations/Langtjern/Langtjern_temp_daily.csv", "Langtjern", 'Langtjern', "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "rcp26")
     mylakepar(9.75000, 60.25000, "Langtjern", "input\\NO\Lan", kz_N0= 1.61132863e-04, c_shelter= "1.79267238e-02", alb_melt_ice= 4.56082677e-01, alb_melt_snow= 4.73366534e-01, swa_b0= 2.00915072, swa_b1= 8.62103358e-01)
     run_myLake("observations\Langtjern", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "rcp26")
