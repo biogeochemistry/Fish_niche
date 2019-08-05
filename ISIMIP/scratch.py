@@ -11,7 +11,7 @@ with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFa
     lake = 'Langtjern'
     file = 'hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc'
 
-    sftp.get("{}/{}".format(lake, file), localpath="C:\\Users\\User\Documents\GitHub\Fish_niche\ISIMIP\\forcing_data\\{}".format(file))
+    sftp.get("{}/{}".format(lake, file), localpath="forcing_data\\{}".format(file))
 
 nc = Dataset("forcing_data\\hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc", "r", format="NETCDF4")
 print(nc.variables)

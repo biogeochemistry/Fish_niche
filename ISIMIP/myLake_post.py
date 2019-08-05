@@ -326,7 +326,15 @@ def performance_analysis(lake_name, input_folder, output_folder):
     rms2 = root_mean_square(obs_list_2, sims_list_2)
     r_squ1 = r_squared(obs_list_1, sims_list_1)
     r_squ2 = r_squared(obs_list_2, sims_list_2)
-    score = (sos1 + sos2) + (rms1 + rms2) * 1000
+
+    if r_squ1 < 0:
+        r_squ1_B = -r_squ1
+    else: r_squ1_B = r_squ1
+    if r_squ2 < 0:
+        r_squ2_B = -r_squ2
+    else: r_squ2_B = r_squ2
+
+    score = (sos1 + sos2) + (rms1 + rms2) * 1000  + (1 - r_squ1_B) * 100 + (1 - r_squ2_B) * 100
 
     print("Analysis of {}.".format(output_folder[10:]))
     print("Sums of squares : {}, {}".format(sos1, sos2))
@@ -715,13 +723,13 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     :return: performance analysis, which itself returns a score as float
     """
 
-    c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
+    kz_N0, c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
     i_scv = 1
     i_sct = 0
 
     run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
                                 run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
-                                lake_name, input_directory, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
+                                lake_name, input_directory, kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
 
     run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
 
@@ -737,7 +745,7 @@ def optimize_differential_evolution(lake_name, observation_path, input_directory
     func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region,
                                                   forcing_data_directory, outdir, modelid, scenarioid, params)
     params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
-    bounds = [(0, 1), (0.4, 1), (0.4, 1), (0.4, 4), (0.4, 2)]
+    bounds = [(0.001, 0.000001), (0, 1), (0.4, 1), (0.4, 1), (0.4, 4), (0.4, 2)]
 
     res = differential_evolution(func, bounds, tol= 10, disp= True)
     print(res)
@@ -773,7 +781,7 @@ def test_function(params):
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
-    #make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/rcp26")
+    make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/rcp26")
     performance_analysis("Langtjern", "input/NO/Lan", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")

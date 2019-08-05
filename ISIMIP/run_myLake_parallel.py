@@ -8,18 +8,19 @@ import myLake_post
 import sys
 import math
 import os
+import pysftp
 from joblib import Parallel, delayed
 import multiprocessing as mp
 
 num_cores = mp.cpu_count()
 
-lake_list = [#"Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin",
-             #"Crystal", "CrystalBog", "Delavan", "Dickie", "Eagle", "Ekoln", "Erken", "EsthwaiteWater", "FallingCreek",
-             #"Feeagh", "Fish", "Geneva", "GreatPond", "Green", "Harp", "Kilpisjarvi", "Kinneret", "Kivu", "Klicava", "Kuivajarvi",
-             "Langtjern" #, "Laramie", "LowerLakeZurich", "Mendota", "Monona", "Mozaisk", "MtBold", "Muggelsee", "Neuchatel",
-             #"Ngoring", "NohipaloMustjarv", "NohipaloValgejarv", "Okauchee", "Paajarvi", "Rappbode", "Rimov", "Rotorua",
-             #"Sammamish", "Sau", "Sparkling", "Stechlin", "Sunapee", "Tahoe", "Tarawera", "Taupo", "Toolik", "Trout", "TroutBog",
-             #"TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra", "Zlutice"
+lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin",
+             "Crystal", "CrystalBog", "Delavan", "Dickie", "Eagle", "Ekoln", "Erken", "EsthwaiteWater", "FallingCreek",
+             "Feeagh", "Fish", "Geneva", "GreatPond", "Green", "Harp", "Kilpisjarvi", "Kinneret", "Kivu", "Klicava", "Kuivajarvi",
+             "Langtjern", "Laramie", "LowerLakeZurich", "Mendota", "Monona", "Mozaisk", "MtBold", "Muggelsee", "Neuchatel",
+             "Ngoring", "NohipaloMustjarv", "NohipaloValgejarv", "Okauchee", "Paajarvi", "Rappbode", "Rimov", "Rotorua",
+             "Sammamish", "Sau", "Sparkling", "Stechlin", "Sunapee", "Tahoe", "Tarawera", "Taupo", "Toolik", "Trout", "TroutBog",
+             "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra", "Zlutice"
             ]
 
 regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Laramie", "Mendota", "Monona",
@@ -55,6 +56,14 @@ scenarios = ["historical",
              "rcp26",
              "rcp60"
              ]
+input_variables = ["hurs",
+                   "pr",
+                   "ps",
+                   "rsds",
+                   "sfcWind",
+                   "tas"
+                    ]
+
 
 def input_files_parallel():
     Parallel(n_jobs=num_cores, verbose=10)(delayed(input_files_loop(lake)) for lake in lake_list)
@@ -62,15 +71,34 @@ def input_files_parallel():
 def input_files_loop(lake):
 
 
-    forcing_data_dir = 0
+    download_forcing_data(lake)
     for model in models:
         for scenario in scenarios:
             run_myLake_ISIMIP.generate_input_files("observations/{}/{}_hypsometry.csv".format(lake, lake),
                                                    "observations/{}/{}_temp_daily.csv".format(lake, lake), lake,
-                                                   "forcing_data/{}".format(lake),
-                                                   run_myLake_ISIMIP.get_longitude(lake, "forcing_data/{}".format(lake)),
-                                                   run_myLake_ISIMIP.get_latitude(lake, "forcing_data/{}".format(lake)),
-                                                   model, scenario)
+                                                   "forcing_data", run_myLake_ISIMIP.get_longitude(lake, "forcing_data"),
+                                                   run_myLake_ISIMIP.get_latitude(lake, "forcing_data"), model, scenario)
+    for model in models:
+        for scenario in scenarios:
+            for var in input_variables:
+                os.remove("forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake))
+
+
+def download_forcing_data(lake):
+    """
+    A function to download forcing data from dkrz server.
+    :param lake:
+    :return:
+    """
+
+    with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
+        sftp.cwd("/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
+
+        for model in models:
+            for scenario in scenarios:
+                for var in input_variables:
+                   sftp.get("{}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake), localpath="forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake))
+
 
 def mylake_parallel():
 
@@ -140,12 +168,12 @@ def run_calibrations(lake):
 
     for region in regions:
         if lake in regions[region]:
-            if os.path.exists("output/{}/{}/GFDL-ESM2M/historical/Calibration_Complete.txt".format(region, lake)):
+            if os.path.exists("output/{}/{}/GFDL-ESM2M/rcp26/Calibration_Complete.txt".format(region, lake)):
                 print("Calibration for {} is already complete.\n".format(lake))
                 return None
 
             else:
-                return myLake_post.optimize_Nelder_Meald(lake, "observations/{}_{}".format(region, lake),
+                return myLake_post.optimize_differential_evolution(lake, "observations/{}".format(lake),
                                                      "input/{}/{}".format(region, lake), region,
                                                      "forcing_data/{}".format(lake), "output/{}/{}".format(region, lake),
                                                      "GFDL-ESM2M", "historical")
@@ -153,4 +181,4 @@ def run_calibrations(lake):
 
 if __name__ == "__main__":
 
-    #model_scenario_loop("Langtjern")
+    input_files_loop("Langtjern")
