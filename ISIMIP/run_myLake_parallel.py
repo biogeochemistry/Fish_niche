@@ -181,4 +181,4 @@ def run_calibrations(lake):
 
 if __name__ == "__main__":
 
-    input_files_loop("Langtjern")
+    input_files_parallel()
