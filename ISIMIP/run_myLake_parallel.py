@@ -91,6 +91,17 @@ def download_forcing_data(lake):
     :return:
     """
 
+    corrected_names = ["Allequash_Lake", "Big_Muskellunge_Lake", "Black_Oak_Lake", "Burley_Griffin", "Crystal_Bog", "Crystal_Lake",
+                       "Dickie_Lake", "Eagle_Lake", "Ekoln_basin_of_Malaren", "Esthwaite_Water", "Falling_Creek_Reservoir",
+                       "Fish_Lake", "Great_Pond", "Green_Lake", "Harp_Lake", "Laramie_Lake", "Lower_Zurich", "Mt_Bold",
+                       "Nohipalo_Mustjarv", "Nohipalo_Valgejarv", "Okauchee_Lake", "Rappbode_Reservoir", "Sau_Reservoir",
+                       "Sparkling_Lake", "Toolik_Lake", "Trout_Bog", "Trout_Lake", "Two_Sisters_Lake"]
+
+    for name in corrected_names:
+        if lake in name:
+            lake = name
+            break
+
     with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
         sftp.cwd("/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
 
@@ -180,5 +191,4 @@ def run_calibrations(lake):
     print("Cannot find specified lake's region")
 
 if __name__ == "__main__":
-
     input_files_parallel()
