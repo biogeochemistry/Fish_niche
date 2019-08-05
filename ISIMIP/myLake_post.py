@@ -3,11 +3,11 @@ import os
 from math import sqrt
 import sys
 import numpy as np
-import datetime
+import statistics
 import netCDF4 as ncdf
 import datetime
-from sklearn import linear_model
-from scipy.optimize import minimize
+from sklearn.metrics import r2_score
+from scipy.optimize import minimize, differential_evolution
 import run_myLake_ISIMIP
 
 "Post-processing script for myLake simulations. For ISIMIP."
@@ -260,7 +260,10 @@ def make_comparison_file(output_folder):
         with open("{}/Tzt.csv".format(output_folder), "r") as simulation_file:
             reader = list(csv.reader(simulation_file))
             for sim in reader:
-                simulation_dict[sims_dates[reader.index(sim)]] = [sim[1], sim[-2]]
+                try:
+                    simulation_dict[sims_dates[reader.index(sim)]] = [sim[1], sim[-2]]
+                except IndexError:
+                    continue
 
         csvFile = csv.writer(file)
         csvFile.writerow(["Date", "Observations",  depth_levels[0], depth_levels[1], "Simulations", depth_levels[0], depth_levels[1]])
@@ -275,6 +278,9 @@ def make_comparison_file(output_folder):
 def performance_analysis(lake_name, input_folder, output_folder):
     """
     Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
+
+    :param
+    :param
     :param output_folder: A string, containing the folder containing the comparison file.
     :return: Score, a float representing the overall performance of the current simulation.
     """
@@ -302,30 +308,39 @@ def performance_analysis(lake_name, input_folder, output_folder):
 
         date_list = []
         obs_list_1 = []
-        #obs_list_2 = []
+        obs_list_2 = []
         sims_list_1 = []
-        #sims_list_2 = []
-        depth_levels = [reader[0][2], reader[0][3]]
+        sims_list_2 = []
+
 
     for item in reader[1:]:
         date_list.append(item[0])
         obs_list_1.append(item[2])
-        #obs_list_2.append(item[3])
+        obs_list_2.append(item[3])
         sims_list_1.append(item[5])
-        #sims_list_2.append(item[6])
+        sims_list_2.append(item[6])
 
     sos1 = sums_of_squares(obs_list_1, sims_list_1)
-    #sos2 = sums_of_squares(obs_list_2, sims_list_2)
+    sos2 = sums_of_squares(obs_list_2, sims_list_2)
     rms1 = root_mean_square(obs_list_1, sims_list_1)
-    #rms2 = root_mean_square(obs_list_2, sims_list_2)
-    #r_squ1 = r_squared(date_list, obs_list_1, sims_list_1)     #For r square, if needed
-    #r_squ2 = r_squared(date_list, obs_list_2, sims_list_2)
-    score = (sos1)/100 + (rms1)* 100
+    rms2 = root_mean_square(obs_list_2, sims_list_2)
+    r_squ1 = r_squared(obs_list_1, sims_list_1)
+    r_squ2 = r_squared(obs_list_2, sims_list_2)
+
+    if r_squ1 < 0:
+        r_squ1_B = -r_squ1
+    else: r_squ1_B = r_squ1
+    if r_squ2 < 0:
+        r_squ2_B = -r_squ2
+    else: r_squ2_B = r_squ2
+
+    score = (sos1 + sos2) + (rms1 + rms2) * 1000  + (1 - r_squ1_B) * 100 + (1 - r_squ2_B) * 100
 
     print("Analysis of {}.".format(output_folder[10:]))
-    print("Sums of squares : {}".format(sos1))
-    print("RMSE : {}".format(rms1))
-    #print("R squared : {}, {}".format(r_squ1, r_squ2))
+    print("Sums of squares : {}, {}".format(sos1, sos2))
+    print("RMSE : {}, {}".format(rms1, rms2))
+    print("R squared : {}, {}".format(r_squ1, r_squ2))
+    print("RMSE/SD : {}, {}".format(rmse_by_sd(obs_list_1, rms1), rmse_by_sd(obs_list_2, rms2)))
     print("Score : {}".format(score))
 
     return score
@@ -355,32 +370,51 @@ def root_mean_square(obs_list, sims_list):
     lenght = len(obs_list) + len(sims_list)
     return sqrt(sums_of_squares(obs_list, sims_list)/lenght)
 
-def r_squared(dates, obs_list, sims_list):
+def r_squared(obs_list, sims_list):
     """
     Find the R squared for the simulations compared to the expected observations
-    :param dates: the list of dates
     :param obs_list: A list of observed temperatures.
     :param sims_list: A list of simulated temperatures.
     :return: results of R squared, as a float
     """
-    linear = linear_model.LinearRegression()
 
     x = []
     y = []
 
     for i in obs_list:
         try:
-            x.append([float(dates[obs_list.index(i)]), float(i)])
+
+            x.append(float(i))
+            y.append(float(sims_list[obs_list.index(i)]))
+
+        except ValueError: continue
         except IndexError: break
 
-    for i in sims_list:
+
+    return r2_score(x, y)
+
+def standard_deviation(obs_list):
+    """
+    Find the standard deviation of the observations
+    :param obs_list: Type list. The list of observed temperatures
+    :return: The standard deviation of obs_list
+    """
+    observations = []
+    for obs in obs_list:
         try:
-            y.append([float(dates[sims_list.index(i)]), float(i)])
-        except IndexError : break
+            observations.append(float(obs))
+        except ValueError: continue
 
-    linear.fit(x, y)
+    return statistics.stdev(observations)
 
-    return linear.score(x, y)
+def rmse_by_sd(obs_list, rmse):
+    """
+    Divides RMSE of the simulations by the SD of the observations
+    :param obs_list: A list of observed temperatures.
+    :param rmse: Float
+    :return: A float, RMSE / SD
+    """
+    return rmse/standard_deviation(obs_list)
 
 def optimise_lake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
     """
@@ -668,7 +702,7 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
     print(res)
 
     with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
-        end_file.writelines(["Calibration results:", res])
+        end_file.writelines(["Calibration results:", str(res)])
 
     return res
 
@@ -689,11 +723,13 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     :return: performance analysis, which itself returns a score as float
     """
 
-    c_shelter, alb_melt_snow, alb_melt_ice, i_scv, i_sct, swa_b0, swa_b1 = params
+    kz_N0, c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
+    i_scv = 1
+    i_sct = 0
 
     run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
                                 run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
-                                lake_name, input_directory, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
+                                lake_name, input_directory, kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
 
     run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
 
@@ -703,6 +739,22 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
 
     return performance_analysis(lake_name, input_directory, outdir)
 
+def optimize_differential_evolution(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
+
+
+    func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region,
+                                                  forcing_data_directory, outdir, modelid, scenarioid, params)
+    params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
+    bounds = [(0.001, 0.000001), (0, 1), (0.4, 1), (0.4, 1), (0.4, 4), (0.4, 2)]
+
+    res = differential_evolution(func, bounds, tol= 10, disp= True)
+    print(res)
+
+    with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
+        end_file.writelines(["Calibration results:", str(res)])
+
+    return res
+
 """
 #test functions for the algorithm
 
@@ -711,7 +763,7 @@ def optimize_test():
     params_0 = np.array([10, 5])
     res = minimize(func, params_0, method="nelder-mead", options={'xtol': 0, 'disp': True})
 
-    print(res)
+    print(str(res))
     return res
 
 
@@ -729,9 +781,11 @@ def test_function(params):
 """
 
 if __name__ == "__main__":
-    #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical")
-    #make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/historical")
-    #performance_analysis("output/NO/Langtjern")
+    #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
+    make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/rcp26")
+    performance_analysis("Langtjern", "input/NO/Lan", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
-    optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    #optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
+    #optimize_differential_evolution("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26", "GFDL-ESM2M", "rcp26")
+    #optimize_test()

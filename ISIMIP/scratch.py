@@ -1,21 +1,22 @@
+import pysftp
+import os
 
-with open("input/NO/Lan/Lan_par", "r") as param_file:
-    for line in param_file.readlines():
+from netCDF4 import Dataset
 
-        if "C_shelter" in line:
-            print(line.split('\t')[1])
+with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
+    print("Connected")
+    sftp.cwd("/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
+    print(sftp.getcwd())
+    print(sftp.listdir())
+    lake = 'Langtjern'
+    file = 'hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc'
 
-        """if "C_shelter" in line:
-            if float(list(line)[1]) <= 0:
-        elif "Swa_b0" in line:
-            if float(list(line)[1]) <= 0: 
-        elif "Swa_b01" in line:
-            if float(list(line)[1]) <= 0: 
-        elif "I_ScV" in line:
-            if float(list(line)[1]) <= 0: 
-        elif "I_ScT" in line:
-            if float(list(line)[1]) <= 0: 
-        elif "Alb_melt_ice" in line:
-            if float(list(line)[1]) <= 0: 
-        elif "Alb_melt_snow" in line:
-            if float(list(line)[1]) <= 0: """
+    sftp.get("{}/{}".format(lake, file), localpath="forcing_data\\{}".format(file))
+
+nc = Dataset("forcing_data\\hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc", "r", format="NETCDF4")
+print(nc.variables)
+
+nc.close()
+
+os.remove("forcing_data\\hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc")
+
