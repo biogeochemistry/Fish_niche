@@ -175,8 +175,8 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         # k_BOD = OLD EQUATION: 0.268454*math.log(float(depth))**-3.980304
         #                     0.291694*math.log(float(depth))**-4.013598#0.2012186 * math.log(float(depth)) ** -3.664774
     else:
-        swa_b1 = math.exp(-0.95670 * math.log(float(mean_calculated)) + 1.36359)
-        k_BOD = math.exp(-0.25290 * float(mean_calculated) - 1.36966)
+        swa_b1 = math.exp(-0.95670 * math.log(float(volume)/float(area)) + 1.36359)
+        k_BOD = math.exp(-0.25290 * (float(volume)/float(area)) - 1.36966)
 
     print('BOD %s' % k_BOD)
     k_SOD = math.exp(-0.06629 * float(depth) + 0.64826 * math.log(float(area)) - 3.13037)
@@ -200,5 +200,5 @@ if __name__ == '__main__':
     # runlakesGoran_par(csvf, modeli, scenarioi)
 
     # Line used to run regional scale simulation with all model-scenario combinations
-    loop_through_model_scenario ( [1,2,3,4,5,6],[1,2,3,4,5,6,7,8], r'2017SwedenList.csv', 'report_122.txt' )
+    loop_through_model_scenario ( [1,2,3,4,5,6],[1,2,3,4,5,6,7,8], r'2017SwedenList.csv', 'report_0725.txt' )
     #loop_through_model_scenario ( [1,2,3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report_end.txt' ),,
