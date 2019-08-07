@@ -1,10 +1,7 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
   <component name="ChangeListManager">
-    <list default="true" id="69863771-2d5a-4b4c-95d4-1744dbe4a1a1" name="Default Changelist" comment="">
-      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
-      <change beforePath="$PROJECT_DIR$/run_myLake_parallel.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_myLake_parallel.py" afterDir="false" />
-    </list>
+    <list default="true" id="69863771-2d5a-4b4c-95d4-1744dbe4a1a1" name="Default Changelist" comment="" />
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
     <option name="HIGHLIGHT_CONFLICTS" value="true" />
@@ -109,7 +106,7 @@
         <entry file="file://$PROJECT_DIR$/run_myLake_parallel.py">
           <provider selected="true" editor-type-id="text-editor">
             <state relative-caret-position="2210">
-              <caret line="193" column="21" lean-forward="true" selection-start-line="193" selection-start-column="21" selection-end-line="193" selection-end-column="21" />
+              <caret line="193" column="21" selection-start-line="193" selection-start-column="21" selection-end-line="193" selection-end-column="21" />
               <folding>
                 <element signature="e#109#133#0" expanded="true" />
                 <marker date="1565020357266" expanded="true" signature="2891:4997" ph="..." />
@@ -339,7 +336,7 @@
     <servers />
   </component>
   <component name="ToolWindowManager">
-    <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
     <editor active="true" />
     <layout>
       <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.17248322" />
@@ -478,7 +475,7 @@
     <entry file="file://$PROJECT_DIR$/run_myLake_parallel.py">
       <provider selected="true" editor-type-id="text-editor">
         <state relative-caret-position="2210">
-          <caret line="193" column="21" lean-forward="true" selection-start-line="193" selection-start-column="21" selection-end-line="193" selection-end-column="21" />
+          <caret line="193" column="21" selection-start-line="193" selection-start-column="21" selection-end-line="193" selection-end-column="21" />
           <folding>
             <element signature="e#109#133#0" expanded="true" />
             <marker date="1565020357266" expanded="true" signature="2891:4997" ph="..." />
