@@ -129,7 +129,7 @@ def mylakeinit(init_info_dict, I_scDOC = 1):
 
     return init_info_dict["outdir"]                 # To pass the output folder to the other modules
 
-def init_info(hypsometry_path, temperature_path, date_init = 101):
+def init_info(lakeName, observation_path, date_init = 101):
     """
     J. Bellavance 2018/11/19
     For ISI-MIP
@@ -144,7 +144,7 @@ def init_info(hypsometry_path, temperature_path, date_init = 101):
              outhpath has the output directory path as a value instead, as a string.
     """
 
-    with open("{}".format(hypsometry_path), "r") as obs:
+    with open("{}/{}_hypsometry.csv".format(observation_path, lakeName), "r") as obs:
         reader = list(csv.reader(obs))[1:]
         out_dir, out_folder = reader[0][0][:2], reader[0][0][3:]
 
@@ -154,8 +154,19 @@ def init_info(hypsometry_path, temperature_path, date_init = 101):
             depth_levels.append(float(row[2]))
             areas.append(float(row[3]))
 
-    with open("{}".format(temperature_path), "r") as obs:
-        reader = list(csv.reader(obs))[1:]
+    if os.path.exists("{}/{}_temp_daily.csv".format(observation_path, lakeName)):
+
+        with open("{}/{}_temp_daily.csv".format(observation_path, lakeName), "r") as obs:
+            reader = list(csv.reader(obs))[1:]
+
+            w_temp = find_init_temp(reader, depth_levels, date_init)
+
+    else:
+        reader = []
+
+        for file in os.listdir(observation_path):
+            with open(file, "r") as obs:
+                reader.append(list(csv.reader(obs))[1:])
 
         w_temp = find_init_temp(reader, depth_levels, date_init)
 
@@ -369,7 +380,7 @@ def get_latitude(lake_name, forcing_data_directory):
 
 
 
-def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_data_directory, longitude, latitude, model, scenario):
+def generate_input_files(hypsometry_path, temperature_path, lake_name, f_lake_name, forcing_data_directory, longitude, latitude, model, scenario):
     """
     Creates all files needed for a run of mylake model with a single lake. The input function will generate ALL needed
     input files(one for each combination of scenario, model and variable)
@@ -383,7 +394,7 @@ def generate_input_files(hypsometry_path, temperature_path, lake_name, forcing_d
     """
     outdir = mylakeinit(init_info(hypsometry_path, temperature_path))
     mylakepar(longitude, latitude, lake_name, outdir)
-    myLake_input(lake_name, model, scenario, forcing_data_directory, outdir)
+    myLake_input(f_lake_name, model, scenario, forcing_data_directory, outdir)
 
 def simulation_years(scenarioid):
     if scenarioid == 'piControl':
@@ -395,7 +406,7 @@ def simulation_years(scenarioid):
 
     return y1, y2
 
-def run_myLake(observations_path, input_directory, region, lakeName, modelid, scenarioid):
+def run_myLake(observations_path, input_directory, region, lakeName, modelid, scenarioid, flag = None):
     """
     Runs the MyLake simulation using the input, init and parameters files. Makes a single run for a combination of lake,
     model and scenario.
@@ -404,6 +415,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     :param lakeName: string. Name of the lake to simulate
     :param modelid: string. model used
     :param scenarioid: string. scenario used
+    :param flag: None or string, determines if the run is for calibration or simulation. Should be set to None or "calibration".
 
     :return: None
     """
@@ -411,24 +423,42 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     init_file = os.path.join(input_directory, "{}_init".format(lakeName[:3]))
     parameter_file = os.path.join(input_directory, "{}_par".format(lakeName[:3]))
     input_file = os.path.join(input_directory, "{}_{}_{}_input".format(lakeName[:3], modelid, scenarioid))
-
     outfolder = os.path.join("output", region, lakeName, modelid, scenarioid)
 
-    #Manual lenght for calibrations:
+    if flag == "calibration":   #Ideally, calibrations are done using 2013 and 2014 as the years. If not possible, the last years of observations are used
+        if os.path.exists("{}/{}_temp_daily.csv".format(observations_path, lakeName)):
+            with open("{}/{}_temp_daily.csv".format(observations_path, lakeName), "r") as obs:
+                reader = list(csv.reader(obs))[1:]
 
-    with open("{}/{}_temp_daily.csv".format(observations_path, lakeName), "r") as obs:
-        reader = list(csv.reader(obs))[1:]  
-        y1 = int(reader[0][2][:4])
-        y2 = int(reader[-1][2][:4]) + 1
+                first_year = int(reader[0][2][:4])
+                last_year = int(reader[-1][2][:4]) + 1
+
+                if first_year <= 2013 and last_year >= 2014:
+                    y1, y2 = 2013, 2014
+
+                else:
+                    y2 = int(reader[-1][2][:4])
+                    y1 = y2 - 1
+
+        elif os.path.exists("{}/{}_temp_subdaily_2013.csv".format(observations_path, lakeName)) and os.path.exists(
+                "{}/{}_temp_subdaily_2014.csv".format(observations_path, lakeName)): y1, y2 = 2013, 2014
+
+        else:
+            file_list = os.listdir(observations_path)
+            y2 = 0
+            for file in file_list:
+                if int(file[len(lakeName) + 15:-5]) > y2: y2 = int(file[len(lakeName) + 14:-4])
+
+            y1 = y2 -1
+
+    else:
+        y1, y2 = simulation_years(scenarioid)
+
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
 
-    """
-    #Automatic lenght for simulation runs
-    
-    y1, y2 = simulation_years(scenarioid)
-    """
+
     cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
     print ( cmd )
     os.system ( cmd )
@@ -446,6 +476,6 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
 if __name__ == "__main__":
     #myLake_input("Langtjern", "GFDL-ESM2M", "historical", "forcing_data/Langtjern", "input\\NO\Lan")
-    #generate_input_files("observations/Langtjern/Langtjern_hypsometry.csv", "observations/Langtjern/Langtjern_temp_daily.csv", "Langtjern", "forcing_data/Langtjern", get_longitude("Langtjern", "forcing_data/Langtjern"), get_latitude("Langtjern", "forcing_data/Langtjern"), "GFDL-ESM2M", "rcp26")
-    mylakepar(9.75000, 60.25000, "Langtjern", "input\\NO\Lan", kz_N0= 1.61132863e-04, c_shelter= "1.79267238e-02", alb_melt_ice= 4.56082677e-01, alb_melt_snow= 4.73366534e-01, swa_b0= 2.00915072, swa_b1= 8.62103358e-01)
-    run_myLake("observations\Langtjern", "input\\NO\Lan", "NO", "Langtjern", "GFDL-ESM2M", "rcp26")
+    generate_input_files("Annie", "observations/Annie", "Annie", 'Annie', "forcing_data/Annie", get_longitude('Annie', "forcing_data/Annie"), get_latitude('Annie', "forcing_data/Annie"), "GFDL-ESM2M", "rcp26")
+    #mylakepar(9.75000, 60.25000, "Langtjern", "input\\NO\Lan", kz_N0= 1.61132863e-04, c_shelter= "1.79267238e-02", alb_melt_ice= 4.56082677e-01, alb_melt_snow= 4.73366534e-01, swa_b0= 2.00915072, swa_b1= 8.62103358e-01)
+    run_myLake("observations\Annie", "input\\US\Ann", "US", "Annie", "GFDL-ESM2M", "rcp26", flag="calibration")

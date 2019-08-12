@@ -731,7 +731,7 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
                                 run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
                                 lake_name, input_directory, kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
 
-    run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
+    run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid, flag="calibration")
 
     temperatures_by_depth(observation_path, lake_name, outdir)
 
@@ -765,6 +765,7 @@ def optimize_test():
 
     print(str(res))
     return res
+
 
 def test_function(params):
     x, y = params

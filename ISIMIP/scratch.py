@@ -3,6 +3,7 @@ import os
 
 from netCDF4 import Dataset
 
+"""
 with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
     print("Connected")
     sftp.cwd("/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
@@ -20,4 +21,6 @@ nc.close()
 
 os.remove("forcing_data\\hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc")
 
+"""
 
+print(os.listdir("observations/Annie"))
