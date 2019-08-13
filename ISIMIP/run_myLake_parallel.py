@@ -56,6 +56,7 @@ scenarios = ["historical",
              "rcp26",
              "rcp60"
              ]
+
 input_variables = ["hurs",
                    "pr",
                    "ps",

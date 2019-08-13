@@ -159,18 +159,22 @@ def init_info(lakeName, observation_path, date_init = 101):
         with open("{}/{}_temp_daily.csv".format(observation_path, lakeName), "r") as obs:
             reader = list(csv.reader(obs))[1:]
 
-            w_temp = find_init_temp(reader, depth_levels, date_init)
+        w_temp = find_init_temp_daily(reader, depth_levels, date_init)
 
     else:
-        reader = []
-
+        found_date = False
         for file in os.listdir(observation_path):
-            with open(file, "r") as obs:
-                reader.append(list(csv.reader(obs))[1:])
+            with open("{}/{}".format(observation_path, file), "r") as obs:
+                reader = list(csv.reader(obs))[1:]
 
-        w_temp = find_init_temp(reader, depth_levels, date_init)
+            for observation in reader:
+                if int(observation[2][4:8]) > date_init and int(observation[2][4:8]) < date_init + 20 and found_date is False:
+                    found_date = True
 
+            if found_date is True:
+                break
 
+        w_temp = find_init_temp_subdaily(reader, depth_levels, date_init)
 
     outdir = os.path.join("input", "{}".format(out_dir), "{}".format(out_folder))
 
@@ -182,7 +186,7 @@ def init_info(lakeName, observation_path, date_init = 101):
     return {"depth_levels": depth_levels, "areas": areas, "w_temp": w_temp, "outdir": outdir, "outpath": outpath}
 
 
-def find_init_temp(observations, depth_levels, date_init):
+def find_init_temp_daily(observations, depth_levels, date_init):
     """
     J. Bellavance 2018/12/18
     For ISI-MIP
@@ -190,7 +194,7 @@ def find_init_temp(observations, depth_levels, date_init):
     set for that date is complete (is there a temperature value for every known depth level for this lake). If not,
     interpolate the missing data (with missing_temp).
 
-    :param observations: Type list. A list made from an opened .csv file.
+    :param observations: Type list. A list made from an opened .csv file with subdaily temperatures.
     :param depth_levels: Type list. The depth levels obtained from the hypsometry file. Depth levels values are floats.
     :param date_init: Type int. Date used to initialise data. Must be in the form of 'MMDD'. Year must not be specified.
     :return: Type list. A complete set of mean temperatures for init files, ordered by depth levels
@@ -221,6 +225,49 @@ def find_init_temp(observations, depth_levels, date_init):
 
     if "" in w_temp: return missing_temp(w_temp, depth_levels)
     else: return w_temp
+
+
+def find_init_temp_subdaily(observations, depth_levels, date_init):
+    """
+    J. Bellavance 2018/12/18
+    For ISI-MIP
+    With temperature .csv file opened, searches for the specified date in the time stamp column. Then checks if the data
+    set for that date is complete (is there a temperature value for every known depth level for this lake). If not,
+    interpolate the missing data (with missing_temp).
+
+    :param observations: Type list. A list made from an opened .csv file.
+    :param depth_levels: Type list. The depth levels obtained from the hypsometry file. Depth levels values are floats.
+    :param date_init: Type int. Date used to initialise data. Must be in the form of 'MMDD'. Year must not be specified.
+    :return: Type list. A complete set of mean temperatures for init files, ordered by depth levels
+    """
+    if len(observations) == 0:
+        print("Date not found, using dummy temperatures")
+        return list("4"*len(depth_levels))
+
+    obs_list = []
+
+    for observation in observations:
+        if int(observation[2][4:8]) < date_init or int(observation[2][4:8]) > date_init + 20:
+            continue
+        elif obs_list is []:
+            obs_list.append(observation)
+        elif observation[2][4:] == obs_list[0][2][4:]:
+            obs_list.append(observation)
+
+    w_temp = []
+    m = 0
+
+    for depth in depth_levels:
+        if float(obs_list[m][3]) == depth:
+            w_temp.append(float(obs_list[m][4]))
+            m += 1
+
+        else:
+            w_temp.append("")
+
+    if "" in w_temp: return missing_temp(w_temp, depth_levels)
+    else: return w_temp
+
 
 def missing_temp(temp_list, depth_levels):
     """
