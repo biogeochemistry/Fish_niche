@@ -23,10 +23,11 @@ full_lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "
              "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra"
             ]
 
-lake_list = ["Allequash", "Annecy", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin", "Crystal", "Delavan",
-             "Dickie", "Eagle", "Erken", "Fish", "Geneva", "Green", "Harp", "Kilpisjarvi", "Kinneret", "Kivu", "Laramie",
-             "LowerZurich", "Mendota", "Mozaisk", "Neuchatel", "Okauchee", "Paajarvi", "Rotorua", "Sparkling", "Stechlin",
-             "Sunapee", "Tahoe", "Tarawera", "Toolik", "Trout", "TroutBog", "TwoSisters", "Vendyurskoe", "Wingra"]
+lake_list = [#"Allequash", "Annecy", "Biel",
+             "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin", "Crystal", "Delavan",
+             "Dickie", "Eagle", "Erken", "Fish", "Geneva", "Green", "Harp", "Kilpisjarvi", "Kinneret", "Kivu", "Langtjern",
+             "Laramie", "LowerZurich", "Mendota", "Mozaisk", "Neuchatel", "Okauchee", "Paajarvi", "Rotorua", "Sparkling",
+             "Stechlin", "Sunapee", "Tahoe", "Tarawera", "Toolik", "Trout", "TroutBog", "TwoSisters", "Vendyurskoe", "Wingra"]
 
 regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Laramie", "Mendota", "Monona",
                   "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
@@ -88,7 +89,7 @@ def input_files_loop(lake):
 
     f_lake = lake
     for name in corrected_names:
-        if lake in name:
+        if lake in name.replace("_", ''):
             f_lake = name
             break
 
@@ -96,8 +97,7 @@ def input_files_loop(lake):
 
     for model in models:
         for scenario in scenarios:
-            run_myLake_ISIMIP.generate_input_files("observations/{}/{}_hypsometry.csv".format(lake, lake),
-                                                   "observations/{}/{}_temp_daily.csv".format(lake, lake), lake, f_lake,
+            run_myLake_ISIMIP.generate_input_files("observations/{}".format(lake), lake, f_lake,
                                                    "forcing_data", run_myLake_ISIMIP.get_longitude(f_lake, "forcing_data"),
                                                    run_myLake_ISIMIP.get_latitude(f_lake, "forcing_data"), model, scenario)
     for model in models:

@@ -427,7 +427,7 @@ def get_latitude(lake_name, forcing_data_directory):
 
 
 
-def generate_input_files(hypsometry_path, temperature_path, lake_name, f_lake_name, forcing_data_directory, longitude, latitude, model, scenario):
+def generate_input_files(observation_path, lake_name, f_lake_name, forcing_data_directory, longitude, latitude, model, scenario):
     """
     Creates all files needed for a run of mylake model with a single lake. The input function will generate ALL needed
     input files(one for each combination of scenario, model and variable)
@@ -439,7 +439,7 @@ def generate_input_files(hypsometry_path, temperature_path, lake_name, f_lake_na
     :param latitude: Type int.
     :return: None
     """
-    outdir = mylakeinit(init_info(hypsometry_path, temperature_path))
+    outdir = mylakeinit(init_info(lake_name, observation_path))
     mylakepar(longitude, latitude, lake_name, outdir)
     myLake_input(f_lake_name, model, scenario, forcing_data_directory, outdir)
 
