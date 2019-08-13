@@ -14,19 +14,24 @@ import multiprocessing as mp
 
 num_cores = mp.cpu_count()
 
-lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin",
+full_lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin",
              "Crystal", "CrystalBog", "Delavan", "Dickie", "Eagle", "Ekoln", "Erken", "EsthwaiteWater", "FallingCreek",
              "Feeagh", "Fish", "Geneva", "GreatPond", "Green", "Harp", "Kilpisjarvi", "Kinneret", "Kivu", "Klicava", "Kuivajarvi",
              "Langtjern", "Laramie", "LowerLakeZurich", "Mendota", "Monona", "Mozaisk", "MtBold", "Muggelsee", "Neuchatel",
              "Ngoring", "NohipaloMustjarv", "NohipaloValgejarv", "Okauchee", "Paajarvi", "Rappbode", "Rimov", "Rotorua",
              "Sammamish", "Sau", "Sparkling", "Stechlin", "Sunapee", "Tahoe", "Tarawera", "Taupo", "Toolik", "Trout", "TroutBog",
-             "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra", "Zlutice"
+             "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra"
             ]
+
+lake_list = ["Allequash", "Annecy", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin", "Crystal", "Delavan",
+             "Dickie", "Eagle", "Erken", "Fish", "Geneva", "Green", "Harp", "Kilpisjarvi", "Kinneret", "Kivu", "Laramie",
+             "LowerZurich", "Mendota", "Mozaisk", "Neuchatel", "Okauchee", "Paajarvi", "Rotorua", "Sparkling", "Stechlin",
+             "Sunapee", "Tahoe", "Tarawera", "Toolik", "Trout", "TroutBog", "TwoSisters", "Vendyurskoe", "Wingra"]
 
 regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Laramie", "Mendota", "Monona",
                   "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
                   "Washington", "Wingra"],
-           "CH": ["Biel", "LowerLakeZurich", "Neuchatel"],
+           "CH": ["Biel", "LowerZurich", "Neuchatel"],
            "PT": ["Alqueva"],
            "FR": ["Annecy", "Bourget", "Geneva"],
            "AU": ["Argyle", "BurleyGriffin", "MtBold"],
@@ -37,7 +42,7 @@ regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal",
            "FI": ["Kilpisjarvi", "Kuivajarvi", "Paajarvi"],
            "IL": ["Kinneret"],
            "RW": ["Kivu"],
-           "CZ": ["Klicava", "Rimov", "Zlutice"],
+           "CZ": ["Klicava", "Rimov"],
            "NO": ["Langtjern"],
            "RU": ["Mozaisk", "Vendyurskoe"],
            "DE": ["Muggelsee", "Rappbode", "Stechlin"],
