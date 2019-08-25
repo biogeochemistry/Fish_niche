@@ -1,0 +1,16 @@
+input/US/FIS\Fis_par Done
+matlab -wait -r -nosplash -nodesktop mylakeGoran('input/US/FIS\FIS_init','input/US/FIS\Fis_par','input/US/FIS\Fis_GFDL-ESM2M_rcp26_input',2013,2014,'output\US\Fish\GFDL-ESM2M\rcp26');quit
+Analysis of Fish/GFDL-ESM2M/rcp26.
+Sums of squares : 336.3845309999999, 24.81144900000001
+RMSE : 2.367785642747248, 0.643058434358807
+R squared : 0.8047539542915185, 0.5707831008347196
+RMSE/SD : 0.3071952507647745, 0.42001265061870363
+Score : 361.19597999999996
+Calibration results:     fun: array(0.)
+     jac: array([0., 0., 0., 0., 0., 0.])
+ message: 'Optimization terminated successfully.'
+    nfev: 180
+     nit: 1
+ success: True
+       x: array([4.12215077e-05, 2.39011772e-01, 6.59468012e-01, 4.06545126e-01,
+       3.02696390e+00, 9.27775597e-01])

@@ -1,5 +1,5 @@
 function mylakeGoran(initfile, parfile, inputfile, m_start2, m_stop2, outdir)
-
+global Tzt % rmc remove 
 path(path, 'MyLake_O_simple')%change directory from mylake folder to Mylake_O_simple
 path(path, '../sediments')
 
@@ -45,21 +45,21 @@ solvemodel_v2_modified(m_start,m_stop,initfile,'lake', inputfile,'timeseries', p
 % NOTE: All writing of out data takes a few seconds for each file, so it should be conservative, especially in optimization runs
 
 f1_name = (strcat(outdir, '\Tzt.csv')); % b = binary mode, z = archived file
-dlmwrite(f1_name, Tzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+dlmwrite(f1_name, Tzt(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 f5_name = (strcat(outdir, '\O2zt.csv'));
-dlmwrite(f5_name, O2zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+dlmwrite(f5_name, O2zt(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 f7_name =(strcat(outdir, '\lambdazt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-dlmwrite(f7_name, lambdazt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+dlmwrite(f7_name, lambdazt(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 f8_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-dlmwrite(f8_name, DOCzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+dlmwrite(f8_name, DOCzt(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 f6_name =(strcat(outdir, '\Qst.csv'));%MC add to ensure creation of 2017REDOCOMPLETE
-dlmwrite(f6_name, Qst(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+dlmwrite(f6_name, Qst(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 f7_name =(strcat(outdir, '\Attn_zt.csv'));%MC 2018-05-31 add to comparaison with SDD
-dlmwrite(f7_name, Attn_zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+dlmwrite(f7_name, Attn_zt(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 end          

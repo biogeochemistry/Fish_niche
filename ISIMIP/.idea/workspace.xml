@@ -2,8 +2,27 @@
 <project version="4">
   <component name="ChangeListManager">
     <list default="true" id="69863771-2d5a-4b4c-95d4-1744dbe4a1a1" name="Default Changelist" comment="">
+      <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/myLake_post.py" beforeDir="false" afterPath="$PROJECT_DIR$/myLake_post.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/mylakeGoran.m" beforeDir="false" afterPath="$PROJECT_DIR$/mylakeGoran.m" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/Attn_zt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/Attn_zt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/Calibration_Complete.txt" beforeDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/DOCzt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/DOCzt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/O2zt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/O2zt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/Qst.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/Qst.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/RunComplete" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/RunComplete" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/Tzt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/Tzt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/lambdazt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/historical/lambdazt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/Attn_zt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/Attn_zt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/DOCzt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/DOCzt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/O2zt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/O2zt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/Qst.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/Qst.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/RunComplete" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/RunComplete" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/Tzt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/Tzt.csv" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/lambdazt.csv" beforeDir="false" afterPath="$PROJECT_DIR$/output/NO/Langtjern/GFDL-ESM2M/rcp26/lambdazt.csv" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_myLake_ISIMIP.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_myLake_ISIMIP.py" afterDir="false" />
       <change beforePath="$PROJECT_DIR$/run_myLake_parallel.py" beforeDir="false" afterPath="$PROJECT_DIR$/run_myLake_parallel.py" afterDir="false" />
+      <change beforePath="$PROJECT_DIR$/scratch.py" beforeDir="false" afterPath="$PROJECT_DIR$/scratch.py" afterDir="false" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="SHOW_DIALOG" value="false" />
@@ -16,8 +35,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/run_myLake_ISIMIP.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="4824">
-              <caret line="441" column="61" selection-start-line="441" selection-start-column="61" selection-end-line="441" selection-end-column="61" />
+            <state relative-caret-position="-857">
+              <caret line="465" column="21" selection-start-line="465" selection-start-column="21" selection-end-line="465" selection-end-column="21" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
               </folding>
@@ -28,8 +47,8 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/scratch.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="374">
-              <caret line="25" column="39" selection-start-line="25" selection-start-column="39" selection-end-line="25" selection-end-column="39" />
+            <state relative-caret-position="330">
+              <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
               <folding>
                 <element signature="e#0#13#0" expanded="true" />
               </folding>
@@ -40,10 +59,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/myLake_post.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="12342">
-              <caret line="736" selection-start-line="736" selection-end-line="736" />
+            <state relative-caret-position="180">
+              <caret line="871" column="4" selection-start-line="871" selection-start-column="4" selection-end-line="871" selection-end-column="4" />
               <folding>
                 <element signature="e#0#10#0" expanded="true" />
+                <element signature="e#11825#12566#0" />
               </folding>
             </state>
           </provider>
@@ -52,11 +72,29 @@
       <file pinned="false" current-in-tab="true">
         <entry file="file://$PROJECT_DIR$/run_myLake_parallel.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="357">
-              <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
+            <state relative-caret-position="2482">
+              <caret line="167" selection-start-line="167" selection-end-line="167" />
               <folding>
                 <element signature="e#109#133#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/codecs.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="5491">
+              <caret line="324" selection-start-line="324" selection-end-line="324" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/joblib/parallel.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="15555">
+              <caret line="945" selection-start-line="945" selection-end-line="945" />
             </state>
           </provider>
         </entry>
@@ -79,6 +117,8 @@
       <find>find_init_temp</find>
       <find>LowerLakeZurich</find>
       <find>zlu</find>
+      <find>rotorura</find>
+      <find>rotorua</find>
     </findStrings>
   </component>
   <component name="Git.Settings">
@@ -94,17 +134,17 @@
         <option value="$PROJECT_DIR$/test/myLake_post.py" />
         <option value="$PROJECT_DIR$/myLake_optimisation.py" />
         <option value="$PROJECT_DIR$/../lakes/run_parallel_mylake.py" />
-        <option value="$PROJECT_DIR$/myLake_post.py" />
         <option value="$PROJECT_DIR$/scratch.py" />
-        <option value="$PROJECT_DIR$/run_myLake_ISIMIP.py" />
+        <option value="$PROJECT_DIR$/myLake_post.py" />
         <option value="$PROJECT_DIR$/run_myLake_parallel.py" />
+        <option value="$PROJECT_DIR$/run_myLake_ISIMIP.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds" extendedState="7">
-    <option name="x" value="1200" />
-    <option name="width" value="730" />
-    <option name="height" value="1040" />
+  <component name="ProjectFrameBounds" extendedState="6">
+    <option name="x" value="952" />
+    <option name="width" value="977" />
+    <option name="height" value="1038" />
   </component>
   <component name="ProjectLevelVcsManager" settingsEditedManually="true" />
   <component name="ProjectView">
@@ -112,6 +152,7 @@
       <foldersAlwaysOnTop value="true" />
     </navigator>
     <panes>
+      <pane id="Scope" />
       <pane id="ProjectPane">
         <subPane>
           <expand>
@@ -123,7 +164,6 @@
           <select />
         </subPane>
       </pane>
-      <pane id="Scope" />
     </panes>
   </component>
   <component name="PropertiesComponent">
@@ -264,9 +304,9 @@
     <recent_temporary>
       <list>
         <item itemvalue="Python.run_myLake_parallel" />
+        <item itemvalue="Python.myLake_post" />
         <item itemvalue="Python.run_myLake_ISIMIP" />
         <item itemvalue="Python.scratch" />
-        <item itemvalue="Python.myLake_post" />
         <item itemvalue="Python.myLake_par" />
       </list>
     </recent_temporary>
@@ -288,13 +328,13 @@
     <frame x="-7" y="-7" width="1550" height="838" extended-state="6" />
     <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.1816354" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.14343163" />
       <window_info id="Structure" order="1" side_tool="true" weight="0.25" />
       <window_info id="Favorites" order="2" side_tool="true" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" visible="true" weight="0.36916548" />
-      <window_info anchor="bottom" id="Debug" order="3" weight="0.40141845" />
+      <window_info anchor="bottom" id="Run" order="2" weight="0.36916548" />
+      <window_info anchor="bottom" id="Debug" order="3" weight="0.4002829" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" />
@@ -357,10 +397,24 @@
         </state>
       </provider>
     </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/codecs.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="5491">
+          <caret line="324" selection-start-line="324" selection-end-line="324" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/joblib/parallel.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="15555">
+          <caret line="945" selection-start-line="945" selection-end-line="945" />
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/scratch.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="374">
-          <caret line="25" column="39" selection-start-line="25" selection-start-column="39" selection-end-line="25" selection-end-column="39" />
+        <state relative-caret-position="330">
+          <caret line="41" column="19" selection-start-line="41" selection-start-column="19" selection-end-line="41" selection-end-column="19" />
           <folding>
             <element signature="e#0#13#0" expanded="true" />
           </folding>
@@ -369,18 +423,19 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/myLake_post.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="12342">
-          <caret line="736" selection-start-line="736" selection-end-line="736" />
+        <state relative-caret-position="180">
+          <caret line="871" column="4" selection-start-line="871" selection-start-column="4" selection-end-line="871" selection-end-column="4" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
+            <element signature="e#11825#12566#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/run_myLake_ISIMIP.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="4824">
-          <caret line="441" column="61" selection-start-line="441" selection-start-column="61" selection-end-line="441" selection-end-column="61" />
+        <state relative-caret-position="-857">
+          <caret line="465" column="21" selection-start-line="465" selection-start-column="21" selection-end-line="465" selection-end-column="21" />
           <folding>
             <element signature="e#0#10#0" expanded="true" />
           </folding>
@@ -389,8 +444,8 @@
     </entry>
     <entry file="file://$PROJECT_DIR$/run_myLake_parallel.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="357">
-          <caret line="96" lean-forward="true" selection-start-line="96" selection-end-line="96" />
+        <state relative-caret-position="2482">
+          <caret line="167" selection-start-line="167" selection-end-line="167" />
           <folding>
             <element signature="e#109#133#0" expanded="true" />
           </folding>

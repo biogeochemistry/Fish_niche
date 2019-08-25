@@ -7,3 +7,4 @@ ISIMIP/input
 *.iml
 *.xml
 ISIMIP/.idea/workspace.xml
+*.csv

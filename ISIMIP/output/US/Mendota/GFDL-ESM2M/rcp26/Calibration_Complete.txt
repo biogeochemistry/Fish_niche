@@ -1,0 +1,16 @@
+input/US/Men\Men_par Done
+matlab -wait -r -nosplash -nodesktop mylakeGoran('input/US/Men\Men_init','input/US/Men\Men_par','input/US/Men\Men_GFDL-ESM2M_rcp26_input',2013,2014,'output\US\Mendota\GFDL-ESM2M\rcp26');quit
+Analysis of Mendota/GFDL-ESM2M/rcp26.
+Sums of squares : 312.4676, 43.50408800000001
+RMSE : 2.2449498880821372, 0.8376627237198022
+R squared : 0.842434397673719, -1.6253810055865934
+RMSE/SD : 0.2965298143748713, 0.649733135589729
+Score : 355.97168800000003
+Calibration results:     fun: array(0.)
+     jac: array([0., 0., 0., 0., 0., 0.])
+ message: 'Optimization terminated successfully.'
+    nfev: 180
+     nit: 1
+ success: True
+       x: array([8.78957911e-04, 8.65223643e-01, 4.00471704e-01, 5.40472349e-01,
+       2.25068476e+00, 9.81646714e-01])
