@@ -72,7 +72,7 @@ for T_x = 1:length(T_list)
                     secchi_calculated(time)= 1.48/mean(lambda);
                 
                     if secchi_calculated(time) >= secchi_min
-                        area_secchi_under_secchi_gradient(time) = area_at_depth(secchi_min+1);
+                        area_secchi_under_secchi_gradient(time) = area_at_depth(secchi_calculated(time)+1);
                     else
                         area_secchi_under_secchi_gradient(time) = area_at_depth(1);
                     end

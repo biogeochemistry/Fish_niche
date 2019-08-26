@@ -26,7 +26,7 @@ timeseries_records{1,4} = 'Average T above max T gradient';
 timeseries_records{1,5} = 'Average T below max T gradient';
 timeseries_records{1,6} = 'Volume with T < 15 C';
 timeseries_records{1,7} = 'Volume with O2 > 3000';
-timeseries_records{1,8} = 'Volume with PPFD > 1%';
+timeseries_records{1,8} = 'Volume with PPFD > 50';
 timeseries_records{1,9} = 'Volume satisfying all three previous';
 timeseries_records{1,10} = 'Depth of maximal T gradient';
 timeseries_records{1,11} = 'Total Volume';
@@ -95,7 +95,7 @@ for lakenum = 1:nlakes
 					volume_T_below_15(time) = volume_T_below_15(time) + area_at_depth(depth);
                 end
                 
-                if PARzt(time, depth) > one_Pourcent
+                if PARzt(time, depth) >50
 					volume_PAR_above_1(time) = volume_PAR_above_1(time) + area_at_depth(depth);
 				end
 				%if Iz_calculated(time,depth) >= (8*0.0079)
@@ -104,7 +104,7 @@ for lakenum = 1:nlakes
 				%if Attn(time, depth) >= 0.01 * surface_attn
 				%    volume_PAR_above_1_percent_of_surface(time) = volume_Attn_above_1_percent_of_surface(time) + area_at_depth(depth);
 				%end
-				if O2(time, depth) > 3000 && T(time, depth) < 15 && PARzt(time,depth) > 0.01*(((3/2) / (e_par * DayFrac)) * f_par * Qst(time))
+				if O2(time, depth) > 3000 && T(time, depth) < 15 && PARzt(time,depth) > 50
 					volume_all_three(time) = volume_all_three(time) + area_at_depth(depth);
 				end
 			end
@@ -129,7 +129,7 @@ for lakenum = 1:nlakes
 	
 end
 if i >= 1
-	exportVolumeTimeseries(sprintf('%s/fish_niche_export1_%s.csv',outputdir,d4),timeseries_records,startdate)
+	exportVolumeTimeseries(sprintf('%s/fish_niche_export50_%s.csv',outputdir,d4),timeseries_records,startdate)
 	end
 end
 
