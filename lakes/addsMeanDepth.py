@@ -6,7 +6,8 @@
     Python Version: 3.6
 
     Searches the mean depth for each lake of the lake's list in the SHYPE data and
-        adds a column with those values into the CSV file.
+        adds a column with those values into the CSV file (if valable, when SHYPE doesn't contain this value, the cell stay blank). 
+	Also Calculate the mean depth by using the ratio of the lake Volume on Area.
 
 """
 import xlrd
@@ -33,6 +34,8 @@ for i in ii:
     wb = xlrd.open_workbook(filepath)
     sheet_names = wb.sheet_names()
     sheet = wb.sheet_by_name(sheet_names[2])
+
+    sheettab.cell(row=i+1, column=12).value = float(volume)/float(area)
 
     try:
         cell = sheet.cell_value(5, 1)

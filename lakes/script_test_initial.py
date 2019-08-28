@@ -1,3 +1,13 @@
+"""
+    File name: script_test_initial.py
+    Author: Mariane Cote
+    Date created: 07/22/2019
+    Python Version: 3.6
+
+    Tests the script run_parallel_mylake.py with a lake.
+
+"""
+
 from FishNiche_output_analysis_scripts2 import FishNiche_csv_result,FishNiche_plot_timeseries,FishNiche_graph_temp_complete_time,FishNiche_secchi_graph,FishNiche_graph_temp_time,FishNiche_mean_secchi_graph,FishNiche_validate_results,FishNiche_mean_k_BOD_graph, FishNiche_graph_oxy_time
 from run_parallel_mylake import runlakesGoran_par
 

@@ -421,9 +421,9 @@ def mylakeinput(pA, pB, datesA, datesB, eh, subid, inflowfile, outpath):
             g.write ( f.read ().replace ( '-99999999', 'NaN' ) )
     os.unlink ( temporarypath )
 
-def runlake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1):
+def runlake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_BOD=0.01,swa_b1=1,k_SOD=100,I_scDOC=1,report=None):
     """
-
+    Main function. Creates init, input and parameters files and lauches matlab script.
     :param modelid: model used
     :param scenarioid: scenario used
     :param eh: ebhex number
@@ -472,38 +472,34 @@ def runlake(modelid, scenarioid, eh, subid, depth, area, longitude, latitude,k_B
     if not os.path.exists ( outdir ):
         os.makedirs ( outdir )
 
-    # creation of empty files before risks of bug: MC 2018-07-10
-
     initp = os.path.join ( outdir, '2017init' )
     parp = os.path.join ( outdir, '2017par' )
     inputp = os.path.join ( outdir, '2017input' )
     if os.path.exists ( os.path.join ( outdir, '2017REDOCOMPLETE' ) ):
         print ( 'lake %s is already completed' % eh )
-        #with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
-        #    f.write ( 'lake %s is already completed\n' % eh )
-        #    f.close ()
+        if report is not None:
+            with open ( '%s/%s' % (outputfolder,report), 'a' ) as f:
+                f.write ( 'lake %s is already completed\n' % eh )
+                f.close ()
         ret = 0
     else:
-        # empty = pd.DataFrame(np.nan, index=np.arange(0,len(datesA+datesB)), columns=np.arange(1,int(depth)+1))
-        # for i in ['Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv']:
-        #     empty.to_csv('%s/%s'%(outdir,i),na_rep='NA',header=False,index=False)
-        # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
-        #     f.write ('empty files created\n')
-        #     f.close ()
+       
         mylakeinit ( depth, area, initp,I_scDOC)
         mylakepar ( longitude, latitude, parp,swa_b1,k_BOD,k_SOD,I_scDOC)
         mylakeinput ( pA, pB, datesA, datesB, eh, subid, inflowfilename, inputp )
         cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (initp, parp, inputp, y1A - 2, y2B, outdir)
         print ( cmd )
         os.system ( cmd )
-        #for f in [initp, parp, inputp]:
-        #    os.system ( 'bzip2 -f -k %s' % f )
         expectedfs = [ 'Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv','His.csv','PARzt.csv','PARMaxt.csv']
         flags = [os.path.exists ( os.path.join ( outdir, f ) ) for f in expectedfs]
 
         if all ( flags ):
-            with open ( os.path.join ( outdir, '2017REDOCOMPLETE' ), 'w' ) as f:
+            with open ( os.path.join ( outdir, '2019REDOCOMPLETE' ), 'w' ) as f: #change 2017 for 2019
                  f.write ( datetime.datetime.now ().isoformat () )
+            if report is not None:
+                with open ( '%s/%s' % (outputfolder,report), 'a' ) as f:
+                    f.write ( 'lake %s is completed without issues\n' % eh )
+                    f.close ()
             #ret=0
         ret = 0 if all ( flags ) else 100
     return ret
