@@ -1,0 +1,16 @@
+input/CA/Dic\Dic_par Done
+matlab -wait -r -nosplash -nodesktop mylakeGoran('input/CA/Dic\Dic_init','input/CA/Dic\Dic_par','input/CA/Dic\Dic_GFDL-ESM2M_rcp26_input',2013,2014,'output\CA\Dickie\GFDL-ESM2M\rcp26');quit
+Analysis of Dickie/GFDL-ESM2M/rcp26.
+Sums of squares : 415.6236549999998, 7.831363999999999
+RMSE : 3.005877051348921, 0.41261003802411406
+R squared : 0.4065387736980258, -390.56819999999925
+RMSE/SD : 0.5365811894468984, 2.9175935587249
+Score : 423.4550189999998
+Calibration results:     fun: array(0.)
+     jac: array([0., 0., 0., 0., 0., 0.])
+ message: 'Optimization terminated successfully.'
+    nfev: 180
+     nit: 1
+ success: True
+       x: array([2.81710951e-04, 5.64760446e-01, 4.63246587e-01, 4.46928846e-01,
+       1.70551970e+00, 6.99670098e-01])

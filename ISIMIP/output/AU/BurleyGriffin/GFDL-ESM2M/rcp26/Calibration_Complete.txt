@@ -1,0 +1,16 @@
+input/AU/Lbg\Bur_par Done
+matlab -wait -r -nosplash -nodesktop mylakeGoran('input/AU/Lbg\Lbg_init','input/AU/Lbg\Bur_par','input/AU/Lbg\Bur_GFDL-ESM2M_rcp26_input',2010,2011,'output\AU\BurleyGriffin\GFDL-ESM2M\rcp26');quit
+Analysis of BurleyGriffin/GFDL-ESM2M/rcp26.
+Sums of squares : 28.945040000000013, 7.045530000000007
+RMSE : 1.098200042493777, 0.5418152360353115
+R squared : 0.9350610089890665, 0.9223547498346925
+RMSE/SD : 0.17252160506250955, 0.0985172891966859
+Score : 35.99057000000002
+Calibration results:     fun: array(0.)
+     jac: array([0., 0., 0., 0., 0., 0.])
+ message: 'Optimization terminated successfully.'
+    nfev: 180
+     nit: 1
+ success: True
+       x: array([6.04697760e-05, 3.97356338e-01, 8.70941199e-01, 6.76950958e-01,
+       1.63817779e+00, 8.47667450e-01])

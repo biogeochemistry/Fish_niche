@@ -5,6 +5,7 @@ Module that allows running multiple simulations or calibrations in parallel.
 """
 import run_myLake_ISIMIP
 import myLake_post
+import csv
 import sys
 import math
 import os
@@ -12,21 +13,32 @@ import pysftp
 from joblib import Parallel, delayed
 import multiprocessing as mp
 
-num_cores = mp.cpu_count()
+num_cores = mp.cpu_count() - 2
 
-lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin",
+full_lake_list = ["Allequash", "Alqueva", "Annecy", "Annie", "Argyle", "Biel", "BigMuskellunge", "BlackOak", "Bourget", "BurleyGriffin",
              "Crystal", "CrystalBog", "Delavan", "Dickie", "Eagle", "Ekoln", "Erken", "EsthwaiteWater", "FallingCreek",
              "Feeagh", "Fish", "Geneva", "GreatPond", "Green", "Harp", "Kilpisjarvi", "Kinneret", "Kivu", "Klicava", "Kuivajarvi",
              "Langtjern", "Laramie", "LowerLakeZurich", "Mendota", "Monona", "Mozaisk", "MtBold", "Muggelsee", "Neuchatel",
              "Ngoring", "NohipaloMustjarv", "NohipaloValgejarv", "Okauchee", "Paajarvi", "Rappbode", "Rimov", "Rotorua",
              "Sammamish", "Sau", "Sparkling", "Stechlin", "Sunapee", "Tahoe", "Tarawera", "Taupo", "Toolik", "Trout", "TroutBog",
-             "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra", "Zlutice"
+             "TwoSisters", "Vendyurskoe", "Vortsjarv", "Waahi", "Washington", "Windermere", "Wingra"
             ]
 
-regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Laramie", "Mendota", "Monona",
+lake_list = ["Allequash", "Annecy", "Biel", "BigMuskellunge", "BlackOak",
+             "BurleyGriffin", "Crystal", "Delavan",
+             "Dickie", "Erken",
+             "Fish", "Geneva", "Green",
+             "Harp",
+             "Kilpisjarvi", "Kinneret", "Kivu", "Langtjern", "Laramie",
+             "LowerZurich", "Mendota", "Mozaisk", "Neuchatel", "Okauchee", "Paajarvi", "Rotorua", "Sparkling", "Stechlin",
+             "Sunapee", "Tarawera", "Toolik", "Trout", "TroutBog", "TwoSisters",
+             "Wingra"
+             ]
+
+regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Green", "Laramie", "Mendota", "Monona",
                   "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
                   "Washington", "Wingra"],
-           "CH": ["Biel", "LowerLakeZurich", "Neuchatel"],
+           "CH": ["Biel", "LowerZurich", "Neuchatel"],
            "PT": ["Alqueva"],
            "FR": ["Annecy", "Bourget", "Geneva"],
            "AU": ["Argyle", "BurleyGriffin", "MtBold"],
@@ -37,14 +49,14 @@ regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal",
            "FI": ["Kilpisjarvi", "Kuivajarvi", "Paajarvi"],
            "IL": ["Kinneret"],
            "RW": ["Kivu"],
-           "CZ": ["Klicava", "Rimov", "Zlutice"],
+           "CZ": ["Klicava", "Rimov"],
            "NO": ["Langtjern"],
            "RU": ["Mozaisk", "Vendyurskoe"],
            "DE": ["Muggelsee", "Rappbode", "Stechlin"],
            "CN": ["Ngoring"],
            "EE": ["NohipaloMustjarv", "NohipaloValgejarv", "Vortsjarv"],
            "ES": ["Sau"],
-           "NZ": ["Rotura", "Tarawera", "Taupo", "Waahi"]}
+           "NZ": ["Rotorua", "Tarawera", "Taupo", "Waahi"]}
 
 models = ["GFDL-ESM2M",
           "HadGEM2-ES",
@@ -83,7 +95,14 @@ def input_files_loop(lake):
 
     f_lake = lake
     for name in corrected_names:
-        if lake in name:
+        if lake == "Crystal":
+            f_lake = "Crystal_Lake"
+            break
+        elif lake == "Trout":
+            f_lake = "Trout_Lake"
+            break
+
+        if lake in name.replace("_", ''):
             f_lake = name
             break
 
@@ -91,8 +110,7 @@ def input_files_loop(lake):
 
     for model in models:
         for scenario in scenarios:
-            run_myLake_ISIMIP.generate_input_files("observations/{}/{}_hypsometry.csv".format(lake, lake),
-                                                   "observations/{}/{}_temp_daily.csv".format(lake, lake), lake, f_lake,
+            run_myLake_ISIMIP.generate_input_files("observations/{}".format(lake), lake, f_lake,
                                                    "forcing_data", run_myLake_ISIMIP.get_longitude(f_lake, "forcing_data"),
                                                    run_myLake_ISIMIP.get_latitude(f_lake, "forcing_data"), model, scenario)
     for model in models:
@@ -124,6 +142,9 @@ def mylake_parallel():
 
 def model_scenario_loop(lake):
 
+    with open("observations/{}/{}_hypsometry.csv".format(lake, lake)) as obs:
+        reader = list(csv.reader(obs))
+        prefix = reader[1][0][3:]
 
     reg = None
     for region in regions:
@@ -132,7 +153,7 @@ def model_scenario_loop(lake):
             break
 
     if reg == None:
-        print("Cannot find specified lake's region")
+        print("Cannot find {}'s region".format(lake))
         return None
 
     for model in models:
@@ -140,9 +161,10 @@ def model_scenario_loop(lake):
             if os.path.exists("output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
                 print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
 
-            else:
+            elif os.path.exists("output/{}/{}/GFDL-ESM2M/rcp26/Calibration_Complete.txt".format(reg, lake)):
                 print("Running {} {} {}.\n".format(lake, model, scenario))
-                run_myLake_ISIMIP.run_myLake("observations/{}".format(lake), "input/{}/{}".format(reg, lake[:3]), reg, lake, model, scenario)
+                run_myLake_ISIMIP.run_myLake("observations/{}".format(lake), "input/{}/{}".format(reg, prefix), reg, lake, model, scenario)
+
 
 def make_parameters_file_parallel():
     """
@@ -183,6 +205,10 @@ def run_calibrations(lake):
     from myLake_post module for the given lake.
     """
 
+    with open("observations/{}/{}_hypsometry.csv".format(lake, lake)) as obs:
+        reader = list(csv.reader(obs))
+        prefix = reader[1][0][3:]
+
     for region in regions:
         if lake in regions[region]:
             if os.path.exists("output/{}/{}/GFDL-ESM2M/rcp26/Calibration_Complete.txt".format(region, lake)):
@@ -191,10 +217,12 @@ def run_calibrations(lake):
 
             else:
                 return myLake_post.optimize_differential_evolution(lake, "observations/{}".format(lake),
-                                                     "input/{}/{}".format(region, lake), region,
-                                                     "forcing_data/{}".format(lake), "output/{}/{}".format(region, lake),
-                                                     "GFDL-ESM2M", "historical")
-    print("Cannot find specified lake's region")
+                                                     "input/{}/{}".format(region, prefix), region,
+                                                     "output/{}/{}/{}/{}".format(region, lake, "GFDL-ESM2M", "rcp26"),
+                                                     "GFDL-ESM2M", "rcp26")
+    print("Cannot find {}'s region".format(lake))
 
 if __name__ == "__main__":
-    input_files_parallel()
+    #input_files_parallel()
+    #calibration_parallel()
+    mylake_parallel()

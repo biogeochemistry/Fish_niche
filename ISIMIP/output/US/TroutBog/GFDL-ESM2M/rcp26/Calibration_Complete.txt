@@ -1,0 +1,16 @@
+input/US/TrB\Tro_par Done
+matlab -wait -r -nosplash -nodesktop mylakeGoran('input/US/TrB\TrB_init','input/US/TrB\Tro_par','input/US/TrB\Tro_GFDL-ESM2M_rcp26_input',2013,2014,'output\US\TroutBog\GFDL-ESM2M\rcp26');quit
+Analysis of TroutBog/GFDL-ESM2M/rcp26.
+Sums of squares : 275.85265499999997, 2.1211239999999996
+RMSE : 2.3972756021158683, 0.2102143747067106
+R squared : 0.7982595820648928, 0.44777582417582507
+RMSE/SD : 0.30407952614448974, 0.6386771183770884
+Score : 277.973779
+Calibration results:     fun: array(0.)
+     jac: array([0., 0., 0., 0., 0., 0.])
+ message: 'Optimization terminated successfully.'
+    nfev: 180
+     nit: 1
+ success: True
+       x: array([3.25502910e-04, 1.05799573e-02, 5.49203472e-01, 4.39169585e-01,
+       7.53231657e-01, 1.56284860e+00])

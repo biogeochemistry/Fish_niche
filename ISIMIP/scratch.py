@@ -1,5 +1,6 @@
 import pysftp
 import os
+from scipy.optimize import differential_evolution
 
 from netCDF4 import Dataset
 
@@ -23,4 +24,19 @@ os.remove("forcing_data\\hurs_GFDL-ESM2M_historical_Langtjern.allTS.nc")
 
 """
 
-print(os.listdir("observations/Annie"))
+bounds = [(0.1, 10), (0.1, 10), (0.1, 10)]
+
+def func(params):
+    x, y, z = params
+    return x*2/y + z**3/x + y
+
+
+
+lam = lambda params: func(params)
+res = differential_evolution(lam, bounds, tol= 10, disp= True)
+print(res)
+
+print(res.get('x'[:]))
+print(list(res.get('x'[0]))[0])
+print(tuple(res.get('x'[0])))
+print(res.get('fun'))

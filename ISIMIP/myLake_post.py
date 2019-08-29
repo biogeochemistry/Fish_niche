@@ -21,6 +21,30 @@ parameters = {"Swa_b0" : [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
               "Alb_melt_ice" : [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9],
               "Alb_melt_snow" : [0, 0.1, 0.2, 0.3, 0.4, 0.5, 0.6, 0.7, 0.8, 0.9]}
 
+regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan", "Fish", "Laramie", "Mendota", "Monona",
+                  "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
+                  "Washington", "Wingra"],
+           "CH": ["Biel", "LowerZurich", "Neuchatel"],
+           "PT": ["Alqueva"],
+           "FR": ["Annecy", "Bourget", "Geneva"],
+           "AU": ["Argyle", "BurleyGriffin", "MtBold"],
+           "CA": ["Dickie", "Eagle", "Harp"],
+           "SE": ["Ekoln", "Erken"],
+           "UK": ["EsthwaiteWater", "Windermere"],
+           "IE": ["Feeagh"],
+           "FI": ["Kilpisjarvi", "Kuivajarvi", "Paajarvi"],
+           "IL": ["Kinneret"],
+           "RW": ["Kivu"],
+           "CZ": ["Klicava", "Rimov"],
+           "NO": ["Langtjern"],
+           "RU": ["Mozaisk", "Vendyurskoe"],
+           "DE": ["Muggelsee", "Rappbode", "Stechlin"],
+           "CN": ["Ngoring"],
+           "EE": ["NohipaloMustjarv", "NohipaloValgejarv", "Vortsjarv"],
+           "ES": ["Sau"],
+           "NZ": ["Rotura", "Tarawera", "Taupo", "Waahi"]}
+
+
 def temperatures_by_depth(observation_folder, lakeName, output_folder):
     """
     Creates a new csv file with the observed temperatures separated in columns by depths.
@@ -66,7 +90,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder):
                     missing_temp = True
 
                     for t in temp_list:
-                        if int(t[3]) == depth:
+                        if float(t[3]) == depth:
                             rows[depth].append(float(t[4]))
                             missing_temp = False
 
@@ -327,14 +351,14 @@ def performance_analysis(lake_name, input_folder, output_folder):
     r_squ1 = r_squared(obs_list_1, sims_list_1)
     r_squ2 = r_squared(obs_list_2, sims_list_2)
 
-    if r_squ1 < 0:
+    """if r_squ1 < 0:
         r_squ1_B = -r_squ1
     else: r_squ1_B = r_squ1
     if r_squ2 < 0:
         r_squ2_B = -r_squ2
-    else: r_squ2_B = r_squ2
+    else: r_squ2_B = r_squ2"""
 
-    score = (sos1 + sos2) + (rms1 + rms2) * 1000  + (1 - r_squ1_B) * 100 + (1 - r_squ2_B) * 100
+    score = (sos1 + sos2) #+ (rms1 + rms2) * 1000  + (1 - r_squ1_B) * 100 + (1 - r_squ2_B) * 100
 
     print("Analysis of {}.".format(output_folder[10:]))
     print("Sums of squares : {}, {}".format(sos1, sos2))
@@ -706,7 +730,7 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
 
     return res
 
-def run_optimization_Mylake(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid, params):
+def run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid, params):
     """
     Intermediary function calling mylakepar function to generate new parameters, then running myLake with these parameters,
     and finally
@@ -715,7 +739,6 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     :param observation_path: Type string. Observed temperatures file
     :param input_directory: Type string. The folder containing all input files (input, parameters, init)
     :param region: Type string. The abreviation for the lake's region (Ex: United-States = US, Norway = NO)
-    :param forcing_data_directory: Type string. The folder containing all forcing data for the given lake
     :param outdir: Type string. The output folder
     :param modelid: Type string. Prediction model used.
     :param scenarioid: Type string. The prediction scenario. For optimization purpose this is always historical
@@ -727,9 +750,8 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     i_scv = 1
     i_sct = 0
 
-    run_myLake_ISIMIP.mylakepar(run_myLake_ISIMIP.get_longitude(lake_name, forcing_data_directory),
-                                run_myLake_ISIMIP.get_latitude(lake_name, forcing_data_directory),
-                                lake_name, input_directory, kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
+    run_myLake_ISIMIP.mylakepar(retreive_longitude(lake_name), retreive_latitude(lake_name), lake_name, input_directory,
+                                 kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
 
     run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid, flag="calibration")
 
@@ -737,23 +759,87 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
 
     make_comparison_file(outdir)
 
-    return performance_analysis(lake_name, input_directory, outdir)
+    try:
+        score = performance_analysis(lake_name, input_directory, outdir)
+        return score
 
-def optimize_differential_evolution(lake_name, observation_path, input_directory, region, forcing_data_directory, outdir, modelid, scenarioid):
+    except ValueError:
+        return -1
+
+def optimize_differential_evolution(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid):
 
 
     func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region,
-                                                  forcing_data_directory, outdir, modelid, scenarioid, params)
+                                                     outdir, modelid, scenarioid, params)
+
+
     params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
     bounds = [(0.001, 0.000001), (0, 1), (0.4, 1), (0.4, 1), (0.4, 4), (0.4, 2)]
 
     res = differential_evolution(func, bounds, tol= 10, disp= True)
     print(res)
 
-    with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
-        end_file.writelines(["Calibration results:", str(res)])
+    success = float(res.get('fun'))
 
-    return res
+    if success == -1:
+        print("Couldn't do {}".format(lake_name))
+        return res
+    else:
+        params = tuple(res.get('x'[0]))
+        orig_stdout = sys.stdout
+        with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
+            sys.stdout = end_file
+            run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid,
+                                    params)
+            end_file.writelines(["Calibration results:", str(res)])
+            sys.stdout = orig_stdout
+
+        return res
+
+def retreive_longitude(lake):
+    """Get longitude from param files
+
+    """
+
+    reg = None
+    for region in regions:
+        if lake in regions[region]:
+            reg = region
+            break
+
+    with open("observations/{}/{}_hypsometry.csv".format(lake, lake)) as obs:
+        reader = list(csv.reader(obs))
+        prefix = reader[1][0][3:]
+
+    long = 0
+    with open("input/{}/{}/{}_par".format(reg, prefix, lake[:3])) as par_file:
+        for line in par_file.readlines():
+            if "longitude" in line:
+                long = float(line[14:22])
+                break
+
+    return long
+
+def retreive_latitude(lake):
+    """Get latitude from param files"""
+    reg = None
+    for region in regions:
+        if lake in regions[region]:
+            reg = region
+            break
+
+    with open("observations/{}/{}_hypsometry.csv".format(lake, lake)) as obs:
+        reader = list(csv.reader(obs))
+        prefix = reader[1][0][3:]
+
+    lat = 0
+    with open("input/{}/{}/{}_par".format(reg, prefix, lake[:3])) as par_file:
+        for line in par_file.readlines():
+            if "latitude" in line:
+                lat = float(line[13:21])
+                break
+
+    return lat
 
 """
 #test functions for the algorithm
@@ -782,10 +868,11 @@ def test_function(params):
 
 if __name__ == "__main__":
     #temperatures_by_depth("observations/Langtjern", "Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
-    make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/rcp26")
+    #make_comparison_file("output/NO/Langtjern/GFDL-ESM2M/rcp26")
     performance_analysis("Langtjern", "input/NO/Lan", "output/NO/Langtjern/GFDL-ESM2M/rcp26")
     #optimise_lake("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern", "GFDL-ESM2M", "historical")
     #find_best_parameters("output/NO/Langtjern/optimisation_log.txt")
     #optimize_Nelder_Meald("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/historical", "GFDL-ESM2M", "historical")
-    #optimize_differential_evolution("Langtjern", "observations/Langtjern", "input/NO/Lan", "NO", "forcing_data/Langtjern", "output/NO/Langtjern/GFDL-ESM2M/rcp26", "GFDL-ESM2M", "rcp26")
+    #optimize_differential_evolution("Kilpisjarvi", "observations/Kilpisjarvi", "input/FI/Kil", "CA", "output/CA/Kilpisjarvi/GFDL-ESM2M/rcp26", "GFDL-ESM2M", "rcp26")
     #optimize_test()
+    #print(retreive_latitude("BurleyGriffin"))
