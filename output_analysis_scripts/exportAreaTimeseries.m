@@ -8,8 +8,8 @@ nlakes = size(timeseries_records, 1) - 1;
 
 fid = fopen(exportfile, 'w', 'n', 'UTF-8');
 
-fprintf(fid, '%s,%s,%s\n',...
-    timeseries_records{1, 1}, timeseries_records{1, 2},timeseries_records{1, 4});
+fprintf(fid, '%s,%s,%s,%s\n',...
+    timeseries_records{1, 1}, timeseries_records{1, 2},timeseries_records{1, 3},timeseries_records{1, 5});
 
 for lakenum = 1:nlakes
    
@@ -18,10 +18,11 @@ for lakenum = 1:nlakes
     fprintf(1, 'Outputting for lake with id %d\n', lake_id);
     
     avg_area= timeseries_records{1+lakenum, 2};
-    ntg= timeseries_records{1+lakenum, 4};
+    avg_areabyTotal= timeseries_records{1+lakenum, 3};
+    ntg= timeseries_records{1+lakenum, 5};
     
-    fprintf(fid, '%d,%.2f,%.2f\n',...
-             lake_id, avg_area,ntg);
+    fprintf(fid, '%d,%.2f,%.2f,%.2f\n',...
+             lake_id, avg_area,avg_areabyTotal,ntg);
     
 %     ndays = length(avg_area);
 %     
