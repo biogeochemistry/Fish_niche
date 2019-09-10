@@ -807,7 +807,7 @@ def retreive_longitude(lake):
             reg = region
             break
 
-    with open("observations/{}/{}_hypsometry.csv".format(lake, lake)) as obs:
+    with open("observations/{}/{}/{}_hypsometry.csv".format(reg,lake, lake)) as obs:
         reader = list(csv.reader(obs))
         prefix = reader[1][0][3:]
 
@@ -828,7 +828,7 @@ def retreive_latitude(lake):
             reg = region
             break
 
-    with open("observations/{}/{}_hypsometry.csv".format(lake, lake)) as obs:
+    with open("observations/{}/{}/{}_hypsometry.csv".format(reg,lake, lake)) as obs:
         reader = list(csv.reader(obs))
         prefix = reader[1][0][3:]
 

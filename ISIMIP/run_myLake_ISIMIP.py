@@ -24,7 +24,7 @@ variables = ["hurs",
              "tas"
              ]
 
-def myLake_input(lake_name, model, scenario, forcing_data_directory, output_directory):
+def myLake_input(lake_name, model, scenario, forcing_data_directory, input_directory):
     """
     Creates input files for myLake model from forcing data. Forcing data is assumed to be in netCDF format. Variables
     can be changed as needed. The naming scheme of forcing data files is assumed to be the standardfor ISIMIP.
@@ -33,70 +33,71 @@ def myLake_input(lake_name, model, scenario, forcing_data_directory, output_dire
     :param lake_name: Type string. The name of the lake for which the input files are being prepared.
     :param forcing_data_directory: Type string. The folder containing the netCDF files for forcing data for a single lake.
                                     Assumes that all files are in the same directory without any sub-folders.
-    :param output_directory: Type string. In a typical run, this is the return value of mylakeinit function.
+    :param input_directory: Type string. In a typical run, this is the return value of mylakeinit function.
     :return: No value
     """
 
-    print("Outputing {}_{}_{}_input".format(lake_name[:3], model, scenario))
+    print("Creating input {}_{}_{}_input".format(lake_name[:3], model, scenario))
 
-    list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
-    start_time = "2006-01-01"
-    if scenario == "historical": start_time = "1861-01-01"
-    elif scenario == "piControl": start_time = "1661-01-01"
+    if not os.path.exists(os.path.join(input_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario))):
+        list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
+        start_time = "2006-01-01"
+        if scenario == "historical": start_time = "1861-01-01"
+        elif scenario == "piControl": start_time = "1661-01-01"
 
-    with open(os.path.join(output_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
+        with open(os.path.join(input_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
 
-        input_file.writelines(["-999\tMyLake Input\n", "Year\tMonth\tDay\tGlobal radiation (MJ/m2)\tCloud cover(-)\t"
-                                "Air temperature (deg C)\tRelative humidity (%)\tAir pressure (hPa)\tWind speed (m/s)\t"
-                                "Precipitation (mm/day)\tInflow (m3/day)\tInflow_T (deg C)\tInflow_C\tInflow_S (kg/m3)\t"
-                                "Inflow_TP (mg/m3)\tInflow_DOP (mg/m3)\tInflow_Chla (mg/m3)\tInflow_DOC (mg/m3)\t"
-                                "DIC\tDO\tNO3\tNH4\tSO4\tFe2\tCa\tpH\tCH4\tFe3\tAl3\tSiO4\tSiO2\tdiatom\n"])
+            input_file.writelines(["-999\tMyLake Input\n", "Year\tMonth\tDay\tGlobal radiation (MJ/m2)\tCloud cover(-)\t"
+                                    "Air temperature (deg C)\tRelative humidity (%)\tAir pressure (hPa)\tWind speed (m/s)\t"
+                                    "Precipitation (mm/day)\tInflow (m3/day)\tInflow_T (deg C)\tInflow_C\tInflow_S (kg/m3)\t"
+                                    "Inflow_TP (mg/m3)\tInflow_DOP (mg/m3)\tInflow_Chla (mg/m3)\tInflow_DOC (mg/m3)\t"
+                                    "DIC\tDO\tNO3\tNH4\tSO4\tFe2\tCa\tpH\tCH4\tFe3\tAl3\tSiO4\tSiO2\tdiatom\n"])
 
-        for variable in variables:
-            ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
+            for variable in variables:
+                ncdf_file = ncdf.Dataset(forcing_data_directory + "/{}_{}_{}_{}.allTS.nc".format(variable, model, scenario, lake_name), "r", format = "NETCDF4")
 
 
-            for x in ncdf_file.variables[variable][:]:
-                if variable == "tas":   #converting from Kelvins to Celsius
-                    temp = float(x) - 273.15
-                    list_dict[variable].append(temp)
+                for x in ncdf_file.variables[variable][:]:
+                    if variable == "tas":   #converting from Kelvins to Celsius
+                        temp = float(x) - 273.15
+                        list_dict[variable].append(temp)
 
-                elif variable == "ps":  #converting from Pa to hPa
-                    press = float(x)/100
-                    list_dict[variable].append(press)
+                    elif variable == "ps":  #converting from Pa to hPa
+                        press = float(x)/100
+                        list_dict[variable].append(press)
 
-                elif variable == "pr":  #converting from kg/m**2/s to mm/day
-                    prec = float(x) * 86400
-                    list_dict[variable].append(prec)
+                    elif variable == "pr":  #converting from kg/m**2/s to mm/day
+                        prec = float(x) * 86400
+                        list_dict[variable].append(prec)
 
-                elif variable == "rsds":    #converting from W/m**2 to MJ/m**2
-                    rsds = float(x) * 24 * 60 *60 / 1000000
-                    list_dict[variable].append(rsds)
+                    elif variable == "rsds":    #converting from W/m**2 to MJ/m**2
+                        rsds = float(x) * 24 * 60 *60 / 1000000
+                        list_dict[variable].append(rsds)
 
-                else : list_dict[variable].append(float(x))
+                    else : list_dict[variable].append(float(x))
 
-            if variable is variables[0]:
-                for y in ncdf_file.variables["time"][:]:
-                    list_dict["Year"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[0:4])
-                    list_dict["Month"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[5:7])
-                    list_dict["Day"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[8:10])
+                if variable is variables[0]:
+                    for y in ncdf_file.variables["time"][:]:
+                        list_dict["Year"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[0:4])
+                        list_dict["Month"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[5:7])
+                        list_dict["Day"].append(str(ncdf.num2date(y, "days since {}".format(start_time)))[8:10])
 
-            ncdf_file.close()
+                ncdf_file.close()
 
-        input_file.write("\n".join(["\t".join(["%s" % year, "%s" % month, "%s" % day, "%f" % rsds,
-                                    "0", "%f" % tas, "%f" % hurs, "%f" % ps, "%f" % sfcwind, "%f" % pr,
-                                    "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
-                                    "0", "0", "0", "0", "0", "0", "0"])
-                                    for year, month, day, hurs, pr, ps, rsds, sfcwind, tas in zip(
-                                    list_dict["Year"],
-                                    list_dict["Month"],
-                                    list_dict["Day"],
-                                    list_dict["hurs"],
-                                    list_dict["pr"],
-                                    list_dict["ps"],
-                                    list_dict["rsds"],
-                                    list_dict["sfcWind"],
-                                    list_dict["tas"])]))
+            input_file.write("\n".join(["\t".join(["%s" % year, "%s" % month, "%s" % day, "%f" % rsds,
+                                        "0", "%f" % tas, "%f" % hurs, "%f" % ps, "%f" % sfcwind, "%f" % pr,
+                                        "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0", "0",
+                                        "0", "0", "0", "0", "0", "0", "0"])
+                                        for year, month, day, hurs, pr, ps, rsds, sfcwind, tas in zip(
+                                        list_dict["Year"],
+                                        list_dict["Month"],
+                                        list_dict["Day"],
+                                        list_dict["hurs"],
+                                        list_dict["pr"],
+                                        list_dict["ps"],
+                                        list_dict["rsds"],
+                                        list_dict["sfcWind"],
+                                        list_dict["tas"])]))
 
     print("{}_{}_{}_input Done".format(lake_name[:3], model, scenario))
 
@@ -165,6 +166,7 @@ def init_info(lakeName, observation_path, date_init = 101):
         found_date = False
         for file in os.listdir(observation_path):
             with open("{}/{}".format(observation_path, file), "r") as obs:
+
                 reader = list(csv.reader(obs))[1:]
 
             for observation in reader:
@@ -483,7 +485,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     :return: None
     """
 
-    with open("observations/{}/{}_hypsometry.csv".format(lakeName, lakeName)) as obs:
+    with open("observations/{}/{}/{}_hypsometry.csv".format(region,lakeName, lakeName)) as obs:
         reader = list(csv.reader(obs))
         prefix = reader[1][0][3:]
 
