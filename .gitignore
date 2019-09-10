@@ -9,3 +9,5 @@ ISIMIP/input
 ISIMIP/.idea/workspace.xml
 *.csv
 output
+ISIMIP/output/
+ISIMIP/output/AU/BurleyGriffin/GFDL-ESM2M/historical/RunComplete
