@@ -144,9 +144,9 @@ def runlakesGoran_par(model_id, scenario_id, csvf):
         ii = range(1, nlines)
         
 
-    for i in ii:
-        loop_through_lakes_list(i,lines,model_id,scenario_id)
-    #Parallel(n_jobs=num_cores)(delayed(loop_through_lakes_list)(i, lines, model_id, scenario_id) for i in ii)
+   # for i in ii:
+   #     loop_through_lakes_list(i,lines,model_id,scenario_id)
+    Parallel(n_jobs=num_cores)(delayed(loop_through_lakes_list)(i, lines, model_id, scenario_id) for i in ii)
 
 
 def loop_through_lakes_list(i, lines, modelid, scenarioid):
@@ -159,7 +159,7 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         scenarioid: scenario id (one of the keys of the dictionary "scenarios")
     """
 
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment\
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment,MEAN_CAL\
         = lines[i].strip().split(',')
 
     print('running lake %s' % ebh)
@@ -203,5 +203,5 @@ if __name__ == '__main__':
     # runlakesGoran_par(csvf, modeli, scenarioi)
 
     # Line used to run regional scale simulation with all model-scenario combinations
-    loop_through_model_scenario ( [2],[1], r'2017SwedenList_only_validation_ice.csv', 'report_0930.txt' )
+    loop_through_model_scenario ( [2],[2], r'2017SwedenList.csv', 'report_1116.txt' )
     #loop_through_model_scenario ( [1,2,3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report_end.txt' ),,

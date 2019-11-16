@@ -41,7 +41,7 @@ cordexfolder = 'E:\cordex' #5-24-2018 MC # needs to be changed depending where t
 # 'http://ns2806k.web.sigma2.no/'  # website updated: 5-9-2018 MC
 
 inflowfolder = '../sweden_inflow_data' #5-9-2018 MC
-outputfolder = 'D:\Fish_niche\outputtasinflow' #5-9-2018 MC
+outputfolder = 'D:\Fish_niche\outputinflow' #5-9-2018 MC
 
 
 def mylakeinit(max_depth, area, outpath,I_scDOC=1):
@@ -194,7 +194,7 @@ def take5(pdict, dates, eh,eh1):
     df['ps'] = h5py.File(pdict['ps'], mode='r')[e][:] * 0.01
     df['rsds'] = h5py.File(pdict['rsds'], mode='r')[e][:] * (60 * 60 * 24 * 1e-6)
     df['sfcWind'] = h5py.File(pdict['sfcWind'], mode='r')[e][:]
-    df['tas'] = h5py.File(pdict['tas'], mode='r')[e1][:] - 273.15
+    df['tas'] = h5py.File(pdict['tas'], mode='r')[e][:] - 273.15
     return df
 
 def take5_missingdata(pdict, dates, eh,eh1): #5-24-2018 MC
@@ -231,7 +231,7 @@ def take5_missingdata(pdict, dates, eh,eh1): #5-24-2018 MC
     df['ps'] = h5py.File(pdict['ps'], mode='r')[e][:] * 0.01
     df['rsds'] = h5py.File(pdict['rsds'], mode='r')[e][:] * (60 * 60 * 24 * 1e-6)
     df['sfcWind'] = h5py.File(pdict['sfcWind'], mode='r')[e][:]
-    df['tas'] = h5py.File(pdict['tas'], mode='r')[e1][:] - 273.15
+    df['tas'] = h5py.File(pdict['tas'], mode='r')[e][:] - 273.15
     if len(dates) != len(df):
         if special:
             step = int((len(dates)-len(df))/4)

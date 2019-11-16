@@ -14,7 +14,7 @@ function generateAreaTimeseries(lakelistfile,T_list, light_list,m1,m2,exA,y1A,ex
 %       Areaday =  AreaDays/(Lake Surface Area * 365 days), giving the "proportion of the maximum potential habitat area averaged across the entire year " as calculated by Gretchen et al.
 %Call the function exportAreaTimeseries to export the timeseries of NTGdays,AreaDays and Areaday for each lake into csv. 
 
-path(path, '../output1')
+path(path, '../outputinflow')
 path(path, 'E:\output-06-08-2018')
 path(path, 'E:\output-21-08-2018')
 
