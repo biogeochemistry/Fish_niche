@@ -176,7 +176,7 @@ def input_files_loop(lake):
             f.write('running lake %s \n'% (lake))
             f.close()
         print("download for %s"%lake)
-        #download_forcing_data(f_lake)
+        download_forcing_data(f_lake)
         with open(report, 'a') as f:
             f.write('download for %s completed\n'% (lake))
             f.close()
@@ -196,54 +196,53 @@ def input_files_loop(lake):
     if reg == None:
         print("Cannot find {}'s region".format(lake))
         return None
-    models=['EWEMBI']
-    scenarios = ['historical']
+
     for model in models:
         for scenario in scenarios:
-            #try:
-            if scenario == "historical" and model == 'EWEMBI':
-                print(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\{}\{}_{}_{}_input".format(reg,lake[:3], model, scenario))
-
-                if not (os.path.exists( r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input/{}/{}\{}_{}_{}_input".format(reg,lake[:3],lake[:3], model, scenario))):
-                    try:
-
-                        run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
-                                                   "D:/forcing_data", run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data",model,scenario),
-                                                   run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data",model,scenario), model, scenario)
-                    except:
-                        print("missing data")
-                    if (os.path.exists(
-                            r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
-                                    reg, lake, lake))):
-
-                        myLake_post.temperatures_by_depth(
-                            r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}/".format(reg,
-                                                                                                           lake),
-                            lake,
-                            os.path.join(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\output", reg, lake),
-                            model, scenario)
-                    else:
-                        print('no daily data for %s'% lake)
-                else:
-                    print('Already done')
-                    print(r"output/{}/{}/{}/{}/Observed_Temperatures.csv".format(reg, lake, model, scenario))
-                    if not (os.path.exists(r"output/{}/{}/{}/{}/Observed_Temperatures.csv".format(reg, lake, model, scenario))):
-                        if (os.path.exists(
-                                r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
-                                    reg, lake, lake))):
-                            myLake_post.temperatures_by_depth("observations/{}/{}".format(reg, lake), lake,
-                                                      "output/{}/{}/{}/{}".format(reg, lake, model, scenario),model,scenario)
-                        else:
-                            print('no daily data for %s' % lake)
+            try:
+            # if scenario == "historical" and model == 'EWEMBI':
+            #     print(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\{}\{}_{}_{}_input".format(reg,lake[:3], model, scenario))
+            #
+            #     if not (os.path.exists( r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input/{}/{}\{}_{}_{}_input".format(reg,lake[:3],lake[:3], model, scenario))):
+            #         try:
+            #
+            #             run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
+            #                                        "D:/forcing_data", run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data",model,scenario),
+            #                                        run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data",model,scenario), model, scenario)
+            #         except:
+            #             print("missing data")
+            #         if (os.path.exists(
+            #                 r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
+            #                         reg, lake, lake))):
+            #
+            #             myLake_post.temperatures_by_depth(
+            #                 r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}/".format(reg,
+            #                                                                                                lake),
+            #                 lake,
+            #                 os.path.join(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\output", reg, lake),
+            #                 model, scenario)
+            #         else:
+            #             print('no daily data for %s'% lake)
+            #     else:
+            #         print('Already done')
+            #         print(r"output/{}/{}/{}/{}/Observed_Temperatures.csv".format(reg, lake, model, scenario))
+            #         if not (os.path.exists(r"output/{}/{}/{}/{}/Observed_Temperatures.csv".format(reg, lake, model, scenario))):
+            #             if (os.path.exists(
+            #                     r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
+            #                         reg, lake, lake))):
+            #                 myLake_post.temperatures_by_depth("observations/{}/{}".format(reg, lake), lake,
+            #                                           "output/{}/{}/{}/{}".format(reg, lake, model, scenario),model,scenario)
+            #             else:
+            #                 print('no daily data for %s' % lake)
             # else:
-            #     if not model == "EWEMBI":
-            #         run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
-            #                                                "D:/forcing_data",
-            #                                                run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data"),
-            #                                                run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data"),
-            #                                                model, scenario)
-            #except:
-            #    print("problem when doing %s %s %s" % (lake, model, scenario))
+                if not model == "EWEMBI":
+                    run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
+                                                           "D:/forcing_data",
+                                                           run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data"),
+                                                           run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data"),
+                                                           model, scenario)
+            except:
+               print("problem when doing %s %s %s" % (lake, model, scenario))
 
             if not os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, lake[:3],lake[:3],model,scenario)) or not os.path.exists("input/{}/{}/{}_init".format(reg, lake[:3],lake[:3])) or not os.path.exists("input/{}/{}/{}_par".format(reg, lake[:3],lake[:3])):
                 print("not all initial files existing for %s %s %s" % ( model, scenario,lake))
@@ -286,23 +285,23 @@ def download_forcing_data(lake):
                                 f.close()
                             print('download already done %s \n' % (lake))
 
-            # else:
-            #
-            #     with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
-            #         sftp.cwd( "/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
-            #         for var in input_variables:
-            #             if not os.path.exists("D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake)):
-            #                 print("start scenario %s"%(scenario))
-            #                 try:
-            #                     sftp.get("{}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake), localpath="D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake))
-            #                     print("end")
-            #                 except:
-            #                     print("enable to get {}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake))
-            #             else:
-            #                 with open(report, 'a') as f:
-            #                     f.write('download already done %s \n' % (lake))
-            #                     f.close()
-            #                 print('download already done %s \n' % (lake))
+            else:
+
+                with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
+                    sftp.cwd( "/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
+                    for var in input_variables:
+                        if not os.path.exists("D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake)):
+                            print("start scenario %s"%(scenario))
+                            try:
+                                sftp.get("{}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake), localpath="D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake))
+                                print("end")
+                            except:
+                                print("enable to get {}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake))
+                        else:
+                            with open(report, 'a') as f:
+                                f.write('download already done %s \n' % (lake))
+                                f.close()
+                            print('download already done %s \n' % (lake))
 
 
 
@@ -310,7 +309,7 @@ def download_forcing_data(lake):
 
 def mylake_parallel():
 
-    Parallel(n_jobs=num_cores, verbose=10)(delayed(model_scenario_loop)(lake) for lake in coundntop)
+    Parallel(n_jobs=num_cores, verbose=10)(delayed(model_scenario_loop)(lake) for lake in full_lake_list)
 
 
 def model_scenario_loop(lake):
@@ -327,7 +326,7 @@ def model_scenario_loop(lake):
         print("Cannot find {}'s region".format(lake))
         return None
     else:
-        with open("observations/{}/{}/{}_hypsometry.csv".format(reg,lake, lake)) as obs:
+        with open("observations/{}/{}/{}_hypsometry2.csv".format(reg,lake, lake)) as obs:
             reader = list(csv.reader(obs))
             prefix = reader[1][0][3:]
 
@@ -337,9 +336,15 @@ def model_scenario_loop(lake):
                 if os.path.exists("output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
                     print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
 
-                elif os.path.exists("output/{}/{}/GFDL-ESM2M/rcp26/Calibration_Complete.txt".format(reg, lake)):
+                elif os.path.exists("output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)):
                     print("Running {} {} {}.\n".format(lake, model, scenario))
-                    run_myLake_ISIMIP.run_myLake("observations/{}/{}".format(reg, lake), "input/{}/{}".format(reg, prefix), reg, lake, model, scenario)
+                    try:
+                        run_myLake_ISIMIP.run_myLake("observations/{}/{}".format(reg, lake), "input/{}/{}".format(reg, prefix), reg, lake, model, scenario)
+                        print("Run of {} {} {} Completed.\n".format(lake, model, scenario))
+                    except:
+                        print("problem with {} {} {}.\n".format(lake, model, scenario))
+                else:
+                    print("{} Calibration have not been done.\n".format(lake))
 
 
 def make_parameters_file_parallel():
@@ -428,7 +433,7 @@ def run_calibrations(lake):
 
 if __name__ == "__main__":
     #
-    #input_files_parallel()
+    input_files_parallel()
     # lake ="BurleyGriffin"
     # reg = "AU"
     # model="EWEMBI"
@@ -441,6 +446,7 @@ if __name__ == "__main__":
     # #Parallel(n_jobs=num_cores)(delayed(run_calibrations(lake)) for lake in full_lake_list)
     #for lake in ['Allequash_Lake', 'Alqueva', 'Annecy', 'Annie', 'Argyle', 'Biel', 'Big_Muskellunge_Lake', 'Black_Oak_Lake', 'Bourget', 'Burley_Griffin', 'Crystal_Bog', 'Crystal_Lake', 'Delavan', 'Dickie_Lake', 'Eagle_Lake', 'Ekoln_basin_of_Malaren', 'Erken', 'Esthwaite_Water', 'Falling_Creek_Reservoir', 'Feeagh', 'Fish_Lake', 'Geneva', 'Great_Pond', 'Green_Lake', 'Harp_Lake', 'Kilpisjarvi', 'Kinneret', 'Kivu', 'Klicava', 'Kuivajarvi', 'Langtjern', 'Laramie_Lake', 'Lower_Zurich', 'Mendota', 'Monona', 'Mozaisk', 'Mt_Bold', 'Mueggelsee', 'Neuchatel', 'Ngoring', 'Nohipalo_Mustjarv', 'Nohipalo_Valgejarv', 'Okauchee_Lake', 'Paajarvi', 'Rappbode_Reservoir', 'Rimov', 'Rotorua', 'Sammamish', 'Sau_Reservoir', 'Sparkling_Lake', 'Stechlin', 'Sunapee', 'Tahoe', 'Tarawera', 'Toolik_Lake', 'Trout_Bog', 'Trout_Lake', 'Two_Sisters_Lake', 'Vendyurskoe', 'Victoria', 'Vortsjarv', 'Washington', 'Windermere', 'Wingra', 'Zlutice']:
     #    download_forcing_data(lake)
-    calibration_parallel()
-    #mylake_parallel()
+    #calibration_parallel()
+    mylake_parallel()
+    #model_scenario_loop("Langtjern")
     #run_calibrations(full_lake_list[1])

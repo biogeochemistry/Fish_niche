@@ -436,83 +436,83 @@ def mylakepar(longitude, latitude, lake_name, outdir, kz_N0 = 0.00007, c_shelter
     :return: None
     """
     outpath = outdir + "\{}_par".format(lake_name[:3])
+    if not os.path.exists(outpath):
+        if os.path.isfile ( "LAE_para_all1.txt" ): #this file allows change of the four coefficients, if nothing is given, will uses initial values
+            print('using file')
+            with open ( "LAE_para_all1.txt", "r" ) as infile:
+                out = infile.read () % (latitude, longitude, kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, I_scDOC, swa_b0, swa_b1, k_BOD, k_SOD)
 
-    if os.path.isfile ( "LAE_para_all1.txt" ): #this file allows change of the four coefficients, if nothing is given, will uses initial values
-        print('using file')
-        with open ( "LAE_para_all1.txt", "r" ) as infile:
-            out = infile.read () % (latitude, longitude, kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, I_scDOC, swa_b0, swa_b1, k_BOD, k_SOD)
+        else:
+            out = '''-999	"Mylake parameters"			
+            Parameter	Value	Min	Max	Unit
+            dz	1.0	0.5	2	m
+            Kz_ak	NaN	NaN	NaN	(-)
+            Kz_ak_ice	0.0009	NaN	NaN	(-)
+            Kz_N0	%f	NaN	NaN	s-2                 #7.00E-05
+            C_shelter	%s	NaN	NaN	(-)
+            latitude	%.5f	NaN	NaN	dec.deg
+            longitude	%.5f	NaN	NaN	dec.deg
+            alb_melt_ice	%f	NaN	NaN	(-)
+            alb_melt_snow	%f	NaN	NaN	(-)
+            PAR_sat	3.00E-05	1.00E-05	1.00E-04	mol m-2 s-1
+            f_par	0.89	NaN	NaN	(-)
+            beta_chl	0.015	0.005	0.045	m2 mg-1
+            lamgbda_I	5	NaN	NaN	m-1
+            lambda_s	15	NaN	NaN	m-1
+            sed_sld	0.36	NaN	NaN	(m3/m3)
+            I_scV 	%f	NaN	NaN	(-)
+            I_scT	%f	NaN	NaN	deg C
+            I_scC	1	NaN	NaN	(-)
+            I_scS	1	1.1	1.9	(-)
+            I_scTP	1	0.4	0.8	(-)
+            I_scDOP	1	NaN	NaN	(-)
+            I_scChl	1	NaN	NaN	(-)
+            I_scDOC	%s	NaN	NaN	(-)
+            swa_b0	%f	NaN	NaN	m-1
+            swa_b1	%f	0.8	1.3	m-1
+            S_res_epi	3.30E-07	7.30E-08	1.82E-06	m d-1 (dry mass)
+            S_res_hypo	3.30E-08	NaN	NaN	m d-1 (dry mass)
+            H_sed	0.03	NaN	NaN	m
+            Psat_Lang	2500	NaN	NaN	mg m-3
+            Fmax_Lang	8000	5000	10000	mg kg-1
+            Uz_Sz	0.3	0.1	1	m d-1
+            Uz_Chl	0.16	0.05	0.5	m d-1
+            Y_cp	1	NaN	NaN	(-)
+            m_twty	0.2	0.1	0.3	d-1
+            g_twty	1.5	1	1.5	d-1
+            k_sed_twty	2.00E-04	NaN	NaN	d-1
+            k_dop_twty	0	NaN	NaN	d-1
+            P_half	0.2	0.2	2	mg m-3
+            PAR_sat2	3.00E-05	NaN	NaN	mol m-2 s-1
+            beta_chl2	0.015	NaN	NaN	m2 mg-1
+            Uz_Chl2	0.16	NaN	NaN	m d-1
+            m_twty2	0.2	NaN	NaN	d-1
+            g_twty2	1.5	NaN	NaN	d-1
+            P_half2	0.2	NaN	NaN	mg m-3
+            oc_DOC	0.01	NaN	NaN	m2 mg-1
+            qy_DOC	0.1	NaN	NaN	mg mol-1
+            k_BOD	%s	NaN	NaN	d-1
+            k_SOD	%s	NaN	NaN	mg m-2
+            theta_BOD	1.047	NaN	NaN	(-)
+            theta_BOD_ice	1.13	NaN	NaN	(-)
+            theta_SOD	1	NaN	NaN	(-)
+            theta_SOD_ice	1	NaN	NaN	(-)
+            theta_T	4	NaN	NaN	deg.celcius
+            pH	5.2	NaN	NaN	(-)
+            I_scDIC	1	NaN	NaN	(-)
+            Mass_Ratio_C_Chl	100	NaN	NaN	(-)
+            SS_C	0.25	NaN NaN 57
+            density_org_H_nc	1.95	NaN NaN 58
+            density_inorg_H_nc	2.65	NaN NaN 59
+            I_scO	1	NaN NaN (-)
+            ''' % (kz_N0, c_shelter, latitude, longitude, alb_melt_ice, alb_melt_snow, i_scv, i_sct, I_scDOC, swa_b0, swa_b1, k_BOD, k_SOD)
 
-    else:
-        out = '''-999	"Mylake parameters"			
-        Parameter	Value	Min	Max	Unit
-        dz	1.0	0.5	2	m
-        Kz_ak	NaN	NaN	NaN	(-)
-        Kz_ak_ice	0.0009	NaN	NaN	(-)
-        Kz_N0	%f	NaN	NaN	s-2                 #7.00E-05
-        C_shelter	%s	NaN	NaN	(-)
-        latitude	%.5f	NaN	NaN	dec.deg
-        longitude	%.5f	NaN	NaN	dec.deg
-        alb_melt_ice	%f	NaN	NaN	(-)
-        alb_melt_snow	%f	NaN	NaN	(-)
-        PAR_sat	3.00E-05	1.00E-05	1.00E-04	mol m-2 s-1
-        f_par	0.89	NaN	NaN	(-)
-        beta_chl	0.015	0.005	0.045	m2 mg-1
-        lamgbda_I	5	NaN	NaN	m-1
-        lambda_s	15	NaN	NaN	m-1
-        sed_sld	0.36	NaN	NaN	(m3/m3)
-        I_scV 	%f	NaN	NaN	(-)
-        I_scT	%f	NaN	NaN	deg C
-        I_scC	1	NaN	NaN	(-)
-        I_scS	1	1.1	1.9	(-)
-        I_scTP	1	0.4	0.8	(-)
-        I_scDOP	1	NaN	NaN	(-)
-        I_scChl	1	NaN	NaN	(-)
-        I_scDOC	%s	NaN	NaN	(-)
-        swa_b0	%f	NaN	NaN	m-1
-        swa_b1	%f	0.8	1.3	m-1
-        S_res_epi	3.30E-07	7.30E-08	1.82E-06	m d-1 (dry mass)
-        S_res_hypo	3.30E-08	NaN	NaN	m d-1 (dry mass)
-        H_sed	0.03	NaN	NaN	m
-        Psat_Lang	2500	NaN	NaN	mg m-3
-        Fmax_Lang	8000	5000	10000	mg kg-1
-        Uz_Sz	0.3	0.1	1	m d-1
-        Uz_Chl	0.16	0.05	0.5	m d-1
-        Y_cp	1	NaN	NaN	(-)
-        m_twty	0.2	0.1	0.3	d-1
-        g_twty	1.5	1	1.5	d-1
-        k_sed_twty	2.00E-04	NaN	NaN	d-1
-        k_dop_twty	0	NaN	NaN	d-1
-        P_half	0.2	0.2	2	mg m-3
-        PAR_sat2	3.00E-05	NaN	NaN	mol m-2 s-1
-        beta_chl2	0.015	NaN	NaN	m2 mg-1
-        Uz_Chl2	0.16	NaN	NaN	m d-1
-        m_twty2	0.2	NaN	NaN	d-1
-        g_twty2	1.5	NaN	NaN	d-1
-        P_half2	0.2	NaN	NaN	mg m-3
-        oc_DOC	0.01	NaN	NaN	m2 mg-1
-        qy_DOC	0.1	NaN	NaN	mg mol-1
-        k_BOD	%s	NaN	NaN	d-1
-        k_SOD	%s	NaN	NaN	mg m-2
-        theta_BOD	1.047	NaN	NaN	(-)
-        theta_BOD_ice	1.13	NaN	NaN	(-)
-        theta_SOD	1	NaN	NaN	(-)
-        theta_SOD_ice	1	NaN	NaN	(-)
-        theta_T	4	NaN	NaN	deg.celcius
-        pH	5.2	NaN	NaN	(-)
-        I_scDIC	1	NaN	NaN	(-)
-        Mass_Ratio_C_Chl	100	NaN	NaN	(-)
-        SS_C	0.25	NaN NaN 57
-        density_org_H_nc	1.95	NaN NaN 58
-        density_inorg_H_nc	2.65	NaN NaN 59
-        I_scO	1	NaN NaN (-)
-        ''' % (kz_N0, c_shelter, latitude, longitude, alb_melt_ice, alb_melt_snow, i_scv, i_sct, I_scDOC, swa_b0, swa_b1, k_BOD, k_SOD)
+        outpath = outdir + "\{}_par".format(lake_name[:3])
 
-    outpath = outdir + "\{}_par".format(lake_name[:3])
+        with open(outpath, 'w') as f:
+            f.write(out)
 
-    with open(outpath, 'w') as f:
-        f.write(out)
-
-    print("{} Done".format(outpath))
+        print("{} Done".format(outpath))
 
 def get_longitude(lake_name, forcing_data_directory,model,scenario):
     """
@@ -558,7 +558,7 @@ def generate_input_files(observation_path, lake_name, f_lake_name, forcing_data_
     """
 
     outdir = mylakeinit(init_info(lake_name, observation_path))
-    mylakepar(longitude, latitude, lake_name, outdir)
+    #mylakepar(longitude, latitude, lake_name, outdir)
     myLake_input(f_lake_name, model, scenario, forcing_data_directory, outdir)
 
 def simulation_years(scenarioid):
@@ -624,34 +624,34 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     #
     # else:
 
-    if os.path.exists("{}/Observed_Temperatures.csv".format(outfolder)):
-        with open("{}/Observed_Temperatures.csv".format(outfolder), "r") as observation_file:
-            reader = list(csv.reader(observation_file))
-
-            start_year = int(reader[1][0][:4])
-            end_year = int(reader[-1][0][:4])
-
-        if start_year > 1978:
-            y1 = start_year-1
-            if start_year == 1979:
-                y1 = 1979
-            if end_year < 2016:
-                y2 = end_year
-            else:
-                y2 = 2016
-        else:
-            y1 = 1979
-            if end_year < 2016:
-                y2 = end_year
-            else:
-                y2 = 2016
-
-    else:
+    # if os.path.exists("{}/Observed_Temperatures.csv".format(outfolder)):
+    #     with open("{}/Observed_Temperatures.csv".format(outfolder), "r") as observation_file:
+    #         reader = list(csv.reader(observation_file))
+    #
+    #         start_year = int(reader[1][0][:4])
+    #         end_year = int(reader[-1][0][:4])
+    #
+    #     if start_year > 1978:
+    #         y1 = start_year-1
+    #         if start_year == 1979:
+    #             y1 = 1979
+    #         if end_year < 2016:
+    #             y2 = end_year
+    #         else:
+    #             y2 = 2016
+    #     else:
+    #         y1 = 1979
+    #         if end_year < 2016:
+    #             y2 = end_year
+    #         else:
+    #             y2 = 2016
+    #
+    # else:
     #y1, y2 = simulation_years(scenarioid)
-        if modelid =="EWEMBI":
-           y1,y2 = 1979,2016
-        else:
-            y1,y2=simulation_years(scenarioid)
+    if modelid =="EWEMBI":
+       y1,y2 = 1979,2016
+    else:
+        y1,y2=simulation_years(scenarioid)
 
     if not os.path.exists ( outfolder ):
         os.makedirs ( outfolder )
@@ -665,16 +665,22 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
     flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
 
     if all(flags) and flag != "calibration":
-        if modelid != "EwembI":
-            #if outputfile(y1, y2, outfolder) == True:
-            with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
-                f.write(datetime.datetime.now().isoformat())
+        # if modelid != "EwembI":
+        #     #if outputfile(y1, y2, outfolder) == True:
+
+        ret = outputfile(y1, y2, outfolder)
+        with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
+            f.write(datetime.datetime.now().isoformat())
+
+
         # else:
         #     with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
         #         f.write(datetime.datetime.now().isoformat())
-
+    if ret is True:
         ret = 0
-    ret = 0 if all(flags) else 100
+    else:
+        ret = 100
+
     return ret
 
 def calculatedensity(temp):
@@ -690,20 +696,124 @@ def outputfile(y1,y2,outfolder):
         with open("{}/Tzt.csv".format(outfolder), "r") as observation_file:
             rows = list(csv.reader(observation_file))
             strat = []
-            for i in len(0, rows):
+            density = []
+            maxdensity =[]
+            watertemp = []
+            for i in range(0, len(rows)):
                 data = rows[i]
                 row = [dates[i]]
-
-                if abs(calculatedensity(data[0])-calculatedensity(data[-1]))>0.1:
+                waterrow = [dates[i]]
+                maxrowdensity = [dates[i]]
+                if abs(calculatedensity(float(data[0]))-calculatedensity(float(data[-1]))) > 0.1:
                     row.append(1)
                 else:
                     row.append(0)
                 strat.append(row)
-            with open("strat.csv", "wb") as f:
+                density = []
+                for j in range(0, len(data)):
+                    density.append(calculatedensity(float(data[j])))
+                    waterrow.append(float(data[j]))
+                watertemp.append(waterrow)
+                maxrowdensity.append(density.index(max(density)))
+                maxdensity.append(maxrowdensity)
+            with open(os.path.join(outfolder, "strat.csv"), "w", newline="") as f:
                 writer = csv.writer(f)
                 writer.writerows(strat)
+            with open(os.path.join(outfolder, "watertemp.csv"), "w", newline="") as f2:
+                writer = csv.writer(f2)
+                writer.writerows(watertemp)
+            with open(os.path.join(outfolder, "thermodepth.csv"), "w", newline="") as f1:
+                writer = csv.writer(f1)
+                writer.writerows(maxdensity)
 
-            ret = True
+
+        with open("{}/His.csv".format(outfolder), "r") as ice_file:
+            rows = list(csv.reader(ice_file))
+            ice = []
+            lakeicefrac = []
+            snowtick = []
+            for i in range(0, len(rows)):
+                data = rows[i]
+                ice.append([dates[i],float(data[6])])
+                lakeicefrac.append([dates[i],float(data[0])])
+                snowtick.append([dates[i],float(data[2])])
+            with open(os.path.join(outfolder, "ice.csv"), "w", newline="") as f3:
+                writer = csv.writer(f3)
+                writer.writerows(ice)
+            with open(os.path.join(outfolder, "lakeicefrac.csv"), "w", newline="") as f4:
+                writer = csv.writer(f4)
+                writer.writerows(lakeicefrac)
+            with open(os.path.join(outfolder, "snowtick.csv"), "w", newline="") as f4:
+                writer = csv.writer(f4)
+                writer.writerows(snowtick)
+
+        his = pd.read_csv("{}/His.csv".format(outfolder),names =['0','1','2','3','4','5','6','7'])
+        dates1 = pd.date_range(start='1/1/%s'%y1, periods=len(his))
+        his = his.set_index(dates1)
+        icetemp = his['3'].groupby(pd.Grouper(freq="M",convention='s')).mean()
+        icetemp.to_csv("{}/icetemp.csv".format(outfolder),header=False)
+
+        turbdiffheat = []
+        with open("{}/Qst.csv".format(outfolder), "r") as qst_file:
+            rows = list(csv.reader(qst_file))
+            sensheatf = []
+            latentheatf = []
+            lakeheatf = []
+            albedo = []
+            for i in range(0, len(rows)):
+                data = rows[i]
+                sensheatf.append([dates[i], float(data[3])])
+                latentheatf.append([dates[i], float(data[4])])
+                lakeheatf.append([dates[i], float(data[0])+float(data[1])-float(data[2])])
+                albedo.append([dates[i], float(data[5])])
+
+            with open(os.path.join(outfolder, "sensheatf.csv"), "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerows(sensheatf)
+            with open(os.path.join(outfolder, "latentheatf.csv"), "w", newline="") as f2:
+                writer = csv.writer(f2)
+                writer.writerows(latentheatf)
+            with open(os.path.join(outfolder, "lakeheatf.csv"), "w", newline="") as f1:
+                writer = csv.writer(f1)
+                writer.writerows(lakeheatf)
+            with open(os.path.join(outfolder, "albedo.csv"), "w", newline="") as f1:
+                writer = csv.writer(f1)
+                writer.writerows(albedo)
+
+        with open("{}/Kzt.csv".format(outfolder), "r") as qst_file:
+            rows = list(csv.reader(qst_file))
+            turbdiffheat = []
+
+            for i in range(0, len(rows)):
+                data = rows[i]
+                turbrow = [dates[i]]
+
+                for j in range(0, len(data)):
+                    turbrow.append(float(data[j]))
+                turbdiffheat.append(turbrow)
+
+            with open(os.path.join(outfolder, "turbdiffheat.csv"), "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerows(turbdiffheat)
+
+        with open("{}/Qzt_sed.csv".format(outfolder), "r") as qst_file:
+            rows = list(csv.reader(qst_file))
+            sedheatf = []
+
+            for i in range(0, len(rows)):
+                data = rows[i]
+                sedheat = [dates[i]]
+
+                for j in range(0, len(data)):
+                    sedheat.append(float(data[j]))
+                sedheatf.append(sedheat)
+
+            with open(os.path.join(outfolder, "sedheatf.csv"), "w", newline="") as f:
+                writer = csv.writer(f)
+                writer.writerows(sedheatf)
+
+
+        ret = True
     except:
         ret = False
     return ret
