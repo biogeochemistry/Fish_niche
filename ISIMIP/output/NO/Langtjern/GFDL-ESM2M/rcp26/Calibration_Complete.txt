@@ -1,8 +1,0 @@
-Calibration results:     fun: array(0.)
-     jac: array([0., 0., 0., 0., 0., 0.])
- message: 'Optimization terminated successfully.'
-    nfev: 180
-     nit: 1
- success: True
-       x: array([1.61132863e-04, 1.79267238e-02, 4.73366534e-01, 4.56082677e-01,
-       2.00915072e+00, 8.62103358e-01])
