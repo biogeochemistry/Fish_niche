@@ -15,10 +15,10 @@
         python runlakesGoran_par.py 2 2 2017SwedenList.csv
         Or using Python IDE.
 """
-
-import run_mylakeGoran
-import math
 from joblib import Parallel, delayed
+from run_mylakeGoran import runlake
+import math
+
 import multiprocessing
 import datetime
 import time
@@ -144,9 +144,9 @@ def runlakesGoran_par(model_id, scenario_id, csvf):
         ii = range(1, nlines)
         
 
-    #for i in ii:
-    #    loop_through_lakes_list(i,lines,model_id,scenario_id)
-    Parallel(n_jobs=num_cores)(delayed(loop_through_lakes_list)(i, lines, model_id, scenario_id) for i in ii)
+    for i in ii:
+        loop_through_lakes_list(i,lines,model_id,scenario_id)
+    #Parallel(n_jobs=num_cores)(delayed(loop_through_lakes_list)(i, lines, model_id, scenario_id) for i in ii)
 
 
 def loop_through_lakes_list(i, lines, modelid, scenarioid):
@@ -159,7 +159,7 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         scenarioid: scenario id (one of the keys of the dictionary "scenarios")
     """
 
-    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated\
+    lake_id, subid, name, ebh, area, depth, longitude, latitude, volume, mean_depth, sediment\
         = lines[i].strip().split(',')
 
     print('running lake %s' % ebh)
@@ -178,6 +178,8 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
         swa_b1 = math.exp(-0.95670 * math.log(float(volume)/float(area)) + 1.36359)
         k_BOD = math.exp(-0.25290 * (float(volume)/float(area)) - 1.36966)
 
+    
+    
     print('BOD %s' % k_BOD)
     k_SOD = math.exp(-0.06629 * float(depth) + 0.64826 * math.log(float(area)) - 3.13037)
     # k_SOD = OLD EQUATION: 13069.873528*math.exp(-1.760776*math.log(float(depth)))
@@ -187,7 +189,8 @@ def loop_through_lakes_list(i, lines, modelid, scenarioid):
     I_scDOC = math.log((swa_b1 + 0.727)/0.3208008880)/(2 * 0.1338538345)  # needs to be modified if swa_b0 changes
     print('IDOC %s' % I_scDOC)
 
-    run_mylakeGoran.runlake(modelid, scenarioid, ebh.strip('"'), int(subid), float(depth), float(area),
+
+    runlake(modelid, scenarioid, ebh.strip('"'), int(subid), float(depth), float(area),
                             float(longitude), float(latitude), k_BOD, swa_b1, k_SOD, I_scDOC)
 
 
@@ -200,5 +203,5 @@ if __name__ == '__main__':
     # runlakesGoran_par(csvf, modeli, scenarioi)
 
     # Line used to run regional scale simulation with all model-scenario combinations
-    loop_through_model_scenario ( [1,2,3,4,5,6],[1,2,3,4,5,6,7,8], r'2017SwedenList.csv', 'report_0725.txt' )
+    loop_through_model_scenario ( [2],[1], r'2017SwedenList_only_validation_ice.csv', 'report_0930.txt' )
     #loop_through_model_scenario ( [1,2,3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'2017SwedenList.csv', 'report_end.txt' ),,

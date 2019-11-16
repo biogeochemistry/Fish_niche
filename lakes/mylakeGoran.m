@@ -1,6 +1,6 @@
 function mylakeGoran(initfile, parfile, inputfile, m_start2, m_stop2, outdir)
 
-path(path, 'C:\Users\macot620\Documents\GitHub\Fish_niche\MyLake_O_simple')%change directory from mylake folder to Mylake_O_simple
+path(path, '../MyLake_O_simple')%change directory from mylake folder to Mylake_O_simple
 path(path, '../sediments')
 
 warning('off', 'all') 
@@ -47,30 +47,29 @@ try
     f1_name = (strcat(outdir, '\Tzt.csv')); % b = binary mode, z = archived file
     dlmwrite(f1_name, Tzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f2_name = (strcat(outdir, '\O2zt.csv'));
-    dlmwrite(f2_name, O2zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f5_name = (strcat(outdir, '\O2zt.csv'));
+    dlmwrite(f5_name, O2zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f3_name =(strcat(outdir, '\lambdazt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f3_name, lambdazt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f7_name =(strcat(outdir, '\lambdazt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
+    dlmwrite(f7_name, lambdazt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f4_name =(strcat(outdir, '\PARzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f4_name, PARzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
-
-    f5_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f5_name, DOCzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f8_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
+    dlmwrite(f8_name, DOCzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f6_name =(strcat(outdir, '\Qst.csv'));%MC add to ensure creation of 2017REDOCOMPLETE
     dlmwrite(f6_name, Qst(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f7_name =(strcat(outdir, '\Attn_zt.csv'));%MC 2018-05-31 add to comparaison with SDD
     dlmwrite(f7_name, Attn_zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
-
-    f8_name =(strcat(outdir, '\His.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
-    dlmwrite(f8_name,His(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
     
-    f9_name =(strcat(outdir, '\PARMaxt.csv'));%MC 2019-05-13 Need it to evaluate change in ice covert
-    dlmwrite(f9_name,PARMaxt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    f12_name =(strcat(outdir, '\His.csv'));%MC 2018-05-31 add to comparaison with SDD
+    dlmwrite(f12_name, His(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 
+    f10_name =(strcat(outdir, '\PARzt.csv'));%MC 2018-05-31 add to comparaison with SDD
+    dlmwrite(f10_name, PARzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+
+    f11_name =(strcat(outdir, '\PARMaxt.csv'));%MC 2018-05-31 add to comparaison with SDD
+    dlmwrite(f11_name, PARMaxt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
 catch
 end
 end          

@@ -14,7 +14,7 @@ function generateAreaTimeseries(lakelistfile,T_list, light_list,m1,m2,exA,y1A,ex
 %       Areaday =  AreaDays/(Lake Surface Area * 365 days), giving the "proportion of the maximum potential habitat area averaged across the entire year " as calculated by Gretchen et al.
 %Call the function exportAreaTimeseries to export the timeseries of NTGdays,AreaDays and Areaday for each lake into csv. 
 
-path(path, '../output')
+path(path, '../output1')
 path(path, 'E:\output-06-08-2018')
 path(path, 'E:\output-21-08-2018')
 
@@ -54,7 +54,9 @@ for T_x = 1:length(T_list)
                 surface_area = lakes(lakenum).area;
                 max_depth    = lakes(lakenum).depth;
 
-                area_at_depth = @(depth)( surface_area .* ((depth-1) - max_depth).^2 ./ max_depth.^2 );
+                %area_at_depth = @(depth)( surface_area .* ((depth-1) - max_depth).^2 ./ max_depth.^2 );
+                surface_area_at_depth = @(depth)( ( surface_area .* ((depth-1) - max_depth).^2 ./ max_depth.^2 ) .*(pi*(max_depth-(depth-1)).^2 + ( surface_area .* ((depth-1) - max_depth).^2 ./ max_depth.^2 ) )).^(1/2);
+
 
                 %T_grad = diff(T')';
                 %[~, maxgrad_depth] = max(abs(T_grad'));
@@ -72,14 +74,16 @@ for T_x = 1:length(T_list)
                     %surface_attn = Attn(time, 1);
                     for depth = 1:zlen
                         if T(time, depth) < T_max
-                            area_T_below_T_max(time) = area_at_depth(depth);
+                            
+                            area_T_below_T_max(time) = surface_area_at_depth(depth);
                             break
                         end
                         
                     end
                     for depth = 1:zlen
                         if ppfd(time, depth) < ppfd_min
-                            area_light_over_light_gradient(time) = area_at_depth(depth);
+                            
+                            area_light_over_light_gradient(time) = surface_area_at_depth(depth);
                             break
                         end
                         
@@ -107,7 +111,7 @@ for T_x = 1:length(T_list)
             
                 timeseries_records{1+lakenum, 1} = lakes(lakenum).lake_id;
                 timeseries_records{1+lakenum, 2} = sum(area_T_and_secchi)/10;
-                timeseries_records{1+lakenum, 3} = (sum(area_T_and_secchi)/10)/(surface_area*365);
+                timeseries_records{1+lakenum, 3} = (sum(area_T_and_secchi)/10)/(surface_area_at_depth(1)*365);
                 timeseries_records{1+lakenum, 4} = mean(secchi_calculated);
                 timeseries_records{1+lakenum, 5} = ngt;
 

@@ -2,7 +2,7 @@
 Parameter	Value	Min	Max	Unit
 dz	1.0	0.5	2	m
 Kz_ak	NaN	NaN	NaN	(-)
-Kz_ak_ice	0.000898	NaN	NaN	(-)
+Kz_ak_ice	NaN	NaN	NaN	(-)
 Kz_N0	7.00E-05	NaN	NaN	s-2
 C_shelter	NaN	NaN	NaN	(-)
 latitude	%.5f	NaN	NaN	dec.deg
