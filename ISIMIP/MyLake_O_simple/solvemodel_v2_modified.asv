@@ -443,6 +443,7 @@ end
 
 if (Hi<=0)
     IceIndicator=0; %IceIndicator==0 means no ice cover
+    alb = NaN;
 else
     IceIndicator=1;
 end
@@ -468,7 +469,9 @@ for i = 1:length(tt)
     % Surface heat fluxes (W m-2), wind stress (N m-2) & daylight fraction (-), based on Air-Sea Toolbox
     [Qsw,Qlw,Qsl,tau,DayFrac,DayFracHeating,sensheatf,latentheatf,alb] = heatflux_v12_isimip(tt(i),Wt(i,1),Wt(i,2),Wt(i,3),Wt(i,4),Wt(i,5),Wt(i,6),Tz(1), ...
         lat,lon,WEQs,Hi,alb_melt_ice,alb_melt_snow,albedot1);     %Qlw and Qsl are functions of Tz(1)            
-    
+    if (IceIndicator==0)
+    alb = NaN;
+    end
     % Calculate total mean PAR and non-PAR light extinction coefficient in water (background + due to Chl a)
     lambdaz_wtot_avg=zeros(Nz,1);
     lambdaz_NP_wtot_avg=zeros(Nz,1);

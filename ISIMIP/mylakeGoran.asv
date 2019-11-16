@@ -13,7 +13,7 @@ test_time = 0;
 Eevapor = 0;
 
 dt = 1.0;
-try
+%try
 [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
     Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
     = modelinputs_v2(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parfile, 'lake', dt);
@@ -70,7 +70,6 @@ dlmwrite(f9_name, Kzt(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 f10_name =(strcat(outdir, '\Qzt_sed.csv'));%MC 2018-05-31 add to comparaison with SDD
 dlmwrite(f10_name, Qzt_sed(:,:)', 'delimiter', ',', 'precision', '%.3f');
-catch
-    fclose(fopen(strcat(outdir, '\problem.txt'), 'w'));
-end  
+%catch
+%end  
 end

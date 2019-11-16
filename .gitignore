@@ -10,4 +10,11 @@ ISIMIP/.idea/workspace.xml
 *.csv
 output
 ISIMIP/output/
+ISIMIP/test
+ISIMIP/test3
+ISIMIP/analyse.py
+ISIMIP/input/NO/Lan/Lan_init
 ISIMIP/output/AU/BurleyGriffin/GFDL-ESM2M/historical/RunComplete
+ISIMIP/output/AU/BurleyGriffin/GFDL-ESM2M/historical/RunComplete
+ISIMIP/report.txt
+ISIMIP/test.py
