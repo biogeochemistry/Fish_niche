@@ -2,8 +2,8 @@
 *.h5
 *.nc
 ISIMIP/scratch.py
-ISIMIP/observations
 ISIMIP/input
+ISIMIP/observations
 *.iml
 *.xml
 ISIMIP/.idea/workspace.xml
@@ -17,3 +17,4 @@ ISIMIP/input/NO/Lan/Lan_init
 ISIMIP/report.txt
 ISIMIP/test.py
 ISIMIP/output/
+

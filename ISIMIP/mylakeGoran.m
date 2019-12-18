@@ -5,8 +5,13 @@ path(path, '../sediments')
 
 warning('off', 'all') 
 
-m_start = datevec(datenum([(m_start2) + 2, 1, 1]) - 365 - 365),(1:3); 
-m_stop = [(m_stop2), 12, 31]; 
+m_start = datevec(datenum([(m_start2), 1, 1])),(1:3); 
+m_stop = [(m_stop2), 12, 31];
+%if ((m_start2 == 1861)||(m_stop2 == 2099)|| (m_stop2==2299))
+%    m_stop = [(m_stop2), 12, 31];
+%else 
+%    m_stop = [(m_stop2+1), 1, 1]; 
+%end;
 
 global ies80 Eevapor;
 test_time = 0;
@@ -70,7 +75,9 @@ dlmwrite(f9_name, Kzt(:,:)', 'delimiter', ',', 'precision', '%.3f');
 
 f10_name =(strcat(outdir, '\Qzt_sed.csv'));%MC 2018-05-31 add to comparaison with SDD
 dlmwrite(f10_name, Qzt_sed(:,:)', 'delimiter', ',', 'precision', '%.3f');
+clear;
 %catch
 %    fclose(fopen(strcat(outdir, '\problem.txt'), 'w'));
+%    clear;
 %end  
 end

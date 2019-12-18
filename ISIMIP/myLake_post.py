@@ -119,7 +119,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder,model,scen
 
 
         with open ("{}/Observed_Temperatures.csv".format(output_folder), "w", newline = '') as csvfile:
-
+            print("{}/Observed_Temperatures.csv".format(output_folder))
             header = "Date, {}\n".format(depthlist)
             csvfile.write(header.translate({ord(i): None for i in '[]'}))
 
@@ -164,6 +164,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder,model,scen
                      temp_list.append(rows[x][dates.index(date)])
                 out.writerow(temp_list)
                 temp_list.clear()
+    print("observation done ... ... ... ... ")
 
 def get_dates_of_simulation(start_year, stop_year):
     """
@@ -1101,6 +1102,63 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
 
     return res
 
+
+
+def run_optimization_Mylake_save(lake_name, input_directory,outdir,observation_path, region, modelid, scenarioid):
+    """
+    Intermediary function calling mylakepar function to generate new parameters, then running myLake with these parameters,
+    and finally
+
+    :param lake_name: Type string. The name of the lake to optimise
+    :param observation_path: Type string. Observed temperatures file
+    :param input_directory: Type string. The folder containing all input files (input, parameters, init)
+    :param region: Type string. The abreviation for the lake's region (Ex: United-States = US, Norway = NO)
+    :param outdir: Type string. The output folder
+    :param modelid: Type string. Prediction model used.
+    :param scenarioid: Type string. The prediction scenario. For optimization purpose this is always historical
+
+    :return: performance analysis, which itself returns a score as float
+    """
+
+
+
+    depths = None
+    for lake in temp_by_lake:
+        if lake_name == lake:
+            depths = temp_by_lake[lake_name]
+            break
+
+    if depths != None:
+        run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid,
+                                     flag="calibration")
+
+        try:
+            make_comparison_file(outdir,depths)
+
+            score = performance_analysis(lake_name, input_directory, outdir)
+
+            with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
+                end_file.writelines(["Calibration results:", str(score)])
+
+
+            return score
+
+
+        except ValueError:
+            print('error value')
+            X = 1/0
+            return -1
+        except ZeroDivisionError:
+            print('zero division')
+            X = 1 / 0
+            return -1
+        except:
+            print('error other')
+            X = 1 / 0
+            return -1
+
+
+
 def run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid,params):
     """
     Intermediary function calling mylakepar function to generate new parameters, then running myLake with these parameters,
@@ -1117,10 +1175,10 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     :return: performance analysis, which itself returns a score as float
     """
 
-    kz_N0, c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
-    i_scv = 1
-    i_sct = 0
-
+    # kz_N0, c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
+    # i_scv = 1
+    # i_sct = 0
+    #
 
 
     depths = None
@@ -1130,9 +1188,9 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
             break
 
     if depths != None:
-        run_myLake_ISIMIP.mylakepar(retreive_longitude(lake_name), retreive_latitude(lake_name), lake_name,
-                                    input_directory,
-                                    kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
+        # run_myLake_ISIMIP.mylakepar(retreive_longitude(lake_name), retreive_latitude(lake_name), lake_name,
+        #                             input_directory,
+        #                             kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
 
         run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid,
                                      flag="calibration")

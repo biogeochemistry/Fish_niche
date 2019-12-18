@@ -1,1 +1,1 @@
-mylakeGoran('input/RW/Kiv\Kiv_init','input/RW/Kiv\Kiv_par','input/RW/Kiv\Kiv_EWEMBI_historical_input',2001,2014,'output\RW\Kivu\EWEMBI\historical');quit
+mylakeGoran('input/AU/Bur\Bur_init','input/AU/Bur\Bur_par','input/AU/Bur\Bur_GFDL-ESM2M_historical_input',1862,1864,'output\AU\Bur\Bur_GFDL-ESM2M\historical')

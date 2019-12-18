@@ -7,7 +7,9 @@ import run_myLake_ISIMIP
 import myLake_post
 import csv
 import sys
+import netCDF4 as ncdf
 import math
+import pandas as pd
 import os
 import pysftp
 from joblib import Parallel, delayed
@@ -15,7 +17,7 @@ import multiprocessing as mp
 from multiprocessing import Pool
 import numpy as np
 
-num_cores = mp.cpu_count() - 6
+num_cores = mp.cpu_count()-2
 hyspomissing =[ "Monona","Ngoring",]
 allmissing = ["Annie" ,"Klicava","Zlutice",]
 forcingdatamissing=["Mozhaysk","Muggelsee","Taupo","Waahi",]
@@ -61,12 +63,12 @@ full_lake_list =["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal",
                  "Waahi"]
 
 #"Ngoring","Klicava",
-full_lake_list =["Argyle","Alqueva","Rotorua","Muggelsee","BigMuskellunge","Vendyurskoe",
+full_lake_list1 =["Argyle","Alqueva","Rotorua","Muggelsee","BigMuskellunge","Vendyurskoe",
                  "EsthwaiteWater","Allequash", "Annie",  "BlackOak", "Crystal",
                  "CrystalBog", "Delavan","FallingCreek", "Fish", "GreatPond",
                  "Green_lake", "Laramie", "Mendota", "Okauchee",
                   "Sparkling", "Sunapee", "Toolik",
-                 "Trout", "TroutBog", "Two_Sisters", "Wingra",
+                 "Trout", "TroutBog", "TwoSisters", "Wingra",
                  "Biel", "LowerZurich", "Neuchatel","Annecy",
                  "Bourget",  "BurleyGriffin", "MtBold",
                  "Dickie", "Eagle_lake", "Harp","Ekoln", "Erken",
@@ -77,10 +79,17 @@ full_lake_list =["Argyle","Alqueva","Rotorua","Muggelsee","BigMuskellunge","Vend
                  "Vortsjarv","Sau", "Tarawera", "Taupo",
                  "Waahi","Washington","Sammamish", "Geneva","Tahoe"]
 
+full_lake_list=['Langtjern','Annecy','Argyle','Crystal','Dickie',
+                'Ekoln','Erken','EsthwaiteWater','Feeagh','Fish',
+                'Harp','Kilpisjarvi','Kinneret','Kivu','LowerZurich',
+                'Mendota','Neuchatel','Okauchee','Rimov','Rotorua',
+                'Sammamish','Sau','Sparkling','Stechlin','Sunapee',
+                'Vendyurskoe','Vortsjarv','Windermere']
+
 
 #full_lake_list = "Allequash"
 regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan",
-                  "Falling_Creek", "Fish", "GreatPond", "Green_lake", "Laramie", "Mendota", "Monona",
+                  "FallingCreek", "Fish", "GreatPond", "Green_lake", "Laramie", "Mendota", "Monona",
                   "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
                   "Washington", "Wingra"],
            "CH": ["Biel", "LowerZurich", "Neuchatel"],
@@ -103,7 +112,7 @@ regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal",
            "ES": ["Sau"],
            "NZ": ["Rotorua", "Tarawera", "Taupo", "Waahi"]}
 
-models = [ "EWEMBI","GFDL-ESM2M",
+models = [ "GFDL-ESM2M","EWEMBI",
           "HadGEM2-ES",
           "IPSL-CM5A-LR",
           "MIROC5"
@@ -122,11 +131,254 @@ input_variables = ["hurs",
                    "sfcWind",
                    "tas"
                     ]
+output_variables = ["strat.csv", "watertemp.csv", "thermodepth.csv", "ice.csv", "lakeicefrac.csv",
+                  "snowtick.csv", "sensheatf.csv", "latentheatf.csv", "lakeheatf.csv", "albedo.csv", "turbdiffheat.csv",
+                  "sedheatf.csv"]
+output_unit={"strat.csv":"", "watertemp.csv":"K", "thermodepth.csv":"m", "ice.csv":"",
+             "lakeicefrac.csv":"","snowtick.csv":"m", "sensheatf.csv":"W m-2",
+             "latentheatf.csv":"W m-2", "lakeheatf.csv":"W m-2", "albedo.csv":"",
+             "turbdiffheat.csv":"m2 s-1", "sedheatf.csv":"W m-2"}
 params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
 report = 'report.txt'
+grid = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\grid.txt"
+
+def simulation_years(scenarioid):
+    if scenarioid == 'piControl':
+        y1, y2 = 1661, 2299
+    elif scenarioid == 'historical':
+        y1, y2 = 1861, 2005
+    elif scenarioid == 'rcp26':
+        y1, y2 = 2006, 2299
+    else:
+        y1, y2 = 2006, 2099
+
+    return y1, y2
+def format():
+    index = range(0, len(full_lake_list) * 5)
+    columns = ['lake', 'model', 'scenario']
+    tableau = pd.DataFrame(index=index, columns=columns)
+    index = 0
+    for lake in (full_lake_list):
+        corrected_names = ["Allequash_Lake", "Big_Muskellunge_Lake", "Black_Oak_Lake", "Burley_Griffin", "Crystal_Bog",
+                           "Crystal_Lake",
+                           "Dickie_Lake", "Eagle_Lake", "Ekoln_basin_of_Malaren", "Esthwaite_Water",
+                           "Falling_Creek",
+                           "Fish_Lake", "Great_Pond", "Green_Lake", "Harp_Lake", "Laramie_Lake", "Lower_Zurich",
+                           "Mt_Bold",
+                           "Nohipalo_Mustjarv", "Nohipalo_Valgejarv", "Okauchee_Lake", "Rappbode_Reservoir",
+                           "Sau_Reservoir",
+                           "Sparkling_Lake", "Toolik_Lake", "Trout_Bog", "Trout_Lake", "Two_Sisters_Lake"]
+
+        f_lake = lake
+        for name in corrected_names:
+            if lake == "Crystal":
+                f_lake = "Crystal_Lake"
+                break
+            elif lake == "Trout":
+                f_lake = "Trout_Lake"
+                break
+            elif lake == "TroutBog":
+                f_lake = "Trout_Bog"
+                break
+            elif lake == "Two_Sisters":
+                f_lake = "Two_Sisters_Lake"
+                break
+            elif lake == "Toolik":
+                f_lake = "Toolik_Lake"
+                break
+            elif lake == "FallingCreek":
+                f_lake = "Falling_Creek"
+                break
+
+            if lake in name.replace("_", ''):
+                f_lake = name
+                break
+        reg = None
+        for region in regions:
+            if lake in regions[region]:
+                reg = region
+                break
+        for modelid in models:
+            for scenarioid in scenarios:
+                print(lake, modelid, scenarioid)
+                if os.path.exists("D:\output\%s\%s\%s\%s\RunComplete" % (reg, lake, modelid, scenarioid)):
+                    tableau.loc[index, 'lake'] = f_lake
+                    tableau.loc[index, 'model'] = modelid
+                    tableau.loc[index, 'scenario'] = scenarioid
+                    if (modelid == "EWEMBI" and scenarioid == "historical") or modelid != "EWEMBI":
+
+                        if modelid == "EWEMBI":
+                            y1, y2 = 1979, 2016
+                        elif modelid == "GFDL-ESM2M" and scenarioid == 'piControl':
+                            y1, y2 = 1661, 2099
+                        elif modelid == "GFDL-ESM2M" and scenarioid == 'rcp26':
+                            y1, y2 = 2006, 2099
+                        elif modelid == "IPSL-CM5A-LR" and scenarioid == 'rcp85':
+                            y1, y2 = 2006, 2299
+                        else:
+                            y1, y2 = simulation_years(scenarioid)
+                        startyear = y1
+
+                        for vari in output_variables:
+                            try:
+                                data = pd.read_csv(os.path.join("D:\output\%s\%s\%s\%s"%(reg,lake,modelid,scenarioid),vari),header=None)
+                                #data1 = data
+                                #data1.apply(lambda x: "%s" % (data[0]), axis=1)
+                                #data1.apply(lambda x: "%s-%s-%s, 00:00:00" % (data["strDate"][0:4], data["strDate"][4:6], data["strDate"][6:]), axis=1)
+                                #data["strDate"] = str(data[0])
+                                #data[0]=("%s-%s-%s, 00:00:00" % (str(data[0])[0:4], str(data[0])[4:6], str(data[0])[6:]))
+                                #data["Date"] = ("%s-%s-%s, 00:00:00" % (data["strDate"][0:4], data["strDate"][4:6], data["strDate"][6:]))
+                                #all_date = []
+                                #for i in range(0,len(data.index)):
+                                #    date = str(data.iloc[i][0])
+                                #    year,month,day=date[0:4],date[4:6],date[6:]
+                                #    all_date.append("%s-%s-%s, 00:00:00"%(str(data.iloc[i][0])[0:4],str(data.iloc[i][0])[4:6],str(data.iloc[i][0])[6:]))
+                                #data.iloc[0] = all_date
+                                variable = vari[:-5]
+                                data1 = data
+                                del data1[0]
+                                min1 = data1.min(axis=0,skipna = True).tolist()
+                                mean1 = data1.mean(axis=0,skipna = True).tolist()
+                                max1 = data1.max(axis=0,skipna = True).tolist()
+                                tableau.loc[index, 'min_%s' % variable] = np.min(min1)
+                                tableau.loc[index, 'meam_%s' % variable] = np.mean(mean1)
+                                tableau.loc[index, 'max_%s' % variable] = np.max(max1)
+                                unit = output_unit.get(vari)
+                                tableau.loc[index, '%s_unit' % variable] = unit
+                                # data.to_csv("D:\output\%s\%s\%s\%s\%s.txt" %(reg,lake,modelid,scenarioid,variable), header=None, index=None, sep=' ', mode='w')
+                                # increment ="day"
+                                # command = "cdo --history -f nc4c -z zip -setmissval,1e+20 -setunit,\"%s\" -setname," \
+                                #     "%s -setreftime,1661-01-01,00:00:00,1%s -settaxis," \
+                                #     "%s-01-01,00:00:00,1%s -input,%s %s.nc4 < %s.txt"%(unit,variable,increment,startyear,increment,grid,
+                                #                                                        "D:\output\%s\%s\%s\%s\%s"%(reg,lake,modelid,scenarioid,variable),
+                                #                                                        "D:\output\%s\%s\%s\%s\%s"%(reg,lake,modelid,scenarioid,variable))
+                                # if not os.path.exists("D:\output\%s\%s\%s\%s\%s.nc4" %(reg,lake,modelid,scenarioid,variable)) and os.path.exists("D:\output\%s\%s\%s\%s\%s.txt" %(reg,lake,modelid,scenarioid,variable)):
+                                #     os.system(command)
+                            except:
+                                print("bug")
+                        index +=1
+    tableau.to_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\all_variable_lakes_combinaison.csv", index=False)
+
+
+def revision():
+
+    index = range(0,len(full_lake_list)*5)
+    columns = ['lake', 'model', 'scenario','nbr_forcing_data','forcing_data_empty','hyspometry','daily_obs','init','input','par','calibration']
+    tableau = pd.DataFrame(index=index, columns=columns)
+    index = 0
+    for lake in (full_lake_list):
+        corrected_names = ["Allequash_Lake", "Big_Muskellunge_Lake", "Black_Oak_Lake", "Burley_Griffin", "Crystal_Bog",
+                           "Crystal_Lake",
+                           "Dickie_Lake", "Eagle_Lake", "Ekoln_basin_of_Malaren", "Esthwaite_Water",
+                           "Falling_Creek",
+                           "Fish_Lake", "Great_Pond", "Green_Lake", "Harp_Lake", "Laramie_Lake", "Lower_Zurich",
+                           "Mt_Bold",
+                           "Nohipalo_Mustjarv", "Nohipalo_Valgejarv", "Okauchee_Lake", "Rappbode_Reservoir",
+                           "Sau_Reservoir",
+                           "Sparkling_Lake", "Toolik_Lake", "Trout_Bog", "Trout_Lake", "Two_Sisters_Lake"]
+
+        f_lake = lake
+        for name in corrected_names:
+            if lake == "Crystal":
+                f_lake = "Crystal_Lake"
+                break
+            elif lake == "Trout":
+                f_lake = "Trout_Lake"
+                break
+            elif lake == "TroutBog":
+                f_lake = "Trout_Bog"
+                break
+            elif lake == "Two_Sisters":
+                f_lake = "Two_Sisters_Lake"
+                break
+            elif lake == "Toolik":
+                f_lake = "Toolik_Lake"
+                break
+
+            if lake in name.replace("_", ''):
+                f_lake = name
+                break
+        reg ='None'
+        for region in regions:
+            regio = region
+            if lake in regions[region]:
+                reg = region
+                break
+        if reg != "None":
+            for model in models:
+                for scenario in scenarios:
+                    print(lake,model,scenario)
+                    if (model == "EWEMBI" and scenario == "historical") or model !="EWEMBI":
+                        tableau.loc[index,'lake'] = f_lake
+                        tableau.loc[index, 'model'] = model
+                        tableau.loc[index, 'scenario'] = scenario
+
+                        count = 0
+                        empty= 0
+                        for vari in input_variables:
+                            if os.path.exists(os.path.join(r"D:\forcing_data","%s_%s_%s_%s.allTS.nc" % (vari,model,scenario,f_lake))):
+                                count +=1
+                            try:
+                                ncdf_file = ncdf.Dataset(os.path.join(r"D:\forcing_data","%s_%s_%s_%s.allTS.nc" % (vari,model,scenario,f_lake)), "r", format="NETCDF4")
+                                if vari == "tas":  # converting from Kelvins to Celsius
+                                    temp = float(ncdf_file.variables[vari][1]) - 273.15
+                            except:
+                                empty += 1
+
+                        tableau.loc[index, 'nbr_forcing_data'] = count
+                        tableau.loc[index, 'forcing_data_empty'] = empty
+
+
+                        print("observations/{}/{}/{}_hypsometry2.csv".format(reg, lake, lake))
+                        if os.path.exists("observations/{}/{}/{}_hypsometry2.csv".format(reg, lake, lake)):
+                            with open("observations/{}/{}/{}_hypsometry2.csv".format(reg, lake, lake)) as obs:
+                                reader = list(csv.reader(obs))
+                                prefix = reader[1][0][3:]
+                            tableau.loc[index, 'hyspometry'] = "Exist"
+                            if not os.path.exists("{}/Calibration_Complete.txt".format("D:\output/{}/{}/EWEMBI/historical".format(reg,lake))):
+                                myLake_post.run_optimization_Mylake_save(lake, "input/{}/{}".format(reg, prefix),
+                                                                             "D:\output/{}/{}/EWEMBI/historical".format(reg,lake),r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations{}/{}".format(reg, lake), reg, model, scenario)
 
 
 
+                            if os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, prefix, prefix, model, scenario)):
+
+
+
+                                tableau.loc[index, 'input'] = "Exist"
+                            else:
+                                tableau.loc[index, 'input'] = "Does not exist"
+                            if os.path.exists("input/{}/{}/{}_init".format(reg, prefix, prefix)):
+                                tableau.loc[index, 'init'] = "Exist"
+                            else:
+                                tableau.loc[index, 'init'] = "Does not exist"
+                            if os.path.exists("input/{}/{}/{}_par".format(reg, prefix, prefix)):
+                                tableau.loc[index, 'par'] = "Exist"
+                            else:
+                                tableau.loc[index, 'par'] = "Does not exist"
+                        else:
+                            tableau.loc[index, 'hyspometry'] = "Does not exist"
+
+                        if (os.path.exists(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(reg, lake, lake))):
+                            tableau.loc[index, 'daily_obs'] = "Exist"
+                        else:
+                            tableau.loc[index, 'daily_obs'] = "Does not exist"
+
+                        if os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg,lake)):
+                            tableau.loc[index, 'calibration'] = "Exist"
+                        else:
+                            tableau.loc[index, 'calibration'] = "Does not exist"
+
+
+
+
+
+
+
+
+                    index +=1
+
+    tableau.to_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\recapitulatif.csv",index=False)
 
 def input_files_parallel():
     with open(report, 'w') as f:
@@ -134,7 +386,8 @@ def input_files_parallel():
         f.close()
 
     print("start")
-
+    #for lake in full_lake_list:
+    #    input_files_loop(lake)
     Parallel(n_jobs=num_cores, verbose=10)(delayed(input_files_loop)(lake) for lake in full_lake_list)
 
 def input_files_loop(lake):
@@ -176,7 +429,7 @@ def input_files_loop(lake):
             f.write('running lake %s \n'% (lake))
             f.close()
         print("download for %s"%lake)
-        download_forcing_data(f_lake)
+        #download_forcing_data(f_lake)
         with open(report, 'a') as f:
             f.write('download for %s completed\n'% (lake))
             f.close()
@@ -192,65 +445,89 @@ def input_files_loop(lake):
         if lake in regions[region]:
             reg = region
             break
+    try:
+        if reg == None:
+            print("Cannot find {}'s region".format(lake))
+            return None
+        else:
+            with open("observations/{}/{}/{}_hypsometry2.csv".format(reg, lake, lake)) as obs:
+                reader = list(csv.reader(obs))
+                prefix = reader[1][0][3:]
 
-    if reg == None:
-        print("Cannot find {}'s region".format(lake))
-        return None
+        for model in models:
+            for scenario in scenarios:
+                if os.path.exists("D:\output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
+                    print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
 
-    for model in models:
-        for scenario in scenarios:
-            try:
-            # if scenario == "historical" and model == 'EWEMBI':
-            #     print(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\{}\{}_{}_{}_input".format(reg,lake[:3], model, scenario))
-            #
-            #     if not (os.path.exists( r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input/{}/{}\{}_{}_{}_input".format(reg,lake[:3],lake[:3], model, scenario))):
-            #         try:
-            #
-            #             run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
-            #                                        "D:/forcing_data", run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data",model,scenario),
-            #                                        run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data",model,scenario), model, scenario)
-            #         except:
-            #             print("missing data")
-            #         if (os.path.exists(
-            #                 r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
-            #                         reg, lake, lake))):
-            #
-            #             myLake_post.temperatures_by_depth(
-            #                 r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}/".format(reg,
-            #                                                                                                lake),
-            #                 lake,
-            #                 os.path.join(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\output", reg, lake),
-            #                 model, scenario)
-            #         else:
-            #             print('no daily data for %s'% lake)
-            #     else:
-            #         print('Already done')
-            #         print(r"output/{}/{}/{}/{}/Observed_Temperatures.csv".format(reg, lake, model, scenario))
-            #         if not (os.path.exists(r"output/{}/{}/{}/{}/Observed_Temperatures.csv".format(reg, lake, model, scenario))):
-            #             if (os.path.exists(
-            #                     r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
-            #                         reg, lake, lake))):
-            #                 myLake_post.temperatures_by_depth("observations/{}/{}".format(reg, lake), lake,
-            #                                           "output/{}/{}/{}/{}".format(reg, lake, model, scenario),model,scenario)
-            #             else:
-            #                 print('no daily data for %s' % lake)
-            # else:
-                if not model == "EWEMBI":
-                    run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
-                                                           "D:/forcing_data",
-                                                           run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data"),
-                                                           run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data"),
-                                                           model, scenario)
-            except:
-               print("problem when doing %s %s %s" % (lake, model, scenario))
+                elif os.path.exists(
+                        "D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)):# and os.path.exists(
+                        #"input/{}/{}/{}_{}_{}_input".format(reg, prefix, prefix, model, scenario)):
 
-            if not os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, lake[:3],lake[:3],model,scenario)) or not os.path.exists("input/{}/{}/{}_init".format(reg, lake[:3],lake[:3])) or not os.path.exists("input/{}/{}/{}_par".format(reg, lake[:3],lake[:3])):
-                print("not all initial files existing for %s %s %s" % ( model, scenario,lake))
-    #for model in models:
-    #    for scenario in scenarios:
-    #        for var in input_variables:
-    #            os.remove("forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, f_lake))
+                    try:
+                        if (model == "EWEMBI" and scenario == "historical") or model !="EWEMBI":
+                            print(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\{}\{}_{}_{}_input".format(reg,lake[:3], model, scenario))
 
+                            if not (os.path.exists( r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input/{}/{}\{}_{}_{}_input".format(reg,lake[:3],lake[:3], model, scenario))):
+                                try:
+
+                                    run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
+                                                               "D:/forcing_data", run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data",model,scenario),
+                                                               run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data",model,scenario), model, scenario)
+                                except:
+                                    print("missing data")
+                                # if (os.path.exists(
+                                #         r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
+                                #                 reg, lake, lake))):
+                                #     try:
+                                #         myLake_post.temperatures_by_depth(
+                                #             r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}/".format(reg,
+                                #                                                                                            lake),lake,os.path.join(r"D:\output", reg, lake),model, scenario)
+                                #     except:
+                                #         print("missing data")
+                                # else:
+                                #     print('no daily data for %s'% lake)
+                            else:
+                                print('Already done')
+
+
+                                # if not (os.path.exists(r"D:\output/{}/{}/{}/{}/Observed_Temperatures.csv".format(reg, lake, model, scenario))):
+                                #     if (os.path.exists(
+                                #             r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\observations/{}/{}\{}_temp_daily.csv".format(
+                                #                 reg, lake, lake))):
+                                #         try:
+                                #             myLake_post.temperatures_by_depth("observations/{}/{}".format(reg, lake), lake,
+                                #                                   "D:\output/{}/{}/{}/{}".format(reg, lake, model, scenario),model,scenario)
+                                #             print("obsertvation done")
+                                #         except:
+                                #             print("missing data")
+                                #     else:
+                                #         print('no daily data for %s' % lake)
+                        else:
+                            if not model == "EWEMBI":
+                                try:
+                                    run_myLake_ISIMIP.generate_input_files("observations/{}/{}".format(reg, lake), lake, f_lake,
+                                                                       "D:/forcing_data",
+                                                                       run_myLake_ISIMIP.get_longitude(f_lake, "D:/forcing_data",model,scenario),
+                                                                       run_myLake_ISIMIP.get_latitude(f_lake, "D:/forcing_data",model,scenario),
+                                                                       model, scenario)
+                                except:
+                                    print("missing data")
+                    except:
+                       print("problem when doing %s %s %s" % (lake, model, scenario))
+
+                    if model == "EWEMBI":
+                        if scenario == "historical":
+                            if not os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, lake[:3],lake[:3],model,scenario)) or not os.path.exists("input/{}/{}/{}_init".format(reg, lake[:3],lake[:3])) or not os.path.exists("input/{}/{}/{}_par".format(reg, lake[:3],lake[:3])):
+                                print("not all initial files existing for %s %s %s" % ( model, scenario,lake))
+                    else:
+                        if not os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, lake[:3],lake[:3],model,scenario)) or not os.path.exists("input/{}/{}/{}_init".format(reg, lake[:3],lake[:3])) or not os.path.exists("input/{}/{}/{}_par".format(reg, lake[:3],lake[:3])):
+                            print("not all initial files existing for %s %s %s" % ( model, scenario,lake))
+            #for model in models:
+            #    for scenario in scenarios:
+            #        for var in input_variables:
+            #            os.remove("forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, f_lake))
+    except:
+        print("missing hypso probably")
 
 def download_forcing_data(lake):
     """
@@ -261,59 +538,72 @@ def download_forcing_data(lake):
 
     for model in models:
         for scenario in scenarios:
-            if model == "EWEMBI" and "historical":
+            if not os.path.exists(os.path.join("D:/forcing_data\\{}\\Complete_Download_{}_{}_{}.txt".format(lake, model, scenario, lake))):
+                done = 0
+                if model == "EWEMBI":
+                    if scenario == "historical":
 
-                with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
-                    sftp.cwd(
-                        "/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/OBS_atmosphere/local_lakes/EWEMBI/historical")
+                        with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
+                            sftp.cwd(
+                                "/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/OBS_atmosphere/local_lakes/EWEMBI/historical")
 
-                    for var in input_variables:
-                        if not os.path.exists(
-                                "D:/forcing_data\\{}_EWEMBI_historical_{}.allTS.nc".format(var, lake)):
-                            print("start scenario EWE histo")
-                            try:
-                                sftp.get("{}/{}_EWEMBI_historical_{}.allTS.nc".format(lake, var, lake),
-                                         localpath="D:/forcing_data\\{}_EWEMBI_historical_{}.allTS.nc".format(var,
-                                                                                                              lake))
-                                print("end")
+                            for var in input_variables:
+                                if not os.path.exists(
+                                        "D:/forcing_data\\{}_EWEMBI_historical_{}.allTS.nc".format(var, lake)):
+                                    print("start scenario EWE histo")
+                                    try:
+                                        sftp.get("{}/{}_EWEMBI_historical_{}.allTS.nc".format(lake, var, lake),
+                                                 localpath="D:/forcing_data\\{}_EWEMBI_historical_{}.allTS.nc".format(var,
+                                                                                                                      lake))
+                                        print("end")
+                                        done += 1
 
-                            except:
-                                print("enable to get {}/{}_EWEMBI_historical_{}.allTS.nc".format(lake, var, lake))
-                        else:
-                            with open(report, 'a') as f:
-                                f.write('download already done %s \n' % (lake))
-                                f.close()
-                            print('download already done %s \n' % (lake))
+                                    except:
+                                        print("enable to get {}/{}_EWEMBI_historical_{}.allTS.nc".format(lake, var, lake))
+                                else:
+                                    done += 1
+                                    with open(report, 'a') as f:
+                                        f.write('download already done %s \n' % (lake))
+                                        f.close()
+                                    print('download already done %s \n' % (lake))
 
-            else:
+                else:
 
-                with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
-                    sftp.cwd( "/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
-                    for var in input_variables:
-                        if not os.path.exists("D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake)):
-                            print("start scenario %s"%(scenario))
-                            try:
-                                sftp.get("{}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake), localpath="D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake))
-                                print("end")
-                            except:
-                                print("enable to get {}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake))
-                        else:
-                            with open(report, 'a') as f:
-                                f.write('download already done %s \n' % (lake))
-                                f.close()
-                            print('download already done %s \n' % (lake))
+                    with pysftp.Connection('mistralpp.dkrz.de', username='b380750', password='TwopFaP5') as sftp:
+                        sftp.cwd( "/mnt/lustre01/work/bb0820/ISIMIP/ISIMIP2b/InputData/GCM_atmosphere/biascorrected/local_lakes")
 
+                        for var in input_variables:
+                            print(done)
+                            if not os.path.exists("D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake)):
+                                print("start scenario %s"%(scenario))
+                                try:
+                                    sftp.get("{}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake), localpath="D:/forcing_data\\{}_{}_{}_{}.allTS.nc".format(var, model, scenario, lake))
+                                    print("end")
+                                    done += 1
+                                except:
+                                    print("enable to get {}/{}_{}_{}_{}.allTS.nc".format(lake, var, model, scenario, lake))
+                            else:
+                                done += 1
+                                with open(report, 'a') as f:
+                                    f.write('download already done %s \n' % (lake))
+                                    f.close()
+                                print('download already done %s \n' % (lake))
 
-
-
+                if done == 6:
+                    outdirl = os.path.join("D:/forcing_data\\{}".format(lake))
+                    if not os.path.exists(outdirl):
+                        os.makedirs(outdirl)
+                    with open(os.path.join("{}\\Complete_Download_{}_{}_{}.txt".format(outdirl, model, scenario, lake)), 'w') as f:
+                        f.write("Done")
+                    print("Done")
 
 def mylake_parallel():
 
-    Parallel(n_jobs=num_cores, verbose=10)(delayed(model_scenario_loop)(lake) for lake in full_lake_list)
-
+    #for lake in full_lake_list:
+    #    model_scenario_loop(lake)
+    Parallel(n_jobs=num_cores, verbose=10)(delayed(model_scenario_loop)(lake) for lake in full_lake_list1)
 
 def model_scenario_loop(lake):
-
 
 
     reg = None
@@ -326,26 +616,32 @@ def model_scenario_loop(lake):
         print("Cannot find {}'s region".format(lake))
         return None
     else:
-        with open("observations/{}/{}/{}_hypsometry2.csv".format(reg,lake, lake)) as obs:
-            reader = list(csv.reader(obs))
-            prefix = reader[1][0][3:]
+        try:
+            with open("observations/{}/{}/{}_hypsometry2.csv".format(reg,lake, lake)) as obs:
+                reader = list(csv.reader(obs))
+                prefix = reader[1][0][3:]
+                getprefix=True
+        except:
+            getprefix = False
 
-        for model in models:
-            for scenario in scenarios:
+        if getprefix is True:
+            if os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)):
 
-                if os.path.exists("output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
-                    print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
+                for model in models:
+                    for scenario in scenarios:
+                        print("input/{}/{}/{}_{}_{}_input".format(reg, prefix,prefix,model,scenario))
+                        if os.path.exists("D:\output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
+                             print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
 
-                elif os.path.exists("output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)):
-                    print("Running {} {} {}.\n".format(lake, model, scenario))
-                    try:
-                        run_myLake_ISIMIP.run_myLake("observations/{}/{}".format(reg, lake), "input/{}/{}".format(reg, prefix), reg, lake, model, scenario)
-                        print("Run of {} {} {} Completed.\n".format(lake, model, scenario))
-                    except:
-                        print("problem with {} {} {}.\n".format(lake, model, scenario))
-                else:
-                    print("{} Calibration have not been done.\n".format(lake))
+                        if os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)) and os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, prefix,prefix,model,scenario)):
+                            try:
 
+                                run_myLake_ISIMIP.run_myLake("observations/{}/{}".format(reg, lake), "input/{}/{}".format(reg, prefix), reg, lake, model, scenario)
+                                print("Run of {} {} {} Completed.\n".format(lake, model, scenario))
+                            except:
+                                print("problem with {} {} {}.\n".format(lake, model, scenario))
+                        else:
+                            print("{} Calibration have not been done.\n".format(lake))
 
 def make_parameters_file_parallel():
     """
@@ -365,9 +661,8 @@ def get_best_parameters(lake):
             reg = region
             break
 
-    with open("output/{}/{}/GFDL-ESM2M/historical".format(reg, lake)) as results:
+    with open("D:\output/{}/{}/GFDL-ESM2M/historical".format(reg, lake)) as results:
         pass
-
 
 def calibration_parallel():
     """
@@ -379,9 +674,8 @@ def calibration_parallel():
         f.write('\nrunning _parallel\n' )
         f.close()
 
-    #run_calibrations(full_lake_list[0])
-    Parallel(n_jobs=num_cores, verbose=10)(delayed(run_calibrations)(lake) for lake in full_lake_list)
-
+    run_calibrations(full_lake_list[0])
+    #Parallel(n_jobs=num_cores, verbose=10)(delayed(run_calibrations)(lake) for lake in full_lake_list)
 
 def run_calibrations(lake):
     """
@@ -392,6 +686,7 @@ def run_calibrations(lake):
     from myLake_post module for the given lake.
     """
     print(lake)
+    file = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP"
     reg = None
     for region in regions:
         if lake in regions[region]:
@@ -402,14 +697,14 @@ def run_calibrations(lake):
         print("Cannot find {}'s region".format(lake))
         return None
     else:
-        with open("observations/{}/{}/{}_hypsometry2.csv".format(reg, lake, lake)) as obs:
+        with open("{}/observations/{}/{}/{}_hypsometry2.csv".format(file,reg, lake, lake)) as obs:
             reader = list(csv.reader(obs))
             prefix = reader[1][0][3:]
     optimisation_completed_unsuccessfull = []
     for region in regions:
         if lake in regions[region]:
 
-            if os.path.exists("output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(region, lake)):
+            if os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(region, lake)):
                 print("Calibration for {} is already complete.\n".format(lake))
                 return None
             elif not os.path.exists("input/{}/{}/{}_EWEMBI_historical_input".format(region, prefix,prefix)):
@@ -417,7 +712,7 @@ def run_calibrations(lake):
                 return None
             elif not os.path.exists("input/{}/{}/{}_EWEMBI_historical_input".format(region, prefix,prefix)) or not os.path.exists("input/{}/{}/{}_init".format(region, prefix,prefix)) or not os.path.exists("input/{}/{}/{}_par".format(region, prefix,prefix)):
                 print("not all initial files existing for %s" % ( lake))
-            elif os.path.exists("output/{}/{}/EWEMBI/historical/Calibration_problem.txt".format(region, lake)):
+            elif os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_problem.txt".format(region, lake)):
                 print("Unable to calibration {}.\n".format(lake))
                 return None
 
@@ -426,14 +721,14 @@ def run_calibrations(lake):
 
                 return myLake_post.optimize_differential_evolution(lake, "observations/{}/{}".format(reg,lake),
                                                      "input/{}/{}".format(region, prefix), region,
-                                                     "output/{}/{}/{}/{}".format(region, lake, "EWEMBI","historical"),"EWEMBI","historical")
+                                                     "D:\output/{}/{}/{}/{}".format(region, lake, "EWEMBI","historical"),"EWEMBI","historical")
 
 
     print("Cannot find {}'s region".format(lake))
 
 if __name__ == "__main__":
     #
-    input_files_parallel()
+    #input_files_parallel()
     # lake ="BurleyGriffin"
     # reg = "AU"
     # model="EWEMBI"
@@ -446,7 +741,15 @@ if __name__ == "__main__":
     # #Parallel(n_jobs=num_cores)(delayed(run_calibrations(lake)) for lake in full_lake_list)
     #for lake in ['Allequash_Lake', 'Alqueva', 'Annecy', 'Annie', 'Argyle', 'Biel', 'Big_Muskellunge_Lake', 'Black_Oak_Lake', 'Bourget', 'Burley_Griffin', 'Crystal_Bog', 'Crystal_Lake', 'Delavan', 'Dickie_Lake', 'Eagle_Lake', 'Ekoln_basin_of_Malaren', 'Erken', 'Esthwaite_Water', 'Falling_Creek_Reservoir', 'Feeagh', 'Fish_Lake', 'Geneva', 'Great_Pond', 'Green_Lake', 'Harp_Lake', 'Kilpisjarvi', 'Kinneret', 'Kivu', 'Klicava', 'Kuivajarvi', 'Langtjern', 'Laramie_Lake', 'Lower_Zurich', 'Mendota', 'Monona', 'Mozaisk', 'Mt_Bold', 'Mueggelsee', 'Neuchatel', 'Ngoring', 'Nohipalo_Mustjarv', 'Nohipalo_Valgejarv', 'Okauchee_Lake', 'Paajarvi', 'Rappbode_Reservoir', 'Rimov', 'Rotorua', 'Sammamish', 'Sau_Reservoir', 'Sparkling_Lake', 'Stechlin', 'Sunapee', 'Tahoe', 'Tarawera', 'Toolik_Lake', 'Trout_Bog', 'Trout_Lake', 'Two_Sisters_Lake', 'Vendyurskoe', 'Victoria', 'Vortsjarv', 'Washington', 'Windermere', 'Wingra', 'Zlutice']:
     #    download_forcing_data(lake)
-    #calibration_parallel()
+    #input_files_parallel()
+
+
     mylake_parallel()
     #model_scenario_loop("Langtjern")
     #run_calibrations(full_lake_list[1])
+
+
+    revision()
+    format()
+    #calibration_parallel()
+

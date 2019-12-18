@@ -274,7 +274,7 @@ def FishNiche_csv_results_revise(scenarioid,modelid,lake_list,letter):
             print("Cannot find {}'s region".format(lake))
 
         else:
-            outdir = path.join(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\output/{}/{}/{}/{}".format(reg, lake, model, scenario) )
+            outdir = path.join(r"D:\output/{}/{}/{}/{}".format(reg, lake, model, scenario) )
             if not path.exists("{}/Calibration_Complete.txt".format(outdir)):
                 print("{}/Calibration_Complete doesn't exist".format(outdir))
             else:
@@ -445,23 +445,23 @@ def FishNiche_csv_results_revise(scenarioid,modelid,lake_list,letter):
                         fig1.savefig(path.join(datafolder, "Figure_1_temp_%s_%s.png" % (letter, lake)))
 
 
-                        lineStart = 0
-                        lineEnd = 35
-                        fontsize = 30
-                        alldf.set_index(alldf['dates'])
-                        fig4=plt.figure(101 * lakenum)  # ,figsize=(3.0, 3.0))
-
-                        #color = [i for i in alldf['depths']]
-
-                        plt.plot_date(alldf['dates'],alldf['residuals'],marker='.', alpha=0.8,c="Blue",  linestyle='None')
-
-                        plt.xlabel('Time')  # ,fontweight='bold' )
-                        plt.ylabel('Residuals')
-                        #plt.show()
-
-                        #plt.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
-                        #plt.xaxis.set_major_formatter(DateFormatter("%m-%d"))
-                        fig4.savefig(path.join(datafolder, "Figure_4_residualvstime_%s_%s.png" % (letter,lake)))
+                        # lineStart = 0
+                        # lineEnd = 35
+                        # fontsize = 30
+                        # alldf.set_index(alldf['dates'])
+                        # fig4=plt.figure(101 * lakenum)  # ,figsize=(3.0, 3.0))
+                        #
+                        # #color = [i for i in alldf['depths']]
+                        #
+                        # plt.plot_date(alldf['dates'],alldf['residuals'],marker='.', alpha=0.8,c="Blue",  linestyle='None')
+                        #
+                        # plt.xlabel('Time')  # ,fontweight='bold' )
+                        # plt.ylabel('Residuals')
+                        # #plt.show()
+                        #
+                        # #plt.xaxis.set_major_locator(mdates.WeekdayLocator(interval=2))
+                        # #plt.xaxis.set_major_formatter(DateFormatter("%m-%d"))
+                        # fig4.savefig(path.join(datafolder, "Figure_4_residualvstime_%s_%s.png" % (letter,lake)))
 
                         #fig2=plt.figure((2)*110)#,figsize=(18.0, 10.0))
                         #ax = plt.gca ()
@@ -512,7 +512,7 @@ def FishNiche_csv_results_revise(scenarioid,modelid,lake_list,letter):
         alldata = list(zip(alldates,allobsT,allmodelT,alldepths,alllakes))
         alldf=pd.DataFrame(alldata,columns=['dates','obsT','modelT','depths','lakes'])
         alldf['residuals'] = alldf['obsT']-alldf['modelT']
-        alldf.to_csv( path.join ( datafolder,"comparison_all_lakeD.csv"),index=False)
+        alldf.to_csv( path.join ( datafolder,"comparison_all_lakeDDD.csv"),index=False)
 
 
                     # calibration = abs(sum(T_model_samples)-sum(T_data_samples))**2
@@ -530,7 +530,7 @@ def FishNiche_csv_results_revise(scenarioid,modelid,lake_list,letter):
 
 def analysisalllake():
     alldf = pd.read_csv(path.join ( datafolder,"comparison_all_lakeC.csv"))
-    letter='C'
+    letter='D'
 
     # sos1 = sums_of_squares(alldf["obsT"], alldf["modelT"])
     # rms1 = root_mean_square(alldf["obsT"], alldf["modelT"])
@@ -765,25 +765,19 @@ def findgoodHypso(lake_list):
 
 
 
-
-
-
-
-
-
 if __name__ == "__main__":
 
 
-    init_file = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\CA\Dic\Dic_init"
-    parameter_file = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\CA\Dic\Dic_par"
-    input_file = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\CA\Dic\Dic_EWEMBI_historical_input"
-    outfolder = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\output\CA\Dickie\EWEMBI\historical"
-    y1,y2 = 1979,2016
-    cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (
-    init_file, parameter_file, input_file, y1, y2, outfolder)
-    #print(cmd)
-    #os.system(cmd)
+    # init_file = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\CA\Dic\Dic_init"
+    # parameter_file = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\CA\Dic\Dic_par"
+    # input_file = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\input\CA\Dic\Dic_EWEMBI_historical_input"
+    # outfolder = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\output\CA\Dickie\EWEMBI\historical"
+    # y1,y2 = 1979,2016
+    # cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (
+    # init_file, parameter_file, input_file, y1, y2, outfolder)
+    # #print(cmd)
+    # #os.system(cmd)
 
-    FishNiche_csv_results_revise(0, -1, full_lake_list, "D")
+    FishNiche_csv_results_revise(0, -1, full_lake_list, "E")
     #findgoodHypso(full_lake_list)
     #analysisalllake()

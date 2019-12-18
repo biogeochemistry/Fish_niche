@@ -1,0 +1,1387 @@
+,lake,model,scenario,nbr_forcing_data,forcing_data_empty,hyspometry,daily_obs,init,input,par,calibration
+0,Allequash_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1,Allequash_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+2,Allequash_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+3,Allequash_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+4,Allequash_Lake,GFDL-ESM2M,rcp85,6,1,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+5,Allequash_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+6,Allequash_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+7,Allequash_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+8,Allequash_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+9,Allequash_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+10,Allequash_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+11,Allequash_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+12,Allequash_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+13,Allequash_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+14,Allequash_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+15,Allequash_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+16,Allequash_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+17,Allequash_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+18,Allequash_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+19,Allequash_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+20,Allequash_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+21,Annie,GFDL-ESM2M,historical,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+22,Annie,GFDL-ESM2M,piControl,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+23,Annie,GFDL-ESM2M,rcp26,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+24,Annie,GFDL-ESM2M,rcp60,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+25,Annie,GFDL-ESM2M,rcp85,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+26,Annie,HadGEM2-ES,historical,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+27,Annie,HadGEM2-ES,piControl,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+28,Annie,HadGEM2-ES,rcp26,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+29,Annie,HadGEM2-ES,rcp60,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+30,Annie,HadGEM2-ES,rcp85,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+31,Annie,IPSL-CM5A-LR,historical,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+32,Annie,IPSL-CM5A-LR,piControl,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+33,Annie,IPSL-CM5A-LR,rcp26,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+34,Annie,IPSL-CM5A-LR,rcp60,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+35,Annie,IPSL-CM5A-LR,rcp85,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+36,Annie,MIROC5,historical,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+37,Annie,MIROC5,piControl,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+38,Annie,MIROC5,rcp26,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+39,Annie,MIROC5,rcp60,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+40,Annie,MIROC5,rcp85,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+41,Annie,EWEMBI,historical,6,0,Exist,Does not exist,Does not exist,Does not exist,Does not exist,Does not exist
+42,Big_Muskellunge_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+43,Big_Muskellunge_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+44,Big_Muskellunge_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+45,Big_Muskellunge_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+46,Big_Muskellunge_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+47,Big_Muskellunge_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+48,Big_Muskellunge_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+49,Big_Muskellunge_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+50,Big_Muskellunge_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+51,Big_Muskellunge_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+52,Big_Muskellunge_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+53,Big_Muskellunge_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+54,Big_Muskellunge_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+55,Big_Muskellunge_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+56,Big_Muskellunge_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+57,Big_Muskellunge_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+58,Big_Muskellunge_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+59,Big_Muskellunge_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+60,Big_Muskellunge_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+61,Big_Muskellunge_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+62,Big_Muskellunge_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+63,Black_Oak_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+64,Black_Oak_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+65,Black_Oak_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+66,Black_Oak_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+67,Black_Oak_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+68,Black_Oak_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+69,Black_Oak_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+70,Black_Oak_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+71,Black_Oak_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+72,Black_Oak_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+73,Black_Oak_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+74,Black_Oak_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+75,Black_Oak_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+76,Black_Oak_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+77,Black_Oak_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+78,Black_Oak_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+79,Black_Oak_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+80,Black_Oak_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+81,Black_Oak_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+82,Black_Oak_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+83,Black_Oak_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+84,Crystal_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+85,Crystal_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+86,Crystal_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+87,Crystal_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+88,Crystal_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+89,Crystal_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+90,Crystal_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+91,Crystal_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+92,Crystal_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+93,Crystal_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+94,Crystal_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+95,Crystal_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+96,Crystal_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+97,Crystal_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+98,Crystal_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+99,Crystal_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+100,Crystal_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+101,Crystal_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+102,Crystal_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+103,Crystal_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+104,Crystal_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+105,Crystal_Bog,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+106,Crystal_Bog,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+107,Crystal_Bog,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+108,Crystal_Bog,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+109,Crystal_Bog,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+110,Crystal_Bog,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+111,Crystal_Bog,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+112,Crystal_Bog,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+113,Crystal_Bog,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+114,Crystal_Bog,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+115,Crystal_Bog,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+116,Crystal_Bog,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+117,Crystal_Bog,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+118,Crystal_Bog,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+119,Crystal_Bog,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+120,Crystal_Bog,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+121,Crystal_Bog,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+122,Crystal_Bog,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+123,Crystal_Bog,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+124,Crystal_Bog,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+125,Crystal_Bog,EWEMBI,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+126,Delavan,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+127,Delavan,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+128,Delavan,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+129,Delavan,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+130,Delavan,GFDL-ESM2M,rcp85,6,1,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+131,Delavan,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+132,Delavan,HadGEM2-ES,piControl,6,1,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+133,Delavan,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+134,Delavan,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+135,Delavan,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+136,Delavan,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+137,Delavan,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+138,Delavan,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+139,Delavan,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+140,Delavan,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+141,Delavan,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+142,Delavan,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+143,Delavan,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+144,Delavan,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+145,Delavan,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+146,Delavan,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+147,Falling_Creek,GFDL-ESM2M,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+148,Falling_Creek,GFDL-ESM2M,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+149,Falling_Creek,GFDL-ESM2M,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+150,Falling_Creek,GFDL-ESM2M,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+151,Falling_Creek,GFDL-ESM2M,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+152,Falling_Creek,HadGEM2-ES,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+153,Falling_Creek,HadGEM2-ES,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+154,Falling_Creek,HadGEM2-ES,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+155,Falling_Creek,HadGEM2-ES,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+156,Falling_Creek,HadGEM2-ES,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+157,Falling_Creek,IPSL-CM5A-LR,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+158,Falling_Creek,IPSL-CM5A-LR,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+159,Falling_Creek,IPSL-CM5A-LR,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+160,Falling_Creek,IPSL-CM5A-LR,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+161,Falling_Creek,IPSL-CM5A-LR,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+162,Falling_Creek,MIROC5,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+163,Falling_Creek,MIROC5,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+164,Falling_Creek,MIROC5,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+165,Falling_Creek,MIROC5,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+166,Falling_Creek,MIROC5,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+167,Falling_Creek,EWEMBI,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+168,Fish_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+169,Fish_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+170,Fish_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+171,Fish_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+172,Fish_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+173,Fish_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+174,Fish_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+175,Fish_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+176,Fish_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+177,Fish_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+178,Fish_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+179,Fish_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+180,Fish_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+181,Fish_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+182,Fish_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+183,Fish_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+184,Fish_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+185,Fish_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+186,Fish_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+187,Fish_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+188,Fish_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+189,Great_Pond,GFDL-ESM2M,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+190,Great_Pond,GFDL-ESM2M,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+191,Great_Pond,GFDL-ESM2M,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+192,Great_Pond,GFDL-ESM2M,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+193,Great_Pond,GFDL-ESM2M,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+194,Great_Pond,HadGEM2-ES,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+195,Great_Pond,HadGEM2-ES,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+196,Great_Pond,HadGEM2-ES,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+197,Great_Pond,HadGEM2-ES,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+198,Great_Pond,HadGEM2-ES,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+199,Great_Pond,IPSL-CM5A-LR,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+200,Great_Pond,IPSL-CM5A-LR,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+201,Great_Pond,IPSL-CM5A-LR,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+202,Great_Pond,IPSL-CM5A-LR,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+203,Great_Pond,IPSL-CM5A-LR,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+204,Great_Pond,MIROC5,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+205,Great_Pond,MIROC5,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+206,Great_Pond,MIROC5,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+207,Great_Pond,MIROC5,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+208,Great_Pond,MIROC5,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+209,Great_Pond,EWEMBI,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+210,Green_lake,GFDL-ESM2M,historical,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+211,Green_lake,GFDL-ESM2M,piControl,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+212,Green_lake,GFDL-ESM2M,rcp26,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+213,Green_lake,GFDL-ESM2M,rcp60,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+214,Green_lake,GFDL-ESM2M,rcp85,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+215,Green_lake,HadGEM2-ES,historical,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+216,Green_lake,HadGEM2-ES,piControl,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+217,Green_lake,HadGEM2-ES,rcp26,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+218,Green_lake,HadGEM2-ES,rcp60,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+219,Green_lake,HadGEM2-ES,rcp85,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+220,Green_lake,IPSL-CM5A-LR,historical,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+221,Green_lake,IPSL-CM5A-LR,piControl,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+222,Green_lake,IPSL-CM5A-LR,rcp26,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+223,Green_lake,IPSL-CM5A-LR,rcp60,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+224,Green_lake,IPSL-CM5A-LR,rcp85,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+225,Green_lake,MIROC5,historical,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+226,Green_lake,MIROC5,piControl,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+227,Green_lake,MIROC5,rcp26,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+228,Green_lake,MIROC5,rcp60,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+229,Green_lake,MIROC5,rcp85,6,6,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+230,Green_lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+231,Laramie_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+232,Laramie_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+233,Laramie_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+234,Laramie_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+235,Laramie_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+236,Laramie_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+237,Laramie_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+238,Laramie_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+239,Laramie_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+240,Laramie_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+241,Laramie_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+242,Laramie_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+243,Laramie_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+244,Laramie_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+245,Laramie_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+246,Laramie_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+247,Laramie_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+248,Laramie_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+249,Laramie_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+250,Laramie_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+251,Laramie_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+252,Mendota,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+253,Mendota,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+254,Mendota,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+255,Mendota,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+256,Mendota,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+257,Mendota,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+258,Mendota,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+259,Mendota,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+260,Mendota,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+261,Mendota,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+262,Mendota,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+263,Mendota,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+264,Mendota,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+265,Mendota,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+266,Mendota,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+267,Mendota,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+268,Mendota,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+269,Mendota,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+270,Mendota,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+271,Mendota,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+272,Mendota,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+273,Monona,GFDL-ESM2M,historical,0,6,Does not exist,Exist,,,,Does not exist
+274,Monona,GFDL-ESM2M,piControl,0,6,Does not exist,Exist,,,,Does not exist
+275,Monona,GFDL-ESM2M,rcp26,0,6,Does not exist,Exist,,,,Does not exist
+276,Monona,GFDL-ESM2M,rcp60,0,6,Does not exist,Exist,,,,Does not exist
+277,Monona,GFDL-ESM2M,rcp85,0,6,Does not exist,Exist,,,,Does not exist
+278,Monona,HadGEM2-ES,historical,0,6,Does not exist,Exist,,,,Does not exist
+279,Monona,HadGEM2-ES,piControl,0,6,Does not exist,Exist,,,,Does not exist
+280,Monona,HadGEM2-ES,rcp26,0,6,Does not exist,Exist,,,,Does not exist
+281,Monona,HadGEM2-ES,rcp60,0,6,Does not exist,Exist,,,,Does not exist
+282,Monona,HadGEM2-ES,rcp85,0,6,Does not exist,Exist,,,,Does not exist
+283,Monona,IPSL-CM5A-LR,historical,0,6,Does not exist,Exist,,,,Does not exist
+284,Monona,IPSL-CM5A-LR,piControl,0,6,Does not exist,Exist,,,,Does not exist
+285,Monona,IPSL-CM5A-LR,rcp26,0,6,Does not exist,Exist,,,,Does not exist
+286,Monona,IPSL-CM5A-LR,rcp60,0,6,Does not exist,Exist,,,,Does not exist
+287,Monona,IPSL-CM5A-LR,rcp85,0,6,Does not exist,Exist,,,,Does not exist
+288,Monona,MIROC5,historical,0,6,Does not exist,Exist,,,,Does not exist
+289,Monona,MIROC5,piControl,0,6,Does not exist,Exist,,,,Does not exist
+290,Monona,MIROC5,rcp26,0,6,Does not exist,Exist,,,,Does not exist
+291,Monona,MIROC5,rcp60,0,6,Does not exist,Exist,,,,Does not exist
+292,Monona,MIROC5,rcp85,0,6,Does not exist,Exist,,,,Does not exist
+293,Monona,EWEMBI,historical,6,0,Does not exist,Exist,,,,Does not exist
+294,Okauchee_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+295,Okauchee_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+296,Okauchee_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+297,Okauchee_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+298,Okauchee_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+299,Okauchee_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+300,Okauchee_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+301,Okauchee_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+302,Okauchee_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+303,Okauchee_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+304,Okauchee_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+305,Okauchee_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+306,Okauchee_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+307,Okauchee_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+308,Okauchee_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+309,Okauchee_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+310,Okauchee_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+311,Okauchee_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+312,Okauchee_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+313,Okauchee_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+314,Okauchee_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+315,Sammamish,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+316,Sammamish,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+317,Sammamish,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+318,Sammamish,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+319,Sammamish,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+320,Sammamish,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+321,Sammamish,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+322,Sammamish,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+323,Sammamish,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+324,Sammamish,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+325,Sammamish,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+326,Sammamish,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+327,Sammamish,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+328,Sammamish,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+329,Sammamish,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+330,Sammamish,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+331,Sammamish,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+332,Sammamish,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+333,Sammamish,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+334,Sammamish,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+335,Sammamish,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+336,Sparkling_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+337,Sparkling_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+338,Sparkling_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+339,Sparkling_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+340,Sparkling_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+341,Sparkling_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+342,Sparkling_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+343,Sparkling_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+344,Sparkling_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+345,Sparkling_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+346,Sparkling_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+347,Sparkling_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+348,Sparkling_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+349,Sparkling_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+350,Sparkling_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+351,Sparkling_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+352,Sparkling_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+353,Sparkling_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+354,Sparkling_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+355,Sparkling_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+356,Sparkling_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+357,Sunapee,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+358,Sunapee,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+359,Sunapee,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+360,Sunapee,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+361,Sunapee,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+362,Sunapee,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+363,Sunapee,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+364,Sunapee,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+365,Sunapee,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+366,Sunapee,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+367,Sunapee,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+368,Sunapee,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+369,Sunapee,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+370,Sunapee,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+371,Sunapee,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+372,Sunapee,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+373,Sunapee,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+374,Sunapee,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+375,Sunapee,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+376,Sunapee,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+377,Sunapee,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+378,Tahoe,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+379,Tahoe,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+380,Tahoe,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+381,Tahoe,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+382,Tahoe,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+383,Tahoe,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+384,Tahoe,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+385,Tahoe,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+386,Tahoe,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+387,Tahoe,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+388,Tahoe,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+389,Tahoe,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+390,Tahoe,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+391,Tahoe,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+392,Tahoe,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+393,Tahoe,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+394,Tahoe,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+395,Tahoe,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+396,Tahoe,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+397,Tahoe,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+398,Tahoe,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+399,Toolik_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+400,Toolik_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+401,Toolik_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+402,Toolik_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+403,Toolik_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+404,Toolik_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+405,Toolik_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+406,Toolik_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+407,Toolik_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+408,Toolik_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+409,Toolik_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+410,Toolik_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+411,Toolik_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+412,Toolik_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+413,Toolik_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+414,Toolik_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+415,Toolik_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+416,Toolik_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+417,Toolik_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+418,Toolik_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+419,Toolik_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+420,Trout_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+421,Trout_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+422,Trout_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+423,Trout_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+424,Trout_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+425,Trout_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+426,Trout_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+427,Trout_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+428,Trout_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+429,Trout_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+430,Trout_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+431,Trout_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+432,Trout_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+433,Trout_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+434,Trout_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+435,Trout_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+436,Trout_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+437,Trout_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+438,Trout_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+439,Trout_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+440,Trout_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+441,Trout_Bog,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+442,Trout_Bog,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+443,Trout_Bog,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+444,Trout_Bog,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+445,Trout_Bog,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+446,Trout_Bog,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+447,Trout_Bog,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+448,Trout_Bog,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+449,Trout_Bog,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+450,Trout_Bog,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+451,Trout_Bog,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+452,Trout_Bog,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+453,Trout_Bog,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+454,Trout_Bog,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+455,Trout_Bog,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+456,Trout_Bog,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+457,Trout_Bog,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+458,Trout_Bog,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+459,Trout_Bog,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+460,Trout_Bog,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+461,Trout_Bog,EWEMBI,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+462,Two_Sisters_Lake,GFDL-ESM2M,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+463,Two_Sisters_Lake,GFDL-ESM2M,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+464,Two_Sisters_Lake,GFDL-ESM2M,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+465,Two_Sisters_Lake,GFDL-ESM2M,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+466,Two_Sisters_Lake,GFDL-ESM2M,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+467,Two_Sisters_Lake,HadGEM2-ES,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+468,Two_Sisters_Lake,HadGEM2-ES,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+469,Two_Sisters_Lake,HadGEM2-ES,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+470,Two_Sisters_Lake,HadGEM2-ES,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+471,Two_Sisters_Lake,HadGEM2-ES,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+472,Two_Sisters_Lake,IPSL-CM5A-LR,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+473,Two_Sisters_Lake,IPSL-CM5A-LR,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+474,Two_Sisters_Lake,IPSL-CM5A-LR,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+475,Two_Sisters_Lake,IPSL-CM5A-LR,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+476,Two_Sisters_Lake,IPSL-CM5A-LR,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+477,Two_Sisters_Lake,MIROC5,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+478,Two_Sisters_Lake,MIROC5,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+479,Two_Sisters_Lake,MIROC5,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+480,Two_Sisters_Lake,MIROC5,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+481,Two_Sisters_Lake,MIROC5,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+482,Two_Sisters_Lake,EWEMBI,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+483,Washington,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+484,Washington,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+485,Washington,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+486,Washington,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+487,Washington,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+488,Washington,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+489,Washington,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+490,Washington,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+491,Washington,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+492,Washington,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+493,Washington,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+494,Washington,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+495,Washington,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+496,Washington,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+497,Washington,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+498,Washington,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+499,Washington,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+500,Washington,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+501,Washington,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+502,Washington,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+503,Washington,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+504,Wingra,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+505,Wingra,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+506,Wingra,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+507,Wingra,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+508,Wingra,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+509,Wingra,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+510,Wingra,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+511,Wingra,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+512,Wingra,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+513,Wingra,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+514,Wingra,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+515,Wingra,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+516,Wingra,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+517,Wingra,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+518,Wingra,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+519,Wingra,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+520,Wingra,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+521,Wingra,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+522,Wingra,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+523,Wingra,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+524,Wingra,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+525,Biel,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+526,Biel,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+527,Biel,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+528,Biel,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+529,Biel,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+530,Biel,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+531,Biel,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+532,Biel,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+533,Biel,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+534,Biel,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+535,Biel,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+536,Biel,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+537,Biel,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+538,Biel,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+539,Biel,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+540,Biel,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+541,Biel,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+542,Biel,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+543,Biel,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+544,Biel,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+545,Biel,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+546,Lower_Zurich,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+547,Lower_Zurich,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+548,Lower_Zurich,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+549,Lower_Zurich,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+550,Lower_Zurich,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+551,Lower_Zurich,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+552,Lower_Zurich,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+553,Lower_Zurich,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+554,Lower_Zurich,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+555,Lower_Zurich,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+556,Lower_Zurich,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+557,Lower_Zurich,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+558,Lower_Zurich,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+559,Lower_Zurich,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+560,Lower_Zurich,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+561,Lower_Zurich,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+562,Lower_Zurich,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+563,Lower_Zurich,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+564,Lower_Zurich,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+565,Lower_Zurich,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+566,Lower_Zurich,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+567,Neuchatel,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+568,Neuchatel,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+569,Neuchatel,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+570,Neuchatel,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+571,Neuchatel,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+572,Neuchatel,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+573,Neuchatel,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+574,Neuchatel,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+575,Neuchatel,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+576,Neuchatel,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+577,Neuchatel,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+578,Neuchatel,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+579,Neuchatel,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+580,Neuchatel,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+581,Neuchatel,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+582,Neuchatel,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+583,Neuchatel,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+584,Neuchatel,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+585,Neuchatel,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+586,Neuchatel,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+587,Neuchatel,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+588,Alqueva,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+589,Alqueva,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+590,Alqueva,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+591,Alqueva,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+592,Alqueva,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+593,Alqueva,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+594,Alqueva,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+595,Alqueva,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+596,Alqueva,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+597,Alqueva,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+598,Alqueva,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+599,Alqueva,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+600,Alqueva,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+601,Alqueva,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+602,Alqueva,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+603,Alqueva,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+604,Alqueva,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+605,Alqueva,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+606,Alqueva,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+607,Alqueva,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+608,Alqueva,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+609,Annecy,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+610,Annecy,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+611,Annecy,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+612,Annecy,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+613,Annecy,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+614,Annecy,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+615,Annecy,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+616,Annecy,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+617,Annecy,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+618,Annecy,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+619,Annecy,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+620,Annecy,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+621,Annecy,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+622,Annecy,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+623,Annecy,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+624,Annecy,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+625,Annecy,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+626,Annecy,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+627,Annecy,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+628,Annecy,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+629,Annecy,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+630,Bourget,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+631,Bourget,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+632,Bourget,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+633,Bourget,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+634,Bourget,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+635,Bourget,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+636,Bourget,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+637,Bourget,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+638,Bourget,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+639,Bourget,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+640,Bourget,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+641,Bourget,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+642,Bourget,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+643,Bourget,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+644,Bourget,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+645,Bourget,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+646,Bourget,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+647,Bourget,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+648,Bourget,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+649,Bourget,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+650,Bourget,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+651,Geneva,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+652,Geneva,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+653,Geneva,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+654,Geneva,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+655,Geneva,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+656,Geneva,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+657,Geneva,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+658,Geneva,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+659,Geneva,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+660,Geneva,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+661,Geneva,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+662,Geneva,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+663,Geneva,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+664,Geneva,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+665,Geneva,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+666,Geneva,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+667,Geneva,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+668,Geneva,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+669,Geneva,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+670,Geneva,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+671,Geneva,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+672,Argyle,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+673,Argyle,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+674,Argyle,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+675,Argyle,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+676,Argyle,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+677,Argyle,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+678,Argyle,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+679,Argyle,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+680,Argyle,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+681,Argyle,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+682,Argyle,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+683,Argyle,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+684,Argyle,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+685,Argyle,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+686,Argyle,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+687,Argyle,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+688,Argyle,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+689,Argyle,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+690,Argyle,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+691,Argyle,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+692,Argyle,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+693,Burley_Griffin,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+694,Burley_Griffin,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+695,Burley_Griffin,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+696,Burley_Griffin,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+697,Burley_Griffin,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+698,Burley_Griffin,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+699,Burley_Griffin,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+700,Burley_Griffin,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+701,Burley_Griffin,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+702,Burley_Griffin,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+703,Burley_Griffin,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+704,Burley_Griffin,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+705,Burley_Griffin,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+706,Burley_Griffin,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+707,Burley_Griffin,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+708,Burley_Griffin,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+709,Burley_Griffin,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+710,Burley_Griffin,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+711,Burley_Griffin,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+712,Burley_Griffin,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+713,Burley_Griffin,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+714,Mt_Bold,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+715,Mt_Bold,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+716,Mt_Bold,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+717,Mt_Bold,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+718,Mt_Bold,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+719,Mt_Bold,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+720,Mt_Bold,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+721,Mt_Bold,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+722,Mt_Bold,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+723,Mt_Bold,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+724,Mt_Bold,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+725,Mt_Bold,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+726,Mt_Bold,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+727,Mt_Bold,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+728,Mt_Bold,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+729,Mt_Bold,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+730,Mt_Bold,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+731,Mt_Bold,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+732,Mt_Bold,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+733,Mt_Bold,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+734,Mt_Bold,EWEMBI,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+735,Dickie_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+736,Dickie_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+737,Dickie_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+738,Dickie_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+739,Dickie_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+740,Dickie_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+741,Dickie_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+742,Dickie_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+743,Dickie_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+744,Dickie_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+745,Dickie_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+746,Dickie_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+747,Dickie_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+748,Dickie_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+749,Dickie_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+750,Dickie_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+751,Dickie_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+752,Dickie_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+753,Dickie_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+754,Dickie_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+755,Dickie_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+756,Eagle_lake,GFDL-ESM2M,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+757,Eagle_lake,GFDL-ESM2M,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+758,Eagle_lake,GFDL-ESM2M,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+759,Eagle_lake,GFDL-ESM2M,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+760,Eagle_lake,GFDL-ESM2M,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+761,Eagle_lake,HadGEM2-ES,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+762,Eagle_lake,HadGEM2-ES,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+763,Eagle_lake,HadGEM2-ES,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+764,Eagle_lake,HadGEM2-ES,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+765,Eagle_lake,HadGEM2-ES,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+766,Eagle_lake,IPSL-CM5A-LR,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+767,Eagle_lake,IPSL-CM5A-LR,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+768,Eagle_lake,IPSL-CM5A-LR,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+769,Eagle_lake,IPSL-CM5A-LR,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+770,Eagle_lake,IPSL-CM5A-LR,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+771,Eagle_lake,MIROC5,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+772,Eagle_lake,MIROC5,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+773,Eagle_lake,MIROC5,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+774,Eagle_lake,MIROC5,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+775,Eagle_lake,MIROC5,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+776,Eagle_lake,EWEMBI,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+777,Harp_Lake,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+778,Harp_Lake,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+779,Harp_Lake,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+780,Harp_Lake,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+781,Harp_Lake,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+782,Harp_Lake,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+783,Harp_Lake,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+784,Harp_Lake,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+785,Harp_Lake,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+786,Harp_Lake,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+787,Harp_Lake,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+788,Harp_Lake,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+789,Harp_Lake,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+790,Harp_Lake,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+791,Harp_Lake,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+792,Harp_Lake,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+793,Harp_Lake,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+794,Harp_Lake,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+795,Harp_Lake,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+796,Harp_Lake,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+797,Harp_Lake,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+798,Ekoln_basin_of_Malaren,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+799,Ekoln_basin_of_Malaren,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+800,Ekoln_basin_of_Malaren,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+801,Ekoln_basin_of_Malaren,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+802,Ekoln_basin_of_Malaren,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+803,Ekoln_basin_of_Malaren,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+804,Ekoln_basin_of_Malaren,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+805,Ekoln_basin_of_Malaren,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+806,Ekoln_basin_of_Malaren,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+807,Ekoln_basin_of_Malaren,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+808,Ekoln_basin_of_Malaren,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+809,Ekoln_basin_of_Malaren,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+810,Ekoln_basin_of_Malaren,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+811,Ekoln_basin_of_Malaren,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+812,Ekoln_basin_of_Malaren,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+813,Ekoln_basin_of_Malaren,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+814,Ekoln_basin_of_Malaren,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+815,Ekoln_basin_of_Malaren,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+816,Ekoln_basin_of_Malaren,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+817,Ekoln_basin_of_Malaren,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+818,Ekoln_basin_of_Malaren,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+819,Erken,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+820,Erken,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+821,Erken,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+822,Erken,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+823,Erken,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+824,Erken,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+825,Erken,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+826,Erken,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+827,Erken,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+828,Erken,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+829,Erken,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+830,Erken,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+831,Erken,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+832,Erken,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+833,Erken,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+834,Erken,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+835,Erken,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+836,Erken,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+837,Erken,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+838,Erken,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+839,Erken,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+840,Esthwaite_Water,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+841,Esthwaite_Water,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+842,Esthwaite_Water,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+843,Esthwaite_Water,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+844,Esthwaite_Water,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+845,Esthwaite_Water,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+846,Esthwaite_Water,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+847,Esthwaite_Water,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+848,Esthwaite_Water,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+849,Esthwaite_Water,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+850,Esthwaite_Water,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+851,Esthwaite_Water,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+852,Esthwaite_Water,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+853,Esthwaite_Water,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+854,Esthwaite_Water,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+855,Esthwaite_Water,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+856,Esthwaite_Water,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+857,Esthwaite_Water,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+858,Esthwaite_Water,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+859,Esthwaite_Water,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+860,Esthwaite_Water,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+861,Windermere,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+862,Windermere,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+863,Windermere,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+864,Windermere,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+865,Windermere,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+866,Windermere,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+867,Windermere,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+868,Windermere,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+869,Windermere,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+870,Windermere,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+871,Windermere,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+872,Windermere,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+873,Windermere,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+874,Windermere,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+875,Windermere,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+876,Windermere,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+877,Windermere,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+878,Windermere,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+879,Windermere,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+880,Windermere,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+881,Windermere,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+882,Feeagh,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+883,Feeagh,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+884,Feeagh,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+885,Feeagh,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+886,Feeagh,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+887,Feeagh,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+888,Feeagh,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+889,Feeagh,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+890,Feeagh,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+891,Feeagh,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+892,Feeagh,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+893,Feeagh,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+894,Feeagh,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+895,Feeagh,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+896,Feeagh,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+897,Feeagh,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+898,Feeagh,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+899,Feeagh,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+900,Feeagh,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+901,Feeagh,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+902,Feeagh,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+903,Kilpisjarvi,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+904,Kilpisjarvi,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+905,Kilpisjarvi,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+906,Kilpisjarvi,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+907,Kilpisjarvi,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+908,Kilpisjarvi,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+909,Kilpisjarvi,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+910,Kilpisjarvi,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+911,Kilpisjarvi,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+912,Kilpisjarvi,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+913,Kilpisjarvi,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+914,Kilpisjarvi,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+915,Kilpisjarvi,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+916,Kilpisjarvi,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+917,Kilpisjarvi,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+918,Kilpisjarvi,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+919,Kilpisjarvi,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+920,Kilpisjarvi,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+921,Kilpisjarvi,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+922,Kilpisjarvi,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+923,Kilpisjarvi,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+924,Kuivajarvi,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+925,Kuivajarvi,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+926,Kuivajarvi,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+927,Kuivajarvi,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+928,Kuivajarvi,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+929,Kuivajarvi,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+930,Kuivajarvi,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+931,Kuivajarvi,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+932,Kuivajarvi,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+933,Kuivajarvi,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+934,Kuivajarvi,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+935,Kuivajarvi,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+936,Kuivajarvi,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+937,Kuivajarvi,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+938,Kuivajarvi,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+939,Kuivajarvi,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+940,Kuivajarvi,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+941,Kuivajarvi,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+942,Kuivajarvi,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+943,Kuivajarvi,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+944,Kuivajarvi,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+945,Paajarvi,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+946,Paajarvi,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+947,Paajarvi,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+948,Paajarvi,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+949,Paajarvi,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+950,Paajarvi,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+951,Paajarvi,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+952,Paajarvi,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+953,Paajarvi,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+954,Paajarvi,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+955,Paajarvi,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+956,Paajarvi,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+957,Paajarvi,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+958,Paajarvi,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+959,Paajarvi,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+960,Paajarvi,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+961,Paajarvi,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+962,Paajarvi,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+963,Paajarvi,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+964,Paajarvi,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+965,Paajarvi,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+966,Kinneret,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+967,Kinneret,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+968,Kinneret,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+969,Kinneret,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+970,Kinneret,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+971,Kinneret,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+972,Kinneret,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+973,Kinneret,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+974,Kinneret,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+975,Kinneret,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+976,Kinneret,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+977,Kinneret,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+978,Kinneret,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+979,Kinneret,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+980,Kinneret,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+981,Kinneret,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+982,Kinneret,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+983,Kinneret,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+984,Kinneret,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+985,Kinneret,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+986,Kinneret,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+987,Kivu,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+988,Kivu,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+989,Kivu,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+990,Kivu,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+991,Kivu,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+992,Kivu,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+993,Kivu,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+994,Kivu,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+995,Kivu,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+996,Kivu,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+997,Kivu,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+998,Kivu,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+999,Kivu,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1000,Kivu,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1001,Kivu,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1002,Kivu,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1003,Kivu,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1004,Kivu,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1005,Kivu,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1006,Kivu,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1007,Kivu,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1008,Klicava,GFDL-ESM2M,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1009,Klicava,GFDL-ESM2M,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1010,Klicava,GFDL-ESM2M,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1011,Klicava,GFDL-ESM2M,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1012,Klicava,GFDL-ESM2M,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1013,Klicava,HadGEM2-ES,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1014,Klicava,HadGEM2-ES,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1015,Klicava,HadGEM2-ES,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1016,Klicava,HadGEM2-ES,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1017,Klicava,HadGEM2-ES,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1018,Klicava,IPSL-CM5A-LR,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1019,Klicava,IPSL-CM5A-LR,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1020,Klicava,IPSL-CM5A-LR,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1021,Klicava,IPSL-CM5A-LR,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1022,Klicava,IPSL-CM5A-LR,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1023,Klicava,MIROC5,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1024,Klicava,MIROC5,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1025,Klicava,MIROC5,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1026,Klicava,MIROC5,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1027,Klicava,MIROC5,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1028,Klicava,EWEMBI,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1029,Rimov,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1030,Rimov,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1031,Rimov,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1032,Rimov,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1033,Rimov,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1034,Rimov,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1035,Rimov,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1036,Rimov,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1037,Rimov,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1038,Rimov,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1039,Rimov,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1040,Rimov,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1041,Rimov,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1042,Rimov,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1043,Rimov,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1044,Rimov,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1045,Rimov,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1046,Rimov,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1047,Rimov,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1048,Rimov,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1049,Rimov,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1050,Zlutice,GFDL-ESM2M,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1051,Zlutice,GFDL-ESM2M,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1052,Zlutice,GFDL-ESM2M,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1053,Zlutice,GFDL-ESM2M,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1054,Zlutice,GFDL-ESM2M,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1055,Zlutice,HadGEM2-ES,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1056,Zlutice,HadGEM2-ES,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1057,Zlutice,HadGEM2-ES,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1058,Zlutice,HadGEM2-ES,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1059,Zlutice,HadGEM2-ES,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1060,Zlutice,IPSL-CM5A-LR,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1061,Zlutice,IPSL-CM5A-LR,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1062,Zlutice,IPSL-CM5A-LR,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1063,Zlutice,IPSL-CM5A-LR,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1064,Zlutice,IPSL-CM5A-LR,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1065,Zlutice,MIROC5,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1066,Zlutice,MIROC5,piControl,6,0,Does not exist,Does not exist,,,,Does not exist
+1067,Zlutice,MIROC5,rcp26,6,0,Does not exist,Does not exist,,,,Does not exist
+1068,Zlutice,MIROC5,rcp60,6,0,Does not exist,Does not exist,,,,Does not exist
+1069,Zlutice,MIROC5,rcp85,6,0,Does not exist,Does not exist,,,,Does not exist
+1070,Zlutice,EWEMBI,historical,6,0,Does not exist,Does not exist,,,,Does not exist
+1071,Langtjern,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1072,Langtjern,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1073,Langtjern,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1074,Langtjern,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1075,Langtjern,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1076,Langtjern,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1077,Langtjern,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1078,Langtjern,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1079,Langtjern,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1080,Langtjern,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1081,Langtjern,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1082,Langtjern,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1083,Langtjern,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1084,Langtjern,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1085,Langtjern,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1086,Langtjern,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1087,Langtjern,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1088,Langtjern,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1089,Langtjern,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1090,Langtjern,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1091,Langtjern,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1092,Mozhaysk,GFDL-ESM2M,historical,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1093,Mozhaysk,GFDL-ESM2M,piControl,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1094,Mozhaysk,GFDL-ESM2M,rcp26,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1095,Mozhaysk,GFDL-ESM2M,rcp60,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1096,Mozhaysk,GFDL-ESM2M,rcp85,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1097,Mozhaysk,HadGEM2-ES,historical,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1098,Mozhaysk,HadGEM2-ES,piControl,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1099,Mozhaysk,HadGEM2-ES,rcp26,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1100,Mozhaysk,HadGEM2-ES,rcp60,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1101,Mozhaysk,HadGEM2-ES,rcp85,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1102,Mozhaysk,IPSL-CM5A-LR,historical,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1103,Mozhaysk,IPSL-CM5A-LR,piControl,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1104,Mozhaysk,IPSL-CM5A-LR,rcp26,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1105,Mozhaysk,IPSL-CM5A-LR,rcp60,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1106,Mozhaysk,IPSL-CM5A-LR,rcp85,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1107,Mozhaysk,MIROC5,historical,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1108,Mozhaysk,MIROC5,piControl,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1109,Mozhaysk,MIROC5,rcp26,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1110,Mozhaysk,MIROC5,rcp60,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1111,Mozhaysk,MIROC5,rcp85,6,6,Exist,Exist,Exist,Does not exist,Exist,Does not exist
+1112,Mozhaysk,EWEMBI,historical,6,6,Exist,Exist,Exist,Exist,Exist,Does not exist
+1113,Vendyurskoe,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1114,Vendyurskoe,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1115,Vendyurskoe,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1116,Vendyurskoe,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1117,Vendyurskoe,GFDL-ESM2M,rcp85,6,1,Exist,Exist,Exist,Does not exist,Exist,Exist
+1118,Vendyurskoe,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1119,Vendyurskoe,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1120,Vendyurskoe,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1121,Vendyurskoe,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1122,Vendyurskoe,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1123,Vendyurskoe,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1124,Vendyurskoe,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1125,Vendyurskoe,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1126,Vendyurskoe,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1127,Vendyurskoe,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1128,Vendyurskoe,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1129,Vendyurskoe,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1130,Vendyurskoe,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1131,Vendyurskoe,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1132,Vendyurskoe,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1133,Vendyurskoe,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1134,Muggelsee,GFDL-ESM2M,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1135,Muggelsee,GFDL-ESM2M,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1136,Muggelsee,GFDL-ESM2M,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1137,Muggelsee,GFDL-ESM2M,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1138,Muggelsee,GFDL-ESM2M,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1139,Muggelsee,HadGEM2-ES,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1140,Muggelsee,HadGEM2-ES,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1141,Muggelsee,HadGEM2-ES,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1142,Muggelsee,HadGEM2-ES,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1143,Muggelsee,HadGEM2-ES,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1144,Muggelsee,IPSL-CM5A-LR,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1145,Muggelsee,IPSL-CM5A-LR,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1146,Muggelsee,IPSL-CM5A-LR,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1147,Muggelsee,IPSL-CM5A-LR,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1148,Muggelsee,IPSL-CM5A-LR,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1149,Muggelsee,MIROC5,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1150,Muggelsee,MIROC5,piControl,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1151,Muggelsee,MIROC5,rcp26,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1152,Muggelsee,MIROC5,rcp60,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1153,Muggelsee,MIROC5,rcp85,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1154,Muggelsee,EWEMBI,historical,6,6,Exist,Exist,Does not exist,Does not exist,Does not exist,Does not exist
+1155,Rappbode_Reservoir,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1156,Rappbode_Reservoir,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1157,Rappbode_Reservoir,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1158,Rappbode_Reservoir,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1159,Rappbode_Reservoir,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1160,Rappbode_Reservoir,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1161,Rappbode_Reservoir,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1162,Rappbode_Reservoir,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1163,Rappbode_Reservoir,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1164,Rappbode_Reservoir,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1165,Rappbode_Reservoir,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1166,Rappbode_Reservoir,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1167,Rappbode_Reservoir,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1168,Rappbode_Reservoir,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1169,Rappbode_Reservoir,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1170,Rappbode_Reservoir,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1171,Rappbode_Reservoir,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1172,Rappbode_Reservoir,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1173,Rappbode_Reservoir,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1174,Rappbode_Reservoir,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1175,Rappbode_Reservoir,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1176,Stechlin,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1177,Stechlin,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1178,Stechlin,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1179,Stechlin,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1180,Stechlin,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1181,Stechlin,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1182,Stechlin,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1183,Stechlin,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1184,Stechlin,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1185,Stechlin,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1186,Stechlin,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1187,Stechlin,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1188,Stechlin,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1189,Stechlin,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1190,Stechlin,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1191,Stechlin,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1192,Stechlin,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1193,Stechlin,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1194,Stechlin,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1195,Stechlin,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1196,Stechlin,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1197,Ngoring,GFDL-ESM2M,historical,6,0,Does not exist,Exist,,,,Does not exist
+1198,Ngoring,GFDL-ESM2M,piControl,6,0,Does not exist,Exist,,,,Does not exist
+1199,Ngoring,GFDL-ESM2M,rcp26,6,0,Does not exist,Exist,,,,Does not exist
+1200,Ngoring,GFDL-ESM2M,rcp60,6,0,Does not exist,Exist,,,,Does not exist
+1201,Ngoring,GFDL-ESM2M,rcp85,6,0,Does not exist,Exist,,,,Does not exist
+1202,Ngoring,HadGEM2-ES,historical,6,0,Does not exist,Exist,,,,Does not exist
+1203,Ngoring,HadGEM2-ES,piControl,6,0,Does not exist,Exist,,,,Does not exist
+1204,Ngoring,HadGEM2-ES,rcp26,6,0,Does not exist,Exist,,,,Does not exist
+1205,Ngoring,HadGEM2-ES,rcp60,6,0,Does not exist,Exist,,,,Does not exist
+1206,Ngoring,HadGEM2-ES,rcp85,6,0,Does not exist,Exist,,,,Does not exist
+1207,Ngoring,IPSL-CM5A-LR,historical,6,0,Does not exist,Exist,,,,Does not exist
+1208,Ngoring,IPSL-CM5A-LR,piControl,6,0,Does not exist,Exist,,,,Does not exist
+1209,Ngoring,IPSL-CM5A-LR,rcp26,6,0,Does not exist,Exist,,,,Does not exist
+1210,Ngoring,IPSL-CM5A-LR,rcp60,6,0,Does not exist,Exist,,,,Does not exist
+1211,Ngoring,IPSL-CM5A-LR,rcp85,6,0,Does not exist,Exist,,,,Does not exist
+1212,Ngoring,MIROC5,historical,6,0,Does not exist,Exist,,,,Does not exist
+1213,Ngoring,MIROC5,piControl,6,0,Does not exist,Exist,,,,Does not exist
+1214,Ngoring,MIROC5,rcp26,6,0,Does not exist,Exist,,,,Does not exist
+1215,Ngoring,MIROC5,rcp60,6,0,Does not exist,Exist,,,,Does not exist
+1216,Ngoring,MIROC5,rcp85,6,0,Does not exist,Exist,,,,Does not exist
+1217,Ngoring,EWEMBI,historical,6,0,Does not exist,Exist,,,,Does not exist
+1218,Nohipalo_Mustjarv,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1219,Nohipalo_Mustjarv,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1220,Nohipalo_Mustjarv,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1221,Nohipalo_Mustjarv,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1222,Nohipalo_Mustjarv,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1223,Nohipalo_Mustjarv,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1224,Nohipalo_Mustjarv,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1225,Nohipalo_Mustjarv,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1226,Nohipalo_Mustjarv,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1227,Nohipalo_Mustjarv,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1228,Nohipalo_Mustjarv,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1229,Nohipalo_Mustjarv,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1230,Nohipalo_Mustjarv,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1231,Nohipalo_Mustjarv,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1232,Nohipalo_Mustjarv,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1233,Nohipalo_Mustjarv,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1234,Nohipalo_Mustjarv,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1235,Nohipalo_Mustjarv,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1236,Nohipalo_Mustjarv,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1237,Nohipalo_Mustjarv,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1238,Nohipalo_Mustjarv,EWEMBI,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1239,Nohipalo_Valgejarv,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1240,Nohipalo_Valgejarv,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1241,Nohipalo_Valgejarv,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1242,Nohipalo_Valgejarv,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1243,Nohipalo_Valgejarv,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1244,Nohipalo_Valgejarv,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1245,Nohipalo_Valgejarv,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1246,Nohipalo_Valgejarv,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1247,Nohipalo_Valgejarv,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1248,Nohipalo_Valgejarv,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1249,Nohipalo_Valgejarv,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1250,Nohipalo_Valgejarv,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1251,Nohipalo_Valgejarv,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1252,Nohipalo_Valgejarv,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1253,Nohipalo_Valgejarv,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1254,Nohipalo_Valgejarv,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1255,Nohipalo_Valgejarv,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1256,Nohipalo_Valgejarv,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1257,Nohipalo_Valgejarv,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1258,Nohipalo_Valgejarv,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1259,Nohipalo_Valgejarv,EWEMBI,historical,6,0,Exist,Exist,Exist,Does not exist,Does not exist,Does not exist
+1260,Vortsjarv,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1261,Vortsjarv,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1262,Vortsjarv,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1263,Vortsjarv,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1264,Vortsjarv,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1265,Vortsjarv,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1266,Vortsjarv,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1267,Vortsjarv,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1268,Vortsjarv,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1269,Vortsjarv,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1270,Vortsjarv,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1271,Vortsjarv,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1272,Vortsjarv,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1273,Vortsjarv,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1274,Vortsjarv,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1275,Vortsjarv,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1276,Vortsjarv,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1277,Vortsjarv,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1278,Vortsjarv,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1279,Vortsjarv,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1280,Vortsjarv,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1281,Sau_Reservoir,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1282,Sau_Reservoir,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1283,Sau_Reservoir,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1284,Sau_Reservoir,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1285,Sau_Reservoir,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1286,Sau_Reservoir,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1287,Sau_Reservoir,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1288,Sau_Reservoir,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1289,Sau_Reservoir,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1290,Sau_Reservoir,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1291,Sau_Reservoir,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1292,Sau_Reservoir,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1293,Sau_Reservoir,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1294,Sau_Reservoir,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1295,Sau_Reservoir,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1296,Sau_Reservoir,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1297,Sau_Reservoir,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1298,Sau_Reservoir,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1299,Sau_Reservoir,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1300,Sau_Reservoir,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1301,Sau_Reservoir,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1302,Rotorua,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1303,Rotorua,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1304,Rotorua,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1305,Rotorua,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1306,Rotorua,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1307,Rotorua,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1308,Rotorua,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1309,Rotorua,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1310,Rotorua,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1311,Rotorua,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1312,Rotorua,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1313,Rotorua,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1314,Rotorua,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1315,Rotorua,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1316,Rotorua,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1317,Rotorua,MIROC5,historical,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1318,Rotorua,MIROC5,piControl,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1319,Rotorua,MIROC5,rcp26,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1320,Rotorua,MIROC5,rcp60,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1321,Rotorua,MIROC5,rcp85,6,0,Exist,Exist,Exist,Does not exist,Exist,Exist
+1322,Rotorua,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Exist
+1323,Tarawera,GFDL-ESM2M,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1324,Tarawera,GFDL-ESM2M,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1325,Tarawera,GFDL-ESM2M,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1326,Tarawera,GFDL-ESM2M,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1327,Tarawera,GFDL-ESM2M,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1328,Tarawera,HadGEM2-ES,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1329,Tarawera,HadGEM2-ES,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1330,Tarawera,HadGEM2-ES,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1331,Tarawera,HadGEM2-ES,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1332,Tarawera,HadGEM2-ES,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1333,Tarawera,IPSL-CM5A-LR,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1334,Tarawera,IPSL-CM5A-LR,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1335,Tarawera,IPSL-CM5A-LR,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1336,Tarawera,IPSL-CM5A-LR,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1337,Tarawera,IPSL-CM5A-LR,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1338,Tarawera,MIROC5,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1339,Tarawera,MIROC5,piControl,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1340,Tarawera,MIROC5,rcp26,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1341,Tarawera,MIROC5,rcp60,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1342,Tarawera,MIROC5,rcp85,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1343,Tarawera,EWEMBI,historical,6,0,Exist,Exist,Exist,Exist,Exist,Does not exist
+1344,Taupo,GFDL-ESM2M,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1345,Taupo,GFDL-ESM2M,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1346,Taupo,GFDL-ESM2M,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1347,Taupo,GFDL-ESM2M,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1348,Taupo,GFDL-ESM2M,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1349,Taupo,HadGEM2-ES,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1350,Taupo,HadGEM2-ES,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1351,Taupo,HadGEM2-ES,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1352,Taupo,HadGEM2-ES,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1353,Taupo,HadGEM2-ES,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1354,Taupo,IPSL-CM5A-LR,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1355,Taupo,IPSL-CM5A-LR,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1356,Taupo,IPSL-CM5A-LR,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1357,Taupo,IPSL-CM5A-LR,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1358,Taupo,IPSL-CM5A-LR,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1359,Taupo,MIROC5,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1360,Taupo,MIROC5,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1361,Taupo,MIROC5,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1362,Taupo,MIROC5,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1363,Taupo,MIROC5,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1364,Taupo,EWEMBI,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1365,Waahi,GFDL-ESM2M,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1366,Waahi,GFDL-ESM2M,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1367,Waahi,GFDL-ESM2M,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1368,Waahi,GFDL-ESM2M,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1369,Waahi,GFDL-ESM2M,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1370,Waahi,HadGEM2-ES,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1371,Waahi,HadGEM2-ES,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1372,Waahi,HadGEM2-ES,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1373,Waahi,HadGEM2-ES,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1374,Waahi,HadGEM2-ES,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1375,Waahi,IPSL-CM5A-LR,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1376,Waahi,IPSL-CM5A-LR,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1377,Waahi,IPSL-CM5A-LR,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1378,Waahi,IPSL-CM5A-LR,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1379,Waahi,IPSL-CM5A-LR,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1380,Waahi,MIROC5,historical,6,6,Does not exist,Does not exist,,,,Does not exist
+1381,Waahi,MIROC5,piControl,6,6,Does not exist,Does not exist,,,,Does not exist
+1382,Waahi,MIROC5,rcp26,6,6,Does not exist,Does not exist,,,,Does not exist
+1383,Waahi,MIROC5,rcp60,6,6,Does not exist,Does not exist,,,,Does not exist
+1384,Waahi,MIROC5,rcp85,6,6,Does not exist,Does not exist,,,,Does not exist
+1385,Waahi,EWEMBI,historical,6,6,Does not exist,Does not exist,,,,Does not exist

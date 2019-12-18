@@ -1536,7 +1536,6 @@ dfloc = 0.030/365 .* DOCz ./ 1000; % loss of DOC to POC
     Qst(5,i) = latentheatf ;
     Qst(6,i) = alb;
     
-    
     Kzt(:,i) = [0;Kz];
     Tzt(:,i) = Tz;
     Czt(:,i) = Cz;
