@@ -112,7 +112,7 @@ regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal",
            "ES": ["Sau"],
            "NZ": ["Rotorua", "Tarawera", "Taupo", "Waahi"]}
 
-models = [ "GFDL-ESM2M","EWEMBI",
+models = ["EWEMBI", "GFDL-ESM2M",
           "HadGEM2-ES",
           "IPSL-CM5A-LR",
           "MIROC5"
@@ -154,6 +154,12 @@ def simulation_years(scenarioid):
 
     return y1, y2
 def format():
+    models = [ "EWEMBI",
+
+              ]
+    scenarios = ["historical",
+
+                 ]
     index = range(0, len(full_lake_list) * 5)
     columns = ['lake', 'model', 'scenario']
     tableau = pd.DataFrame(index=index, columns=columns)
@@ -222,18 +228,7 @@ def format():
                         for vari in output_variables:
                             try:
                                 data = pd.read_csv(os.path.join("D:\output\%s\%s\%s\%s"%(reg,lake,modelid,scenarioid),vari),header=None)
-                                #data1 = data
-                                #data1.apply(lambda x: "%s" % (data[0]), axis=1)
-                                #data1.apply(lambda x: "%s-%s-%s, 00:00:00" % (data["strDate"][0:4], data["strDate"][4:6], data["strDate"][6:]), axis=1)
-                                #data["strDate"] = str(data[0])
-                                #data[0]=("%s-%s-%s, 00:00:00" % (str(data[0])[0:4], str(data[0])[4:6], str(data[0])[6:]))
-                                #data["Date"] = ("%s-%s-%s, 00:00:00" % (data["strDate"][0:4], data["strDate"][4:6], data["strDate"][6:]))
-                                #all_date = []
-                                #for i in range(0,len(data.index)):
-                                #    date = str(data.iloc[i][0])
-                                #    year,month,day=date[0:4],date[4:6],date[6:]
-                                #    all_date.append("%s-%s-%s, 00:00:00"%(str(data.iloc[i][0])[0:4],str(data.iloc[i][0])[4:6],str(data.iloc[i][0])[6:]))
-                                #data.iloc[0] = all_date
+
                                 variable = vari[:-5]
                                 data1 = data
                                 del data1[0]
@@ -633,13 +628,16 @@ def model_scenario_loop(lake):
                         if os.path.exists("D:\output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
                              print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
 
-                        if os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)) and os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, prefix,prefix,model,scenario)):
-                            try:
-
-                                run_myLake_ISIMIP.run_myLake("observations/{}/{}".format(reg, lake), "input/{}/{}".format(reg, prefix), reg, lake, model, scenario)
-                                print("Run of {} {} {} Completed.\n".format(lake, model, scenario))
-                            except:
-                                print("problem with {} {} {}.\n".format(lake, model, scenario))
+                        if os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)) :
+                            if os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, prefix,prefix,model,scenario)):
+                                try:
+                                    print("start")
+                                    run_myLake_ISIMIP.run_myLake("observations/{}/{}".format(reg, lake), "input/{}/{}".format(reg, prefix), reg, lake, model, scenario)
+                                    print("Run of {} {} {} Completed.\n".format(lake, model, scenario))
+                                except:
+                                    print("problem with {} {} {}.\n".format(lake, model, scenario))
+                            else:
+                                print("input doesnt exist")
                         else:
                             print("{} Calibration have not been done.\n".format(lake))
 

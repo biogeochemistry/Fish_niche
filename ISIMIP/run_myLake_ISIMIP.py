@@ -694,7 +694,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
             if not os.path.exists(os.path.join(outfolder2, 'RunComplete')):
 
-            if not os.path.exists(os.path.join(outfolder2, 'RunComplete')):
+
                 cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, yinit, yend, outfolder2)
                 print(cmd)
 
@@ -737,7 +737,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
     else:
 
-
+        print("here")
         if not os.path.exists ( outfolder ):
             os.makedirs ( outfolder )
         if not os.path.exists(os.path.join(outfolder, 'RunComplete')):
@@ -786,7 +786,7 @@ def outputfile(y1,y2,outfolder):
     except:
         dates = [d.strftime('%Y-%m-%d') for d in pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='D')]
     # "strat.csv,watertemp.csv,thermodepth.csv,ice.csv,lakeicefrac.csv,snowtick.csv,sensheatf.csv,latentheatf.csv,lakeheatf.csv,albedo.csv,turbdiffheat.csv,sedheatf.csv"
-
+    print("run output")
     try:
         if 1==1:
         #if not os.path.exists(os.path.join(outfolder, "strat.csv")) and not os.path.exists(os.path.join(outfolder, "watertemp.csv")) and not os.path.exists(os.path.join(outfolder, "thermodepth.csv")):
