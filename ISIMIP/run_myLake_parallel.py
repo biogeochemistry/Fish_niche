@@ -112,11 +112,12 @@ regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal",
            "ES": ["Sau"],
            "NZ": ["Rotorua", "Tarawera", "Taupo", "Waahi"]}
 
-models = ["EWEMBI", "GFDL-ESM2M",
+models = ["MIROC5","EWEMBI", "GFDL-ESM2M",
           "HadGEM2-ES",
           "IPSL-CM5A-LR",
-          "MIROC5"
+
           ]
+
 scenarios = ["historical",
              "piControl",
              "rcp26",
@@ -134,13 +135,15 @@ input_variables = ["hurs",
 output_variables = ["strat.csv", "watertemp.csv", "thermodepth.csv", "ice.csv", "lakeicefrac.csv",
                   "snowtick.csv", "sensheatf.csv", "latentheatf.csv", "lakeheatf.csv", "albedo.csv", "turbdiffheat.csv",
                   "sedheatf.csv"]
-output_unit={"strat.csv":"", "watertemp.csv":"K", "thermodepth.csv":"m", "ice.csv":"",
-             "lakeicefrac.csv":"","snowtick.csv":"m", "sensheatf.csv":"W m-2",
-             "latentheatf.csv":"W m-2", "lakeheatf.csv":"W m-2", "albedo.csv":"",
+output_unit={"strat.csv":"unitless", "watertemp.csv":"K", "thermodepth.csv":"m", "ice.csv":"unitless",
+             "lakeicefrac.csv":"unitless","snowtick.csv":"m", "sensheatf.csv":"W m-2",
+             "latentheatf.csv":"W m-2", "lakeheatf.csv":"W m-2", "albedo.csv":"unitless",
              "turbdiffheat.csv":"m2 s-1", "sedheatf.csv":"W m-2"}
 params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
 report = 'report.txt'
 grid = r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\grid.txt"
+
+output = r"D:/output"
 
 def simulation_years(scenarioid):
     if scenarioid == 'piControl':
@@ -199,61 +202,128 @@ def format():
             if lake in name.replace("_", ''):
                 f_lake = name
                 break
-        reg = None
-        for region in regions:
-            if lake in regions[region]:
-                reg = region
-                break
-        for modelid in models:
-            for scenarioid in scenarios:
-                print(lake, modelid, scenarioid)
-                if os.path.exists("D:\output\%s\%s\%s\%s\RunComplete" % (reg, lake, modelid, scenarioid)):
-                    tableau.loc[index, 'lake'] = f_lake
-                    tableau.loc[index, 'model'] = modelid
-                    tableau.loc[index, 'scenario'] = scenarioid
-                    if (modelid == "EWEMBI" and scenarioid == "historical") or modelid != "EWEMBI":
+            reg = None
+            for region in regions:
+                if lake in regions[region]:
+                    reg = region
+                    break
+            for modelid in models:
+                for scenarioid in scenarios:
+                    print(lake, modelid, scenarioid)
+                    path = os.path.join(output, "%s/%s/%s/%s/RunComplete" % (reg, lake, modelid, scenarioid))
+                    if os.path.exists(
+                            os.path.join(output, "%s/%s/%s/%s/RunComplete1" % (reg, lake, modelid, scenarioid))):
+                        tableau.loc[index, 'lake'] = f_lake
+                        tableau.loc[index, 'model'] = modelid
+                        tableau.loc[index, 'scenario'] = scenarioid
+                        if (modelid == "EWEMBI" and scenarioid == "historical") or modelid != "EWEMBI":
 
-                        if modelid == "EWEMBI":
-                            y1, y2 = 1979, 2016
-                        elif modelid == "GFDL-ESM2M" and scenarioid == 'piControl':
-                            y1, y2 = 1661, 2099
-                        elif modelid == "GFDL-ESM2M" and scenarioid == 'rcp26':
-                            y1, y2 = 2006, 2099
-                        elif modelid == "IPSL-CM5A-LR" and scenarioid == 'rcp85':
-                            y1, y2 = 2006, 2299
-                        else:
-                            y1, y2 = simulation_years(scenarioid)
-                        startyear = y1
+                            if modelid == "EWEMBI":
+                                y1, y2 = 1979, 2016
+                            elif modelid == "GFDL-ESM2M" and scenarioid == 'piControl':
+                                y1, y2 = 1661, 2099
+                            elif modelid == "GFDL-ESM2M" and scenarioid == 'rcp26':
+                                y1, y2 = 2006, 2099
+                            elif modelid == "IPSL-CM5A-LR" and scenarioid == 'rcp85':
+                                y1, y2 = 2006, 2299
+                            else:
+                                y1, y2 = simulation_years(scenarioid)
+                            startyear = y1
 
-                        for vari in output_variables:
-                            try:
-                                data = pd.read_csv(os.path.join("D:\output\%s\%s\%s\%s"%(reg,lake,modelid,scenarioid),vari),header=None)
+                            for vari in output_variables:
+                                if os.path.exists(os.path.join(output, "%s/%s/%s/%s" % (reg, lake, modelid, scenarioid), vari)):
+                                    data = pd.read_csv(os.path.join(output, "%s/%s/%s/%s" % (reg, lake, modelid, scenarioid), vari),
+                                                       header=None)
+                                    variable = vari[:-4]
+                                    model_name = "MyLake"
+                                    gcm_observation = "GCM"
+                                    bias = modelid
+                                    climate = scenarioid
+                                    socio = "2005soc"
+                                    sens = "co2"
+                                    region = "local"
+                                    timestep = "daily"
+                                    unit = output_unit.get(vari)
+                                    increment = "day"
+                                    searchstart=0
+                                    searchend=0
+                                    end=False
+                                    for y3 in range((math.floor(y1/10)*10)+1, (math.floor(y2/10)*10)+11, 10):
+                                        y4 = y3 + 9
+                                        if y1 > y3:
+                                            y3 = y1
+                                        if y2 < y4:
+                                            y4 = y2
 
-                                variable = vari[:-5]
-                                data1 = data
-                                del data1[0]
-                                min1 = data1.min(axis=0,skipna = True).tolist()
-                                mean1 = data1.mean(axis=0,skipna = True).tolist()
-                                max1 = data1.max(axis=0,skipna = True).tolist()
-                                tableau.loc[index, 'min_%s' % variable] = np.min(min1)
-                                tableau.loc[index, 'meam_%s' % variable] = np.mean(mean1)
-                                tableau.loc[index, 'max_%s' % variable] = np.max(max1)
-                                unit = output_unit.get(vari)
-                                tableau.loc[index, '%s_unit' % variable] = unit
-                                # data.to_csv("D:\output\%s\%s\%s\%s\%s.txt" %(reg,lake,modelid,scenarioid,variable), header=None, index=None, sep=' ', mode='w')
-                                # increment ="day"
-                                # command = "cdo --history -f nc4c -z zip -setmissval,1e+20 -setunit,\"%s\" -setname," \
-                                #     "%s -setreftime,1661-01-01,00:00:00,1%s -settaxis," \
-                                #     "%s-01-01,00:00:00,1%s -input,%s %s.nc4 < %s.txt"%(unit,variable,increment,startyear,increment,grid,
-                                #                                                        "D:\output\%s\%s\%s\%s\%s"%(reg,lake,modelid,scenarioid,variable),
-                                #                                                        "D:\output\%s\%s\%s\%s\%s"%(reg,lake,modelid,scenarioid,variable))
-                                # if not os.path.exists("D:\output\%s\%s\%s\%s\%s.nc4" %(reg,lake,modelid,scenarioid,variable)) and os.path.exists("D:\output\%s\%s\%s\%s\%s.txt" %(reg,lake,modelid,scenarioid,variable)):
-                                #     os.system(command)
-                            except:
-                                print("bug")
-                        index +=1
-    tableau.to_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\ISIMIP\all_variable_lakes_combinaison.csv", index=False)
+                                        try:
+                                            for row in range(searchstart,len(data.index)):
 
+                                                year = int(data.iloc[row][0][0:4])
+
+                                                if year >= y3 and year <= y4:
+                                                        searchend +=1
+                                                        if year == y2:
+                                                            end=True
+                                                else:
+                                                    data_set = data.iloc[:][searchstart:searchend]
+
+                                                    searchstart = searchend
+
+                                                    file_name="%s/%s/%s/%s/%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s" % (
+                                                    reg, lake, modelid, scenarioid, model_name,gcm_observation,bias,climate,socio,sens,variable,region,timestep,y3,y4)
+
+                                                    if not os.path.exists(os.path.join(output,"%s.txt"%file_name )):
+
+                                                        data_set.to_csv(os.path.join(output,"%s.txt"%file_name ), header=None, index=None, sep=' ',
+                                                                    mode='w')
+
+
+
+
+                                                        command = "cdo --history -f nc4c -z zip -setmissval,1e+20 -setunit,\"%s\" -setname," \
+                                                                  "%s -setreftime,1661-01-01,00:00:00,1%s -settaxis," \
+                                                                  "%s-01-01,00:00:00,1%s -input,%s %s.nc4 < %s.txt" % (
+                                                                  unit, variable, increment, startyear, increment, grid,
+                                                                  os.path.join(output, file_name),
+                                                                  os.path.join(output, file_name))
+
+                                                        if not os.path.exists(os.path.join(output, "%s.nc4" % (file_name))) and os.path.exists(os.path.join(output,"%s.txt" % (file_name))):
+                                                            print(command)
+                                                            #os.system(command)
+                                                    break
+
+                                            if end is True:
+                                                data_set = data.iloc[:][searchstart:]
+
+                                                file_name = "%s/%s/%s/%s/%s_%s_%s_%s_%s_%s_%s_%s_%s_%s_%s" % (
+                                                    reg, lake, modelid, scenarioid, model_name, gcm_observation, bias, climate,
+                                                    socio, sens, variable, region, timestep, y3, y4)
+                                                data_set.to_csv(os.path.join(output, "%s.txt" % file_name), header=None,
+                                                                index=None, sep=' ',
+                                                                mode='w')
+
+                                                unit = output_unit.get(vari)
+                                                increment = "day"
+
+                                                command = "cdo --history -f nc4c -z zip -setmissval,1e+20 -setunit,\"%s\" -setname," \
+                                                          "%s -setreftime,1661-01-01,00:00:00,1%s -settaxis," \
+                                                          "%s-01-01,00:00:00,1%s -input,%s %s.nc4 < %s.txt" % (
+                                                              unit, variable, increment, startyear, increment, grid,
+                                                              os.path.join(output, file_name),
+                                                              os.path.join(output, file_name))
+
+                                                if not os.path.exists(os.path.join(output, "%s.nc4" % (
+                                                        file_name))) \
+                                                        and os.path.exists(os.path.join(output, "%s.txt" % (file_name))):
+                                                    print(command)
+                                                    # os.system(command)
+                                        except:
+                                            print("bug")
+
+                                else:
+                                    print(os.path.join(output, "%s/%s/%s/%s" % (reg, lake, modelid, scenarioid), vari))
+                            index += 1
+        tableau.to_csv(r"all_variable_lakes_combinaison.csv", index=False)
 
 def revision():
 
@@ -624,11 +694,12 @@ def model_scenario_loop(lake):
 
                 for model in models:
                     for scenario in scenarios:
+
                         print("input/{}/{}/{}_{}_{}_input".format(reg, prefix,prefix,model,scenario))
-                        if os.path.exists("D:\output/{}/{}/{}/{}/RunComplete".format(reg, lake, model, scenario)):
+                        if os.path.exists("D:\output/{}/{}/{}/{}/RunComplete1".format(reg, lake, model, scenario)):
                              print("{} {} {} Run is already completed.\n".format(lake, model, scenario))
 
-                        if os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)) :
+                        elif os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake)) :
                             if os.path.exists("input/{}/{}/{}_{}_{}_input".format(reg, prefix,prefix,model,scenario)):
                                 try:
                                     print("start")
@@ -742,12 +813,15 @@ if __name__ == "__main__":
     #input_files_parallel()
 
 
-    mylake_parallel()
+
+
+
+
+    #revision()
+    format()
+    #mylake_parallel()
     #model_scenario_loop("Langtjern")
     #run_calibrations(full_lake_list[1])
 
-
-    revision()
-    format()
     #calibration_parallel()
 
