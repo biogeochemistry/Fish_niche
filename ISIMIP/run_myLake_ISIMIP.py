@@ -9,6 +9,10 @@ import os, shutil, time, h5py
 # Doit appeler les autres scripts pour créer les fichiers
 # Le outpath est déterminé par mylake_init et doit ensuite être passé aux scripts suivants
 #
+import fileinput
+import sys
+from shutil import copyfile
+
 
 """ Main script for MyLake - ISIMIP
 Calls the init, input and par scripts to create the appropriate files for MyLake model
@@ -24,6 +28,16 @@ variables = ["hurs",
              "sfcWind",
              "tas"
              ]
+
+
+def replaceAll(file,searchExp,replaceExp):
+    print("%s_copy.txt"%(file))
+    copyfile(file, "%s_copy.txt"%(file))
+    for line in fileinput.input(file, inplace=1):
+        if searchExp in line:
+            line = line.replace(searchExp,replaceExp)
+
+        sys.stdout.write(line)
 
 def myLake_input(lake_name, model, scenario, forcing_data_directory, input_directory):
     """
@@ -227,7 +241,7 @@ def init_info(lakeName, observation_path, date_init = 101):
     if os.path.exists("{}/{}_hypsometry2.csv".format(observation_path, lakeName)):
         with open("{}/{}_hypsometry2.csv".format(observation_path, lakeName), "r") as obs:
             reader = list(csv.reader(obs))[1:]
-            out_dir, out_folder = reader[0][0][:2], reader[0][0][3:]
+            out_dir, out_folder = reader[0][0][:2], lakeName[:3]
             outdir = os.path.join("input", "{}".format(out_dir), "{}".format(out_folder))
             depth_levels = []
             areas = []
@@ -516,6 +530,10 @@ def mylakepar(longitude, latitude, lake_name, outdir, kz_N0 = 0.00007, c_shelter
             f.write(out)
 
         print("{} Done".format(outpath))
+    else:
+        replaceAll(outpath,"latitude	0.00000	NaN	NaN	dec.deg","latitude	%.5f	NaN	NaN	dec.deg"%(latitude))
+        replaceAll(outpath,"longitude	0.00000	NaN	NaN	dec.deg","longitude	%.5f	NaN	NaN	dec.deg"%(longitude))
+        print("{} Done change coor".format(outpath))
 
 def get_longitude(lake_name, forcing_data_directory,model,scenario):
     """
@@ -526,10 +544,14 @@ def get_longitude(lake_name, forcing_data_directory,model,scenario):
     """
     if lake_name == 'Mozhaysk':
         lake_name = 'Mozaisk'
-    ncdf_file = ncdf.Dataset(
-        forcing_data_directory + "/hurs_{}_{}_{}.allTS.nc".format(model,scenario,lake_name), "r", format="NETCDF4")
+    try:
+        print(forcing_data_directory + "/hurs_EWEMBI_historical_{}.allTS.nc".format(lake_name))
+        ncdf_file = ncdf.Dataset(
+        forcing_data_directory + "/hurs_EWEMBI_historical_{}.allTS.nc".format(lake_name), "r", format="NETCDF4")
 
-    return ncdf_file.variables["lon"][0]
+        return ncdf_file.variables["lon"][0]
+    except:
+        print("problem!")
 
 def get_latitude(lake_name, forcing_data_directory,model,scenario):
     """
@@ -540,14 +562,18 @@ def get_latitude(lake_name, forcing_data_directory,model,scenario):
     """
     if lake_name == 'Mozhaysk':
         lake_name = 'Mozaisk'
-    ncdf_file = ncdf.Dataset(
-        forcing_data_directory + "/hurs_{}_{}_{}.allTS.nc".format(model,scenario,lake_name), "r", format="NETCDF4")
+    try:
+        print(forcing_data_directory + "/hurs_EWEMBI_historical_{}.allTS.nc".format(lake_name))
+        ncdf_file = ncdf.Dataset(
+            forcing_data_directory + "/hurs_EWEMBI_historical_{}.allTS.nc".format(lake_name), "r", format="NETCDF4")
 
-    return ncdf_file.variables["lat"][0]
+        return ncdf_file.variables["lat"][0]
+    except:
+        print("problem!")
 
 
 
-def generate_input_files(observation_path, lake_name, f_lake_name, forcing_data_directory, longitude, latitude, model, scenario):
+def generate_input_files(observation_path, lake_name, f_lake_name, forcing_data_directory, longitude, latitude, model, scenario,reg):
     """
     Creates all files needed for a run of mylake model with a single lake. The input function will generate ALL needed
     input files(one for each combination of scenario, model and variable)
@@ -560,8 +586,11 @@ def generate_input_files(observation_path, lake_name, f_lake_name, forcing_data_
     :return: None
     """
 
+
     outdir = mylakeinit(init_info(lake_name, observation_path))
-    #mylakepar(longitude, latitude, lake_name, outdir)
+
+    #if not (os.path.exists(r"{}\{}_par".format(outdir, lake_name[:3]))):
+    mylakepar(longitude, latitude, lake_name, outdir)
     myLake_input(f_lake_name, model, scenario, forcing_data_directory, outdir)
 
 def simulation_years(scenarioid):
@@ -576,7 +605,7 @@ def simulation_years(scenarioid):
 
     return y1, y2
 
-def run_myLake(observations_path, input_directory, region, lakeName, modelid, scenarioid, flag = None):
+def run_myLake( input_directory, region, lakeName, modelid, scenarioid, flag = None):
     """
     Runs the MyLake simulation using the input, init and parameters files. Makes a single run for a combination of lake,
     model and scenario.
@@ -594,6 +623,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
         reader = list(csv.reader(obs))
         prefix = reader[1][0][3:]
 
+    print(input_directory, "{}_init".format(prefix))
     init_file = os.path.join(input_directory, "{}_init".format(prefix))
     parameter_file = os.path.join(input_directory, "{}_par".format(prefix))
     input_file = os.path.join(input_directory, "{}_{}_{}_input".format(prefix, modelid, scenarioid))
@@ -671,12 +701,18 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
 
     if y2 - y1 > 100:
-        years = list(range(y1, y2, 100))
+        years = [y1]
+        if y1 == 2006:
+            yinit = 2011
+        else:
+            yinit = y1+100
+        years= years+(list(range(yinit, y2, 100)))
         years.append(y2)
         all_files = []
         yrange = range(0, len(years) - 1)
         for i in range(0, len(years) - 1):
             test = (years[i])
+
             if i + 1 != len(years) - 1:
                 yinit = years[i]
                 yend = years[i + 1] - 1
@@ -700,32 +736,38 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
 
                 os.system(cmd)
 
-            flags = [os.path.exists(os.path.join(outfolder2, f)) for f in expectedfs]
+                flags = [os.path.exists(os.path.join(outfolder2, f)) for f in expectedfs]
 
-            if all(flags) and flag != "calibration":
-                # if modelid != "EwembI":
-                #     #if outputfile(y1, y2, outfolder) == True:
+                if all(flags) and flag != "calibration":
+                    # if modelid != "EwembI":
+                    #     #if outputfile(y1, y2, outfolder) == True:
 
-                ret = outputfile(yinit, yend, outfolder2)
-                with open(os.path.join(outfolder2, 'RunComplete'), 'w') as f:
-                    f.write(datetime.datetime.now().isoformat())
-                for f in expectedfs:
-                    folder = os.path.join(outfolder2, f)
+                    ret = outputfile(yinit, yend, outfolder2)
+                    with open(os.path.join(outfolder2, 'RunComplete'), 'w') as f:
+                        f.write(datetime.datetime.now().isoformat())
+                    for f in expectedfs:
+                        folder = os.path.join(outfolder2, f)
 
         # expectedfs = ["strat.csv", "watertemp.csv", "thermodepth.csv", "ice.csv", "lakeicefrac.csv",
         #               "snowtick.csv", "sensheatf.csv", "latentheatf.csv", "lakeheatf.csv", "albedo.csv",
         #               "turbdiffheat.csv",
         #               "sedheatf.csv"]
-        for finalfile in expectedfs:
-            if not os.path.exists(os.path.join(outfolder,finalfile)):
-                with open(os.path.join(outfolder,finalfile), 'w') as outfile:
-                    for i, filename in enumerate(all_files):
-                        if os.path.exists(os.path.join(filename,finalfile)):
-                            with open(os.path.join(filename,finalfile), 'r') as infile:
-                                for rownum, line in enumerate(infile):
-                                    outfile.write(line)
-        ret = outputfile(y1, y2, outfolder)
-#
+
+        # for finalfile in expectedfs:
+        #     if not os.path.exists(os.path.join(outfolder,finalfile)):
+        #         with open(os.path.join(outfolder,finalfile), 'w') as outfile:
+        #             for i, filename in enumerate(all_files):
+        #                 if os.path.exists(os.path.join(filename,finalfile)):
+        #                     with open(os.path.join(filename,finalfile), 'r') as infile:
+        #                         for rownum, line in enumerate(infile):
+        #                             outfile.write(line)
+        # ret = outputfile(y1, y2, outfolder)
+        #
+        # flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
+
+        if all(flags) :
+            with open(os.path.join(outfolder, 'RunComplete2'), 'w') as f:
+                f.write(datetime.datetime.now().isoformat())
  #       flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
  #       if all(flags) and flag != "calibration":
  #           # if modelid != "EwembI":
@@ -740,7 +782,7 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
         print("here")
         if not os.path.exists ( outfolder ):
             os.makedirs ( outfolder )
-        if not os.path.exists(os.path.join(outfolder, 'RunComplete')):
+        if 1==1:#not os.path.exists(os.path.join(outfolder, 'RunComplete')):
             cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
             print ( cmd )
             os.system ( cmd )
@@ -753,6 +795,13 @@ def run_myLake(observations_path, input_directory, region, lakeName, modelid, sc
             ret = outputfile(y1, y2, outfolder)
             with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
                 f.write(datetime.datetime.now().isoformat())
+
+
+        # flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
+        #
+        # if all(flags):
+        #     with open(os.path.join(outfolder, 'RunComplete1'), 'w') as f:
+        #         f.write(datetime.datetime.now().isoformat())
             # try:
             #     hdfpath = os.path.join(r"D:\result","output_%s_%s_%s.h5"%(lakeName,modelid,scenarioid))
             #     h5f = h5py.File(hdfpath, 'w')

@@ -557,7 +557,7 @@ for i = 1:length(tt)
     if(IceIndicator==0)
         % 2) Vertical heating profile for open water periods (during nighttime heating)
         [Qsw,Qlw_2,Qsl_2,tau,DayFrac,DayFracHeating,sensheatf,latentheatf,alb] = heatflux_v12_isimip(tt(i),Wt(i,1),Wt(i,2),Wt(i,3),Wt(i,4),Wt(i,5),Wt(i,6),Tz(1), ...
-        lat,lon,WEQs,Hi,alb_melt_ice,alb_melt_snow,albedot1);%Qlw and Qsl are functions of Tz(1)   #MC 2019-12-20         
+        lat,lon,WEQs,Hi,alb_melt_ice,alb_melt_snow,albedot1);%Qlw and Qsl are functions of Tz(1)   #         
         
         Qz(1) = (1-DayFracHeating)*(Qlw_2 + Qsl_2); %surface layer heating
         Qz(2:end)=0; %No other heating below surface layer   

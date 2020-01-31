@@ -18,3 +18,7 @@ ISIMIP/report.txt
 ISIMIP/test.py
 ISIMIP/output/
 
+ISIMIP.zip
+ISIMIP/input.zip
+ISIMIP/observations.zip
+*.nc4

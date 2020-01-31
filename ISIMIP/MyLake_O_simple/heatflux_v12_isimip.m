@@ -98,7 +98,7 @@ else
      alb = albedo_mod(Trnsmiss, alt, alb_table); %modified albedo function to save execution time
 end 
 
-average_alb = nanmean(alb);
+average_alb = nanmean(alb); % MC 2019-12-20
 
 Qma = (1 - alb) .* rad .* Trnsmiss;
 

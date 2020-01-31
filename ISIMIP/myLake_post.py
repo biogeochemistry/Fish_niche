@@ -27,40 +27,45 @@ parameters = {"Swa_b0" : [0, 0.5, 1, 1.5, 2, 2.5, 3, 3.5, 4, 4.5],
 
 
 #full_lake_list = "Allequash"
-regions = {"US": ["Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal", "CrystalBog", "Delavan",
-                  "Falling_Creek", "Fish", "Great_Pond", "Green_lake", "Laramie", "Mendota", "Monona",
-                  "Okauchee", "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik", "Trout", "TroutBog", "TwoSisters",
-                  "Washington", "Wingra"],
-           "CH": ["Biel", "LowerZurich", "Neuchatel"],
+regions = {"US": ["Allequash_Lake", "Annie", "Big_Muskellunge_Lake", "Black_Oak_Lake", "Crystal_Lake",
+                  "Crystal_Bog", "Delavan", "Falling_Creek_Reservoir", "Fish_Lake", "Great_Pond",
+                  "Green_Lake", "Laramie_Lake", "Mendota", "Monona", "Okauchee_Lake",
+                  "Sammamish", "Sparkling_Lake", "Sunapee", "Tahoe", "Toolik_Lake",
+                  "Trout_Lake", "Trout_Bog", "Two_Sisters_Lake", "Washington", "Wingra"],
+           "CH": ["Biel", "Lower_Zurich", "Neuchatel"],
            "PT": ["Alqueva"],
            "FR": ["Annecy", "Bourget", "Geneva"],
-           "AU": ["Argyle", "BurleyGriffin", "MtBold"],
-           "CA": ["Dickie", "Eagle_lake", "Harp"],
-           "SE": ["Ekoln", "Erken"],
-           "UK": ["EsthwaiteWater", "Windermere"],
+           "AU": ["Argyle", "Burley_Griffin", "Mt_Bold"],
+           "CA": ["Dickie_Lake", "Eagle_Lake", "Harp_Lake"],
+           "SE": ["Ekoln_basin_of_Malaren", "Erken"],
+           "UK": ["Esthwaite_Water", "Windermere"],
            "IE": ["Feeagh"],
            "FI": ["Kilpisjarvi", "Kuivajarvi", "Paajarvi"],
            "IL": ["Kinneret"],
            "RW": ["Kivu"],
            "CZ": ["Klicava", "Rimov", "Zlutice"],
            "NO": ["Langtjern"],
-           "RU": ["Mozhaysk", "Vendyurskoe"],
-           "DE": ["Muggelsee", "Rappbode", "Stechlin"],
+           "RU": ["Mozaisk", "Vendyurskoe"],
+           "DE": ["Mueggelsee", "Rappbode_Reservoir", "Stechlin"],
            "CN": ["Ngoring"],
-           "EE": ["NohipaloMustjarv", "NohipaloValgejarv", "Vortsjarv"],
-           "ES": ["Sau"],
+           "EE": ["Nohipalo_Mustjarv", "Nohipalo_Valgejarv", "Vortsjarv"],
+           "ES": ["Sau_Reservoir"],
            "NZ": ["Rotorua", "Tarawera", "Taupo", "Waahi"]}
-full_lake_list =["Argyle","Alqueva","Rotorua","Vendyurskoe","Muggelsee","EsthwaiteWater","Allequash", "Annie", "BigMuskellunge", "BlackOak", "Crystal"
-                , "Delavan","FallingCreek", "Fish", "Great_Pond",
-                 "Green_lake", "Laramie", "Mendota", "Okauchee",
-                 "Sammamish", "Sparkling", "Sunapee", "Tahoe", "Toolik",
-                 "Trout", "TroutBog", "Two_Sisters","Washington", "Wingra",
-                 "Biel", "LowerZurich", "Neuchatel","Annecy",
-                 "Bourget" ,"BurleyGriffin","MtBold",
-                 "Dickie","Eagle_lake" , "Harp","Ekoln", "Erken",
-                 "EsthwaiteWater", "Windermere","Feeagh","Kilpisjarvi", "Kuivajarvi",
-                 "Paajarvi","Kinneret","Kivu","Klicava", "Rimov",
-                 "Zlutice","Langtjern","Mozhaysk","Rappbode", "Stechlin","Ngoring","NohipaloMustjarv", "NohipaloValgejarv","Vortsjarv","Sau", "Tarawera", "Taupo","Waahi"]
+
+full_lake_list= ['Annie', 'Allequash_Lake', 'Alqueva', 'Annecy', 'Argyle',
+                  'Biel', 'Big_Muskellunge_Lake', 'Black_Oak_Lake', 'Bourget', 'Burley_Griffin',
+                  'Crystal_Bog', 'Crystal_Lake', 'Delavan', 'Dickie_Lake', 'Eagle_Lake',
+                  'Ekoln_basin_of_Malaren', 'Erken', 'Esthwaite_Water', 'Falling_Creek_Reservoir', 'Feeagh',
+                  'Fish_Lake', 'Geneva', 'Great_Pond', 'Green_Lake', 'Harp_Lake',
+                  'Kilpisjarvi', 'Kinneret', 'Kivu', 'Kuivajarvi','Langtjern',
+                  'Laramie_Lake', 'Lower_Zurich', 'Mendota', 'Monona','Mozaisk',
+                  'Mt_Bold', 'Mueggelsee', 'Neuchatel', 'Nohipalo_Mustjarv',
+                  'Nohipalo_Valgejarv', 'Okauchee_Lake', 'Paajarvi', 'Rappbode_Reservoir','Rimov',
+                  'Rotorua', 'Sammamish', 'Sau_Reservoir', 'Sparkling_Lake','Stechlin',
+                  'Sunapee', 'Tahoe', 'Tarawera', 'Toolik_Lake','Trout_Bog',
+                  'Trout_Lake', 'Two_Sisters_Lake', 'Vendyurskoe', 'Vortsjarv', 'Washington',
+                  'Windermere', 'Wingra']
+
 temp_by_lake = {"Argyle":[0.7,26.7],"Dickie":[1,9],"Harp":[1,27],"LowerZurich":[1,100],"Neuchatel":[0,100],
                "Rimov":[0.2,14.2],"Rappbode":[2.82,52.62],"Stechlin":[0,55],"Vortsjarv":[0.5,3],"Sau":[2,40],
 
@@ -102,7 +107,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder,model,scen
                 depthlist.append(float(depth[3]))
             elif float(depth[3]) == depthlist[0]:
                 loop += 1
-            if loop == 10:
+            if loop == 1000:
                 break
         outputdir2 = list(output_folder.split("/"))
         outputdir3 = 'output'
@@ -116,7 +121,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder,model,scen
         if not os.path.exists(outputdir3):
             os.mkdir(outputdir3)
 
-
+        depthlist.sort()
 
         with open ("{}/Observed_Temperatures.csv".format(output_folder), "w", newline = '') as csvfile:
             print("{}/Observed_Temperatures.csv".format(output_folder))
@@ -132,6 +137,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder,model,scen
             for observation in reader:
                 if int(observation[2]) not in dates:
                     dates.append(int(observation[2]))
+                    print(observation[2])
 
             temp_list = []
             number = 0
@@ -319,6 +325,7 @@ def findYPoint(xa,xb,ya,yb,xc):
     m = (float(ya) - float(yb)) / (float(xa) -float( xb))
     yc = (float(xc) - float(xb)) * m + float(yb)
     return yc
+
 def make_comparison_file(output_folder,depths):
     """
     Search a given output folder for an observation file, containing mesured temperatures for a lake on a finite period,
@@ -754,7 +761,6 @@ def root_mean_square(obs_list, sims_list):
         result = 0
     return result
 
-
 def r_squared(obs_list, sims_list):
     """
     Find the R squared for the simulations compared to the expected observations
@@ -978,7 +984,7 @@ def optimise_lake(lake_name, observation_path, input_directory, region, forcing_
 
                 try:
 
-                    run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid)
+                    run_myLake_ISIMIP.run_myLake(run_myLake_ISIMIP.init_info(lake_name, "observations/{}/{}".format(region, lake_name)), region, lake_name, modelid, scenarioid)
 
                     temperatures_by_depth(observation_path, lake_name, outdir,modelid, scenarioid)
 
@@ -1102,8 +1108,6 @@ def optimize_Nelder_Meald(lake_name, observation_path, input_directory, region, 
 
     return res
 
-
-
 def run_optimization_Mylake_save(lake_name, input_directory,outdir,observation_path, region, modelid, scenarioid):
     """
     Intermediary function calling mylakepar function to generate new parameters, then running myLake with these parameters,
@@ -1129,7 +1133,7 @@ def run_optimization_Mylake_save(lake_name, input_directory,outdir,observation_p
             break
 
     if depths != None:
-        run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid,
+        run_myLake_ISIMIP.run_myLake(run_myLake_ISIMIP.init_info(lake_name, "observations/{}/{}".format(region, lake_name)), region, lake_name, modelid, scenarioid,
                                      flag="calibration")
 
         try:
@@ -1157,8 +1161,6 @@ def run_optimization_Mylake_save(lake_name, input_directory,outdir,observation_p
             X = 1 / 0
             return -1
 
-
-
 def run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid,params):
     """
     Intermediary function calling mylakepar function to generate new parameters, then running myLake with these parameters,
@@ -1175,10 +1177,11 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
     :return: performance analysis, which itself returns a score as float
     """
 
-    # kz_N0, c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
-    # i_scv = 1
-    # i_sct = 0
-    #
+    kz_N0, c_shelter, alb_melt_snow, alb_melt_ice, swa_b0, swa_b1 = params
+
+    i_scv = 1
+    i_sct = 0
+
 
 
     depths = None
@@ -1188,12 +1191,12 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
             break
 
     if depths != None:
-        # run_myLake_ISIMIP.mylakepar(retreive_longitude(lake_name), retreive_latitude(lake_name), lake_name,
-        #                             input_directory,
-        #                             kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
+        #run_myLake_ISIMIP.mylakepar(retreive_longitude(lake_name), retreive_latitude(lake_name), lake_name,
+        #                            input_directory,
+        #                            kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
 
-        run_myLake_ISIMIP.run_myLake(observation_path, input_directory, region, lake_name, modelid, scenarioid,
-                                     flag="calibration")
+        #run_myLake_ISIMIP.run_myLake(run_myLake_ISIMIP.init_info(lake_name, "observations/{}/{}".format(region, lake_name)).get("outdir"), region, lake_name, modelid, scenarioid,
+         #                           flag="calibration")
 
 
         try:
@@ -1216,8 +1219,6 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
             X = 1 / 0
             return -1
 
-
-
 def optimize_differential_evolution(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid):
     func = lambda params: run_optimization_Mylake(lake_name, observation_path, input_directory, region,
                                                   outdir, modelid, scenarioid, params)
@@ -1229,23 +1230,23 @@ def optimize_differential_evolution(lake_name, observation_path, input_directory
         res = differential_evolution(func, bounds, tol=10, disp=True)
         print(res)
 
-        success = float(res.get('fun'))
-
-        if res == -1:
-            print("Couldn't do {}".format(lake_name))
-            x= 1/0
-            return res
-        else:
-            params = tuple(res.get('x'[0]))
-            orig_stdout = sys.stdout
-            with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
-                sys.stdout = end_file
-                run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid,
-                                        params)
-                end_file.writelines(["Calibration results:", str(res)])
-                sys.stdout = orig_stdout
-
-            return res
+        # success = float(res.get('fun'))
+        #
+        # if res == -1:
+        #     print("Couldn't do {}".format(lake_name))
+        #     x= 1/0
+        #     return res
+        # else:
+        #     params = tuple(res.get('x'[0]))
+        #     orig_stdout = sys.stdout
+        #     with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
+        #         sys.stdout = end_file
+        #         run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid,
+        #                                 params)
+        #         end_file.writelines(["Calibration results:", str(res)])
+        #         sys.stdout = orig_stdout
+        #
+        #     return res
     except:
         print('problem when doing calibration')
         outputdir2 = list(outdir.split("/"))
@@ -1261,6 +1262,7 @@ def optimize_differential_evolution(lake_name, observation_path, input_directory
             os.mkdir(outputdir3)
         open("{}/Calibration_problem.txt".format(outdir), "w").close()
         print("problem with the calibration: lake %s"%(lake_name))
+
 def retreive_longitude(lake):
     """Get longitude from param files
 
