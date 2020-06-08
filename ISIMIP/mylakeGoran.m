@@ -4,7 +4,7 @@ path(path, 'MyLake_O_simple')%change directory from mylake folder to Mylake_O_si
 path(path, '../sediments')
 
 warning('off', 'all') 
-
+disp(outdir);
 m_start = datevec(datenum([(m_start2), 1, 1])),(1:3); 
 m_stop = [(m_stop2), 12, 31];
 %if ((m_start2 == 1861)||(m_stop2 == 2099)|| (m_stop2==2299))
@@ -43,7 +43,7 @@ dt = 1.0;
 Depositions = 0;
 global sed_par_file;
 sed_par_file = 'sediment_parameters.txt';
-
+%try
 [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,Attn_zt,P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,oxygenflux,CO2_eqt,~,O2_eqt,K0_O2t,CO2_ppmt,dO2Chlt,dO2BODt,dphotoDOCt,delC_org3,testi1t,testi2t,testi3t, sediments_data_basin1] = ...
 solvemodel_v2_modified(m_start,m_stop,initfile,'lake', inputfile,'timeseries', parfile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Depositions);
 
@@ -78,6 +78,6 @@ dlmwrite(f10_name, Qzt_sed(:,:)', 'delimiter', ',', 'precision', '%.3f');
 clear;
 %catch
 %    fclose(fopen(strcat(outdir, '\problem.txt'), 'w'));
-%    clear;
-%end  
-end
+%    disp('problem with lake')
+%end
+end 

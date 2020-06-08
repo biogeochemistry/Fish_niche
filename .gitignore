@@ -22,3 +22,5 @@ ISIMIP.zip
 ISIMIP/input.zip
 ISIMIP/observations.zip
 *.nc4
+ISIMIP/calibration2/
+*.png

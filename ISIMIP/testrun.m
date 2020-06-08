@@ -1,1 +1,0 @@
-mylakeGoran('input/AU/Bur\Bur_init','input/AU/Bur\Bur_par','input/AU/Bur\Bur_GFDL-ESM2M_historical_input',1862,1864,'output\AU\Bur\Bur_GFDL-ESM2M\historical')

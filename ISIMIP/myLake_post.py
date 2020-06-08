@@ -1,6 +1,6 @@
 import csv
 import os
-from math import sqrt
+from math import sqrt,floor
 import sys
 import numpy as np
 import statistics
@@ -53,35 +53,32 @@ regions = {"US": ["Allequash_Lake", "Annie", "Big_Muskellunge_Lake", "Black_Oak_
            "NZ": ["Rotorua", "Tarawera", "Taupo", "Waahi"]}
 
 full_lake_list= ['Annie', 'Allequash_Lake', 'Alqueva', 'Annecy', 'Argyle',
-                  'Biel', 'Big_Muskellunge_Lake', 'Black_Oak_Lake', 'Bourget', 'Burley_Griffin',
-                  'Crystal_Bog', 'Crystal_Lake', 'Delavan', 'Dickie_Lake', 'Eagle_Lake',
-                  'Ekoln_basin_of_Malaren', 'Erken', 'Esthwaite_Water', 'Falling_Creek_Reservoir', 'Feeagh',
-                  'Fish_Lake', 'Geneva', 'Great_Pond', 'Green_Lake', 'Harp_Lake',
-                  'Kilpisjarvi', 'Kinneret', 'Kivu', 'Kuivajarvi','Langtjern',
-                  'Laramie_Lake', 'Lower_Zurich', 'Mendota', 'Monona','Mozaisk',
-                  'Mt_Bold', 'Mueggelsee', 'Neuchatel', 'Nohipalo_Mustjarv',
-                  'Nohipalo_Valgejarv', 'Okauchee_Lake', 'Paajarvi', 'Rappbode_Reservoir','Rimov',
-                  'Rotorua', 'Sammamish', 'Sau_Reservoir', 'Sparkling_Lake','Stechlin',
-                  'Sunapee', 'Tahoe', 'Tarawera', 'Toolik_Lake','Trout_Bog',
-                  'Trout_Lake', 'Two_Sisters_Lake', 'Vendyurskoe', 'Vortsjarv', 'Washington',
-                  'Windermere', 'Wingra']
+                   'Biel', 'Big_Muskellunge_Lake', 'Black_Oak_Lake', 'Bourget', 'Burley_Griffin',
+                   'Crystal_Bog', 'Crystal_Lake', 'Delavan', 'Dickie_Lake', 'Eagle_Lake',
+                   'Ekoln_basin_of_Malaren', 'Erken', 'Esthwaite_Water', 'Falling_Creek_Reservoir', 'Feeagh',
+                   'Fish_Lake', 'Geneva', 'Great_Pond', 'Green_Lake', 'Harp_Lake',
+                   'Kilpisjarvi', 'Kinneret', 'Kivu', 'Kuivajarvi','Langtjern',
+                   'Laramie_Lake', 'Lower_Zurich', 'Mendota', 'Monona','Mozaisk',
+                  'Mt_Bold', 'Mueggelsee', 'Neuchatel','Ngoring', 'Nohipalo_Mustjarv','Nohipalo_Valgejarv',
+                 'Okauchee_Lake', 'Paajarvi', 'Rappbode_Reservoir','Rimov', 'Rotorua',
+                 'Sammamish', 'Sau_Reservoir', 'Sparkling_Lake','Stechlin', 'Sunapee',
+                 'Tahoe', 'Tarawera', 'Toolik_Lake','Trout_Bog','Trout_Lake',
+                 'Two_Sisters_Lake', 'Vendyurskoe', 'Vortsjarv', 'Washington', 'Windermere',
+                 'Wingra']
 
-temp_by_lake = {"Argyle":[0.7,26.7],"Dickie":[1,9],"Harp":[1,27],"LowerZurich":[1,100],"Neuchatel":[0,100],
-               "Rimov":[0.2,14.2],"Rappbode":[2.82,52.62],"Stechlin":[0,55],"Vortsjarv":[0.5,3],"Sau":[2,40],
-
-               "Kilpisjarvi":[0.75,31],"Kuivajarvi":[0.2,12],"Paajarvi":[1,65],"Annecy":[10,61],"Feeagh":[0.9,42],
-               "Kinneret":[2,34],"Langtjern":[1,8],"Rotorua":[2,16],"Tarawera":[2,80],"Sammamish":[1,20],
-
-               "Kivu":[0,90],"Ekoln":[1,27.25], "Erken":[0.5,20],"EsthwaiteWater":[0.5,11.5],"Windermere":[1,35],
-               "BlackOak":[0.9144,25.908],"Crystal":[1,17],"Laramie":[2,6],"Mendota":[0,20], "Okauchee":[1,25],
-
-               "Sparkling":[0,17],"Sunapee":[1,9], "MtBold":[1,34],"NohipaloMustjarv":[0.5,6], "NohipaloValgejarv":[0.5,8],
-                "BigMuskellunge":[1,18],"BurleyGriffin":[3,12],"Eagle_lake":[1,10], "Mozhaysk":[1,7],"Allequash":[1,7],
-
-                "Biel":[5,70],"Muggelsee":[1,5],"Geneva":[3.6,263.6],"Bourget":[9.5,106],"Vendyurskoe":[4.58,11.3],
-                "CrystalBog":[0.25,2],"Delavan":[1,15],"Fish":[1,17],"Green_lake":[1,66],"Toolik":[1,16],
-
-                "Trout":[1,29],"TroutBog":[1,7],"Washington":[1,55],"Wingra":[1,3]}
+temp_by_lake = {'Annie':[1,17], 'Allequash_Lake':[1,6], 'Alqueva':[1,60], 'Annecy':[10,61], "Argyle":[0.7,26.7],
+                'Biel':[5,70], 'Big_Muskellunge_Lake':[1,18], 'Black_Oak_Lake':[0.9144,24.384], 'Bourget':[9.5,106], 'Burley_Griffin':[3,12],
+                'Crystal_Bog':[0.5,1.5], 'Crystal_Lake':[1,17], 'Delavan':[1,15], 'Dickie_Lake':[1,9], 'Eagle_Lake':[1,10],
+                'Ekoln_basin_of_Malaren':[1,27.25], 'Erken':[0.5,20], 'Esthwaite_Water':[0.5,11.5], 'Falling_Creek_Reservoir':[1,8], 'Feeagh':[0.9,42],
+                'Fish_Lake':[1,17], 'Geneva':[3.6,263.6], 'Great_Pond':[1,19], 'Green_Lake':[1,66], 'Harp_Lake':[1,27],
+                'Kilpisjarvi':[0.75,31], 'Kinneret':[2,34], 'Kivu':[0,90], 'Kuivajarvi':[0.5,8],'Langtjern':[1,8],
+                'Laramie_Lake':[0.8,6], 'Lower_Zurich':[1,100], 'Mendota':[0,20], 'Monona':[1,18],'Mozaisk':[1,7],
+                'Mt_Bold':[1,34], 'Mueggelsee':[1,5], 'Neuchatel':[0,100],'Ngoring':[4.768982031,19.76898203], 'Nohipalo_Mustjarv':[0.5,5],
+                'Nohipalo_Valgejarv':[0.5,7],'Okauchee_Lake':[1,25], 'Paajarvi':[1,60], 'Rappbode_Reservoir':[2.82,52.62],'Rimov':[0.2,14.2],
+                'Rotorua':[2,16],'Sammamish':[1,20], 'Sau_Reservoir':[2,40], 'Sparkling_Lake':[0,17],'Stechlin':[0,55],
+                'Sunapee':[1,9],'Tahoe':[1.5,168.1], 'Tarawera':[2,80], 'Toolik_Lake':[1,16],'Trout_Bog':[1,7],
+                'Trout_Lake':[1,29], 'Two_Sisters_Lake':[4.572,15.24], 'Vendyurskoe':[4.58,11.3], 'Vortsjarv':[0.5,3], 'Washington':[1,55],
+                'Windermere':[1,35], 'Wingra':[1,3]}
 
 def temperatures_by_depth(observation_folder, lakeName, output_folder,model,scenario):
     """
@@ -92,7 +89,7 @@ def temperatures_by_depth(observation_folder, lakeName, output_folder,model,scen
     :return: None
     """
 
-    with open("{}/{}_hypsometry2.csv".format(observation_folder,lakeName)) as bathymetric_file:
+    with open("{}/{}_hypsometry_modified.csv".format(observation_folder,lakeName)) as bathymetric_file:
         maxDepth = int(float(list(csv.reader(bathymetric_file))[-1][2]))
         depthLevels = list(range(maxDepth + 1))
 
@@ -183,7 +180,8 @@ def get_dates_of_simulation(start_year, stop_year):
     date_list = []
     year = start_year
     nb_year = stop_year - start_year
-
+    if nb_year ==0:
+        nb_year = 1
     for i in range(0, nb_year):
         if i % 400 == 0 or (i % 4 == 0 and i % 100 != 0):
             for x in range(1, 367):
@@ -320,13 +318,12 @@ def get_dates_of_simulation(start_year, stop_year):
         year += 1
     return date_list
 
-
 def findYPoint(xa,xb,ya,yb,xc):
     m = (float(ya) - float(yb)) / (float(xa) -float( xb))
-    yc = (float(xc) - float(xb)) * m + float(yb)
+    yc = (float(xc) - (float(xb)+0.5)) * m + float(yb)
     return yc
 
-def make_comparison_file(output_folder,depths):
+def make_comparison_file(output_folder,depths,lake=None):
     """
     Search a given output folder for an observation file, containing mesured temperatures for a lake on a finite period,
     and a simulated temperatures file. Then writes corresponding observed and simulated temperatures to a csv file,
@@ -343,7 +340,8 @@ def make_comparison_file(output_folder,depths):
 
         with open("{}/Observed_Temperatures.csv".format(output_folder), "r") as observation_file:
             reader = list(csv.reader(observation_file))
-            for i in range(1,len(reader)):
+            for i in range(1,len(reader[0])):
+
                 if float(reader[0][i]) == depths[0]:
                     depth_levels.append(reader[0][i])
                     col1= i
@@ -358,7 +356,19 @@ def make_comparison_file(output_folder,depths):
             for obs in reader[1:]:
                 observation_dict[int(obs[0])] = [obs[col1], obs[col2]]
 
-        sims_dates = get_dates_of_simulation(start_year, end_year)
+        if lake == "Green_Lake":
+            sims_dates = get_dates_of_simulation(2000, 2017)
+        elif lake == "Laramie_Lake":
+            sims_dates = get_dates_of_simulation(2013, 2016)
+        elif lake == "Alqueva":
+            sims_dates = get_dates_of_simulation(2015,2020)
+        elif lake == "Rappbode_Reservoir":
+            sims_dates = get_dates_of_simulation(2012, 2017)
+        elif lake == "Tarawera":
+            sims_dates = get_dates_of_simulation(1994, 2016)
+
+        else:
+            sims_dates = get_dates_of_simulation(1979,2016)
 
         with open("{}/Tzt.csv".format(output_folder), "r") as simulation_file:
             reader = list(csv.reader(simulation_file))
@@ -366,21 +376,26 @@ def make_comparison_file(output_folder,depths):
             for sim in reader:
                 try:
 
-                    if int(float(depth_levels[0])) != float(depth_levels[0]):
-                        xa = int(float(depth_levels[0]))
+                    if(floor(float(depth_levels[0]))+0.5) != float(depth_levels[0]):
+                        xa = (floor(float(depth_levels[0])))
                         xb = xa + 1
-                        if int(float(depth_levels[1])) != float(depth_levels[1]):
-                            xa1 = int(float(depth_levels[1]))
+                        if xa >= float(depth_levels[0]):
+                            xa = xa-1
+                            xb = xa+1
+                        if floor(float(depth_levels[1]))+0.5 != float(depth_levels[1]):
+                            xa1 = (floor(float(depth_levels[1])))
                             xb1 = xa1 + 1
+                            if (xa1+0.5) > float(depth_levels[1]):
+                                xa1 = (floor(float(depth_levels[1])))-1
+                                xb1 = xa1 + 1
                             if sim[xa] != "None" and sim[xb] != "None":
 
                                 valueyc = findYPoint(xa, xb, sim[xa], sim[xb], float(depth_levels[0]))
                                 if sim[xa1] != "None" and sim[xb1] != "None":
 
                                     valueyc1 = findYPoint(xa1, xb1, sim[xa1], sim[xb1], float(depth_levels[1]))
-
-
                                     simulation_dict[sims_dates[reader.index(sim)]] = [valueyc, valueyc1]
+
                                 else:
                                     simulation_dict[sims_dates[reader.index(sim)]] = [valueyc,"None"]
 
@@ -400,7 +415,18 @@ def make_comparison_file(output_folder,depths):
                             else:
                                 simulation_dict[sims_dates[reader.index(sim)]] = ["None", sim[col2]]
                     else:
-                        simulation_dict[sims_dates[reader.index(sim)]] = [sim[col1], sim[col2]]
+                        if floor(float(depth_levels[1]))+0.5 != float(depth_levels[1]):
+                            xa1 = floor(float(depth_levels[1]))
+                            xb1 = xa1 + 1
+                            if sim[xa1] != "None" and sim[xb1] != "None":
+                                valueyc1 = findYPoint(xa1, xb1, sim[xa1], sim[xb1], float(depth_levels[1]))
+
+                                simulation_dict[sims_dates[reader.index(sim)]] = [float(sim[int(float(depth_levels[0])-0.5)]),valueyc1]
+
+                            else:
+                                simulation_dict[sims_dates[reader.index(sim)]] = [float(sim[int(float(depth_levels[0])-0.5)]), "None"]
+                        else:
+                            simulation_dict[sims_dates[reader.index(sim)]] = [float(sim[int(float(depth_levels[0])-0.5)]), float(sim[int(float(depth_levels[0])-0.5)])]
                 except IndexError:
                     continue
 
@@ -409,6 +435,12 @@ def make_comparison_file(output_folder,depths):
         for date in sims_dates:
             if date in observation_dict.keys():
                 try:
+
+                    print(date)
+                    print(observation_dict[date][0])
+                    print(observation_dict[date][1])
+                    print(simulation_dict[date][0])
+                    print(simulation_dict[date][1])
 
                     csvFile.writerow([date, '', observation_dict[date][0], observation_dict[date][1], '', simulation_dict[date][0], simulation_dict[date][1]])
 
@@ -661,16 +693,21 @@ def performance_analysis(lake_name, input_folder, output_folder):
     :param output_folder: A string, containing the folder containing the comparison file.
     :return: Score, a float representing the overall performance of the current simulation.
     """
-    if lake_name == "NohipaloMustjarv" or lake_name =="Nohipalo_Mustjarv":
-        file = 'NoM'
-    elif lake_name == "NohipaloValgejarv" or lake_name == "Nohipalo_Valgejarv":
-        file = 'NoV'
-    elif lake_name == "Crystal_lake" or lake_name == "Crystal":
-        file = 'CRY'
-    elif lake_name == "Crystal_Bog" or lake_name == "CrystalB":
-        file = 'CrB'
-    else:
-        file = lake_name[:3]
+    prefix = lake_name[:3]
+
+    if lake_name == "Nohipalo_Valgejarv":
+        prefix = 'NoV'
+    elif lake_name == "Nohipalo_Mustjarv":
+        prefix = 'NoM'
+    elif lake_name == "Crystal_Bog":
+        prefix = 'CrB'
+    elif lake_name == "Great_Pond":
+        prefix = 'GrP'
+    elif lake_name == "Trout_Bog":
+        prefix = 'TrB'
+    elif lake_name == "Mt_Bold":
+        prefix = 'MtB'
+    file = prefix
     with open("{}/{}_par".format(input_folder, file), "r") as param_file:
         for line in param_file.readlines():
             if "C_shelter" in line:
@@ -1133,11 +1170,14 @@ def run_optimization_Mylake_save(lake_name, input_directory,outdir,observation_p
             break
 
     if depths != None:
-        run_myLake_ISIMIP.run_myLake(run_myLake_ISIMIP.init_info(lake_name, "observations/{}/{}".format(region, lake_name)), region, lake_name, modelid, scenarioid,
-                                     flag="calibration")
+        # run_myLake_ISIMIP.run_myLake(run_myLake_ISIMIP.init_info(lake_name, "observations/{}/{}".format(region, lake_name)),
+        #                              region, lake_name, modelid, scenarioid,flag="calibration")
+        if not os.path.exists("{}/Observed_Temperatures.csv".format(outdir)):
+            temperatures_by_depth(observation_path, lake_name, outdir, modelid, scenarioid)
 
         try:
             make_comparison_file(outdir,depths)
+            data = pd.read_csv("{}/T_comparison.csv".format(outdir))
 
             score = performance_analysis(lake_name, input_directory, outdir)
 
@@ -1191,25 +1231,32 @@ def run_optimization_Mylake(lake_name, observation_path, input_directory, region
             break
 
     if depths != None:
-        #run_myLake_ISIMIP.mylakepar(retreive_longitude(lake_name), retreive_latitude(lake_name), lake_name,
-        #                            input_directory,
-        #                            kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
+        run_myLake_ISIMIP.mylakepar(retreive_longitude(lake_name), retreive_latitude(lake_name), lake_name,
+                                   input_directory,
+                                   kz_N0, c_shelter, alb_melt_ice, alb_melt_snow, i_scv, i_sct, swa_b0, swa_b1)
 
-        #run_myLake_ISIMIP.run_myLake(run_myLake_ISIMIP.init_info(lake_name, "observations/{}/{}".format(region, lake_name)).get("outdir"), region, lake_name, modelid, scenarioid,
-         #                           flag="calibration")
-
-
+        run_myLake_ISIMIP.run_myLake(run_myLake_ISIMIP.init_info(lake_name, "observations/{}/{}".format(region, lake_name)).get("outdir"), region, lake_name, modelid, scenarioid,
+                                    flag="calibration")
+        if not os.path.exists("{}/Observed_Temperatures.csv".format(outdir)):
+            temperatures_by_depth(observation_path, lake_name, outdir, modelid, scenarioid)
         try:
-            make_comparison_file(outdir,depths)
+            if not os.path.exists('D:\output\%s\%s\EWEMBI\historical\problem.txt' % (region, lake_name)):
+                make_comparison_file(outdir,depths,lake_name)
+                data = pd.read_csv("{}/T_comparison.csv".format(outdir))
+                if len(data.index) < 2:
+                    x = 1 / 0
+                score = performance_analysis(lake_name, input_directory, outdir)
+                return score
 
-            score = performance_analysis(lake_name, input_directory, outdir)
-            return score
 
-
+            else:
+                os.remove('D:\output\%s\%s\EWEMBI\historical\problem.txt' % (region, lake_name))
+                return -1
         except ValueError:
             print('error value')
-            X = 1/0
+            X = 1 / 0
             return -1
+
         except ZeroDivisionError:
             print('zero division')
             X = 1 / 0
@@ -1225,28 +1272,27 @@ def optimize_differential_evolution(lake_name, observation_path, input_directory
 
     params_0 = np.array([0, 0.3, 0.55, 1, 0, 2.5, 1])
     bounds = [(0.001, 0.000001), (0, 1), (0.4, 1), (0.4, 1), (0.4, 4), (0.4, 2)]
-
     try:
         res = differential_evolution(func, bounds, tol=10, disp=True)
         print(res)
 
-        # success = float(res.get('fun'))
-        #
-        # if res == -1:
-        #     print("Couldn't do {}".format(lake_name))
-        #     x= 1/0
-        #     return res
-        # else:
-        #     params = tuple(res.get('x'[0]))
-        #     orig_stdout = sys.stdout
-        #     with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
-        #         sys.stdout = end_file
-        #         run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid,
-        #                                 params)
-        #         end_file.writelines(["Calibration results:", str(res)])
-        #         sys.stdout = orig_stdout
-        #
-        #     return res
+        success = float(res.get('fun'))
+
+        if res == -1:
+            print("Couldn't do {}".format(lake_name))
+            x= 1/0
+            return res
+        else:
+            params = tuple(res.get('x'[0]))
+            orig_stdout = sys.stdout
+            with open("{}/Calibration_Complete.txt".format(outdir), "w") as end_file:
+                sys.stdout = end_file
+                run_optimization_Mylake(lake_name, observation_path, input_directory, region, outdir, modelid, scenarioid,
+                                        params)
+                end_file.writelines(["Calibration results:", str(res)])
+                sys.stdout = orig_stdout
+
+            return res
     except:
         print('problem when doing calibration')
         outputdir2 = list(outdir.split("/"))
@@ -1274,10 +1320,15 @@ def retreive_longitude(lake):
             reg = region
             break
 
-    with open("observations/{}/{}/{}_hypsometry.csv".format(reg,lake, lake)) as obs:
+    with open("observations/{}/{}/{}_hypsometry_modified.csv".format(reg,lake, lake)) as obs:
         reader = list(csv.reader(obs))
         prefix = reader[1][0][3:]
-
+    if prefix == "Bmu":
+        prefix = "Big"
+    elif prefix == "GRN":
+        prefix = "Gre"
+    elif prefix == "Mug":
+        prefix = "Mue"
     long = 0
 
     with open("input/{}/{}/{}_par".format(reg, prefix, prefix)) as par_file:
@@ -1307,10 +1358,15 @@ def retreive_latitude(lake):
             reg = region
             break
 
-    with open("observations/{}/{}/{}_hypsometry.csv".format(reg,lake, lake)) as obs:
+    with open("observations/{}/{}/{}_hypsometry_modified.csv".format(reg,lake, lake)) as obs:
         reader = list(csv.reader(obs))
         prefix = reader[1][0][3:]
-
+    if prefix == "Bmu":
+        prefix = "Big"
+    elif prefix == "GRN":
+        prefix = "Gre"
+    elif prefix == "Mug":
+        prefix = "Mue"
     lat = 0
     with open("input/{}/{}/{}_par".format(reg, prefix, prefix)) as par_file:
         for line in par_file.readlines():

@@ -51,11 +51,23 @@ def myLake_input(lake_name, model, scenario, forcing_data_directory, input_direc
     :param input_directory: Type string. In a typical run, this is the return value of mylakeinit function.
     :return: No value
     """
-
-    print("Creating input {}_{}_{}_input".format(lake_name[:3], model, scenario))
+    prefix = lake_name[:3]
+    if lake_name == "Nohipalo_Valgejarv":
+        prefix = 'NoV'
+    elif lake_name == "Nohipalo_Mustjarv":
+        prefix = 'NoM'
+    elif lake_name == "Crystal_Bog":
+        prefix = 'CrB'
+    elif lake_name == "Great_Pond":
+        prefix = 'GrP'
+    elif lake_name == "Trout_Bog":
+        prefix = 'TrB'
+    elif lake_name == "Mt_Bold":
+        prefix = 'MtB'
+    print("Creating input {}_{}_{}_input".format(prefix, model, scenario))
     sucess = 0
-    print(os.path.join(input_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)))
-    if not os.path.exists(os.path.join(input_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario))):
+    print(os.path.join(input_directory, "{}_{}_{}_input".format(prefix, model, scenario)))
+    if not os.path.exists(os.path.join(input_directory, "{}_{}_{}_input".format(prefix, model, scenario))):
         if sucess == 0:
             list_dict = {"Year": [], "Month": [], "Day": [], "hurs": [], "pr": [], "ps": [], "rsds": [], "sfcWind": [], "tas": []}
             start_time = "2006-01-01"
@@ -64,7 +76,7 @@ def myLake_input(lake_name, model, scenario, forcing_data_directory, input_direc
 
             if model == "EWEMBI": start_time = "1979-01-01"
 
-            with open(os.path.join(input_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)), "w") as input_file:
+            with open(os.path.join(input_directory, "{}_{}_{}_input".format(prefix, model, scenario)), "w") as input_file:
 
                 input_file.writelines(["-999\tMyLake Input\n", "Year\tMonth\tDay\tGlobal radiation (MJ/m2)\tCloud cover(-)\t"
                                         "Air temperature (deg C)\tRelative humidity (%)\tAir pressure (hPa)\tWind speed (m/s)\t"
@@ -182,11 +194,11 @@ def myLake_input(lake_name, model, scenario, forcing_data_directory, input_direc
                     print("problem with input")
 
     if sucess == 1:
-        print("{}_{}_{}_input Done".format(lake_name[:3], model, scenario))
+        print("{}_{}_{}_input Done".format(prefix, model, scenario))
     else:
-        print("variable missing for {}_{}_{}_input ".format(lake_name[:3], model, scenario))
-        if os.path.exists(os.path.join(input_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario))):
-            os.remove(os.path.join(input_directory, "{}_{}_{}_input".format(lake_name[:3], model, scenario)))
+        print("variable missing for {}_{}_{}_input ".format(prefix, model, scenario))
+        if os.path.exists(os.path.join(input_directory, "{}_{}_{}_input".format(prefix, model, scenario))):
+            os.remove(os.path.join(input_directory, "{}_{}_{}_input".format(prefix, model, scenario)))
 
 
 
@@ -238,14 +250,26 @@ def init_info(lakeName, observation_path, date_init = 101):
     :return: Type dict. depth_levels, areas, w_temp (mean temperatures) and outhpath as keys, and lists of values as values.
              outhpath has the output directory path as a value instead, as a string.
     """
-    if os.path.exists("{}/{}_hypsometry2.csv".format(observation_path, lakeName)):
-        with open("{}/{}_hypsometry2.csv".format(observation_path, lakeName), "r") as obs:
+    if os.path.exists("{}/{}_hypsometry_modified.csv".format(observation_path, lakeName)):
+        with open("{}/{}_hypsometry_modified.csv".format(observation_path, lakeName), "r") as obs:
             reader = list(csv.reader(obs))[1:]
             out_dir, out_folder = reader[0][0][:2], lakeName[:3]
             outdir = os.path.join("input", "{}".format(out_dir), "{}".format(out_folder))
             depth_levels = []
             areas = []
-
+            out_folder = lakeName[:3]
+            if lakeName == "Nohipalo_Valgejarv":
+                out_folder = 'NoV'
+            elif lakeName == "Nohipalo_Mustjarv":
+                out_folder = 'NoM'
+            elif lakeName == "Crystal_Bog":
+                out_folder = 'CrB'
+            elif lakeName == "Great_Pond":
+                out_folder = 'GrP'
+            elif lakeName == "Trout_Bog":
+                out_folder = 'TrB'
+            elif lakeName == "Mt_Bold":
+                out_folder = 'MtB'
 
 
 
@@ -428,7 +452,7 @@ def missing_temp(temp_list, depth_levels):
                 observed_depths.append(depth)
 
             else:
-                temp_list.insert(depth_levels.index(depth), numpy.interp(depth, observed_depths, temp_list))
+                temp_list.insert(depth_levels.index(depth), np.interp(depth, observed_depths, temp_list))
                 observed_depths.insert(depth_levels.index(depth), depth)
 
     return temp_list
@@ -452,8 +476,23 @@ def mylakepar(longitude, latitude, lake_name, outdir, kz_N0 = 0.00007, c_shelter
 
     :return: None
     """
-    outpath = outdir + "\{}_par".format(lake_name[:3])
-    if not os.path.exists(outpath):
+    prefix = lake_name[:3]
+
+    if lake_name == "Nohipalo_Valgejarv":
+        prefix = 'NoV'
+    elif lake_name == "Nohipalo_Mustjarv":
+        prefix = 'NoM'
+    elif lake_name == "Crystal_Bog":
+        prefix = 'CrB'
+    elif lake_name == "Great_Pond":
+        prefix = 'GrP'
+    elif lake_name == "Trout_Bog":
+        prefix = 'TrB'
+    elif lake_name == "Mt_Bold":
+        prefix = 'MtB'
+    outpath = outdir + "\{}_par".format(prefix)
+    if 1==1:
+    #if not os.path.exists(outpath):
         if os.path.isfile ( "LAE_para_all1.txt" ): #this file allows change of the four coefficients, if nothing is given, will uses initial values
             print('using file')
             with open ( "LAE_para_all1.txt", "r" ) as infile:
@@ -524,7 +563,7 @@ def mylakepar(longitude, latitude, lake_name, outdir, kz_N0 = 0.00007, c_shelter
             I_scO	1	NaN NaN (-)
             ''' % (kz_N0, c_shelter, latitude, longitude, alb_melt_ice, alb_melt_snow, i_scv, i_sct, I_scDOC, swa_b0, swa_b1, k_BOD, k_SOD)
 
-        outpath = outdir + "\{}_par".format(lake_name[:3])
+        outpath = outdir + "\{}_par".format(prefix)
 
         with open(outpath, 'w') as f:
             f.write(out)
@@ -588,9 +627,22 @@ def generate_input_files(observation_path, lake_name, f_lake_name, forcing_data_
 
 
     outdir = mylakeinit(init_info(lake_name, observation_path))
-
-    #if not (os.path.exists(r"{}\{}_par".format(outdir, lake_name[:3]))):
-    mylakepar(longitude, latitude, lake_name, outdir)
+    prefix = lake_name[:3]
+    if lake_name == "Nohipalo_Valgejarv":
+        prefix = 'NoV'
+    elif lake_name == "Nohipalo_Mustjarv":
+        prefix = 'NoM'
+    elif lake_name == "Crystal_Bog":
+        prefix = 'CrB'
+    elif lake_name == "Great_Pond":
+        prefix = 'GrP'
+    elif lake_name == "Trout_Bog":
+        prefix = 'TrB'
+    elif lake_name == "Mt_Bold":
+        prefix = 'MtB'
+    print("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake_name))
+    if not os.path.exists("D:\output/{}/{}/EWEMBI/historical/Calibration_Complete.txt".format(reg, lake_name)):
+        mylakepar(longitude, latitude, lake_name, outdir)
     myLake_input(f_lake_name, model, scenario, forcing_data_directory, outdir)
 
 def simulation_years(scenarioid):
@@ -619,14 +671,34 @@ def run_myLake( input_directory, region, lakeName, modelid, scenarioid, flag = N
     :return: None
     """
 
-    with open("observations/{}/{}/{}_hypsometry2.csv".format(region,lakeName, lakeName)) as obs:
+    with open("observations/{}/{}/{}_hypsometry_modified.csv".format(region,lakeName, lakeName)) as obs:
         reader = list(csv.reader(obs))
         prefix = reader[1][0][3:]
+    prefix = lakeName[:3]
+    if lakeName == "Nohipalo_Valgejarv":
+        prefix = 'NoV'
+    elif lakeName == "Nohipalo_Mustjarv":
+        prefix = 'NoM'
+    elif lakeName == "Crystal_Bog":
+        prefix = 'CrB'
+    elif lakeName == "Great_Pond":
+        prefix = 'GrP'
+    elif lakeName == "Trout_Bog":
+        prefix = 'TrB'
+    elif lakeName == "Mt_Bold":
+        prefix = 'MtB'
 
+    if prefix == "Bmu":
+        prefix = "Big"
+    elif prefix == "GRN":
+        prefix = "Gre"
+    elif prefix == "Mug":
+        prefix = "Mue"
     print(input_directory, "{}_init".format(prefix))
     init_file = os.path.join(input_directory, "{}_init".format(prefix))
     parameter_file = os.path.join(input_directory, "{}_par".format(prefix))
-    input_file = os.path.join(input_directory, "{}_{}_{}_input".format(prefix, modelid, scenarioid))
+    input_file = os.path.join(input_directory, r"{}_{}_{}_input".format(prefix, modelid, scenarioid))
+    input_file = os.path.join(input_directory, r"{}_{}_{}_input".format(prefix, modelid, scenarioid))
     outfolder = os.path.join(r"D:\output", region, lakeName, modelid, scenarioid)
 
     # if flag == "calibration":   #Ideally, calibrations are done using 2013 and 2014 as the years. If not possible, the two last years of observations are used
@@ -682,7 +754,7 @@ def run_myLake( input_directory, region, lakeName, modelid, scenarioid, flag = N
     # else:
     #y1, y2 = simulation_years(scenarioid)
     if modelid =="EWEMBI":
-       y1,y2 = 1979,2016
+        y1, y2 = 1979, 2016
     elif modelid== "GFDL-ESM2M" and scenarioid == 'piControl':
         y1,y2 = 1661,2099
     elif modelid== "GFDL-ESM2M" and scenarioid == 'rcp26':
@@ -692,15 +764,29 @@ def run_myLake( input_directory, region, lakeName, modelid, scenarioid, flag = N
     else:
         y1,y2= simulation_years(scenarioid)
 
+    if lakeName == "Laramie_Lake" and modelid=="EWEMBI":
+        y1,y2 = 2013,2016
+    # elif lakeName == "Tarawera":
+    #     y1,y2 = 1994,2016
+    # if prefix == "Alq":
+    #     y1 = 2012
+    # elif prefix == "Gre":
+    #     y1 = 2000
+    # elif prefix == "Lar":
+    #     y1 = 2010
+    # elif prefix == "Rap":
+    #     y1 = 2012
     ret=False
     if not os.path.exists(outfolder):
         os.makedirs(outfolder)
     expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'lambdazt.csv', 'Kzt.csv',
-                  'Qzt_sed.csv']#,"strat.csv","watertemp.csv","thermodepth.csv","ice.csv","lakeicefrac.csv",
-                  #"snowtick.csv","sensheatf.csv","latentheatf.csv","lakeheatf.csv","albedo.csv","turbdiffheat.csv","sedheatf.csv"]
+                  'Qzt_sed.csv']#,"strat.csv", "watertemp.csv", "thermodepth.csv", "ice.csv", "icetick.csv","snowtick.csv",
+    # "sensheatf.csv", "latentheatf.csv", "lakeheatf.csv", "albedo.csv","turbdiffheat.csv","sedheatf.csv"]
 
 
     if y2 - y1 > 100:
+        alldate1 = 0
+        alldate = 0
         years = [y1]
         if y1 == 2006:
             yinit = 2011
@@ -711,6 +797,9 @@ def run_myLake( input_directory, region, lakeName, modelid, scenarioid, flag = N
         all_files = []
         yrange = range(0, len(years) - 1)
         for i in range(0, len(years) - 1):
+            alldate +=1
+            expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'lambdazt.csv', 'Kzt.csv',
+                          'Qzt_sed.csv']
             test = (years[i])
 
             if i + 1 != len(years) - 1:
@@ -722,19 +811,19 @@ def run_myLake( input_directory, region, lakeName, modelid, scenarioid, flag = N
                 yinit = years[i]
                 yend = years[i + 1]
                 print(yinit, yend)
-
             outfolder2 = os.path.join(outfolder, "%s_%s" % (yinit, yend))
             all_files.append(outfolder2)
             if not os.path.exists(outfolder2):
                 os.makedirs(outfolder2)
+            if not os.path.exists(os.path.join(outfolder2, 'RunComplete1')):
 
-            if not os.path.exists(os.path.join(outfolder2, 'RunComplete')):
+                if not os.path.exists(os.path.join(outfolder2, 'RunComplete')):
 
 
-                cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, yinit, yend, outfolder2)
-                print(cmd)
+                    cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, yinit, yend, outfolder2)
+                    print(cmd)
 
-                os.system(cmd)
+                    os.system(cmd)
 
                 flags = [os.path.exists(os.path.join(outfolder2, f)) for f in expectedfs]
 
@@ -745,57 +834,93 @@ def run_myLake( input_directory, region, lakeName, modelid, scenarioid, flag = N
                     ret = outputfile(yinit, yend, outfolder2)
                     with open(os.path.join(outfolder2, 'RunComplete'), 'w') as f:
                         f.write(datetime.datetime.now().isoformat())
-                    for f in expectedfs:
-                        folder = os.path.join(outfolder2, f)
+                    #for f in expectedfs:
+                    #    folder = os.path.join(outfolder2, f)
 
-        # expectedfs = ["strat.csv", "watertemp.csv", "thermodepth.csv", "ice.csv", "lakeicefrac.csv",
-        #               "snowtick.csv", "sensheatf.csv", "latentheatf.csv", "lakeheatf.csv", "albedo.csv",
-        #               "turbdiffheat.csv",
-        #               "sedheatf.csv"]
+                expectedfs = ["strat.csv", "watertemp.csv", "thermodepth.csv", "ice.csv", "icetick.csv",
+                          "snowtick.csv", "sensheatf.csv", "latentheatf.csv", "lakeheatf.csv", "albedo.csv",
+                          "turbdiffheat.csv","sedheatf.csv"]
 
-        # for finalfile in expectedfs:
-        #     if not os.path.exists(os.path.join(outfolder,finalfile)):
-        #         with open(os.path.join(outfolder,finalfile), 'w') as outfile:
-        #             for i, filename in enumerate(all_files):
-        #                 if os.path.exists(os.path.join(filename,finalfile)):
-        #                     with open(os.path.join(filename,finalfile), 'r') as infile:
-        #                         for rownum, line in enumerate(infile):
-        #                             outfile.write(line)
-        # ret = outputfile(y1, y2, outfolder)
-        #
-        # flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
+                # for finalfile in expectedfs:
+                #     if not os.path.exists(os.path.join(outfolder,finalfile)):
+                #         with open(os.path.join(outfolder,finalfile), 'w') as outfile:
+                #             for i, filename in enumerate(all_files):
+                #                 if os.path.exists(os.path.join(filename,finalfile)):
+                #                     with open(os.path.join(filename,finalfile), 'r') as infile:
+                #                         for rownum, line in enumerate(infile):
+                #                             outfile.write(line)
+                # ret = outputfile(y1, y2, outfolder)
+                #
+                flags = [os.path.exists(os.path.join(outfolder2, f)) for f in expectedfs]
 
-        if all(flags) :
-            with open(os.path.join(outfolder, 'RunComplete2'), 'w') as f:
+                if all(flags) :
+                    with open(os.path.join(outfolder2, 'RunComplete1'), 'w') as f:
+                        f.write(datetime.datetime.now().isoformat())
+                    alldate1 += 1
+                else:
+                    output = "incomplete_%s_%s" % (yinit, yend)
+                    for i in np.arange(0, len(flags)):
+                        if flags[i] is False:
+                            output = output + '_' + expectedfs[i]
+                    with open(os.path.join(outfolder, output), 'w') as f:
+                        f.write(datetime.datetime.now().isoformat())
+
+            else:
+                alldate1 += 1
+
+                flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
+                if all(flags) and flag != "calibration":
+                  # if modelid != "EwembI":
+            #if outputfile(y1, y2, outfolder) == True:
+                  ret = outputfile(y1, y2, outfolder)
+                  with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
+                      f.write(datetime.datetime.now().isoformat())
+        if alldate == alldate1:
+            with open(os.path.join(outfolder, 'RunComplete1'), 'w') as f:
                 f.write(datetime.datetime.now().isoformat())
- #       flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
- #       if all(flags) and flag != "calibration":
- #           # if modelid != "EwembI":
-            #     #if outputfile(y1, y2, outfolder) == True:
+        else:
+            with open(os.path.join(outfolder, 'Incomplete'), 'w') as f:
+                f.write(datetime.datetime.now().isoformat())
 
- #           ret = outputfile(y1, y2, outfolder)
- #           with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
- #               f.write(datetime.datetime.now().isoformat())
+
 
     else:
+        if not os.path.exists(os.path.join(outfolder, 'RunComplete1')):
+            expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'lambdazt.csv', 'Kzt.csv',
+                          'Qzt_sed.csv']
+            print("here")
+            if not os.path.exists ( outfolder ):
+                os.makedirs ( outfolder )
+            print(init_file)
+            if not os.path.exists(os.path.join(outfolder, 'RunComplete')):
+                cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
+                print ( cmd )
+                os.system ( cmd )
 
-        print("here")
-        if not os.path.exists ( outfolder ):
-            os.makedirs ( outfolder )
-        if 1==1:#not os.path.exists(os.path.join(outfolder, 'RunComplete')):
-            cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\');quit' % (init_file, parameter_file, input_file, y1, y2, outfolder)
-            print ( cmd )
-            os.system ( cmd )
+            flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
+            if all(flags):# and flag != "calibration":
+                # if modelid != "EwembI":
+                #     #if outputfile(y1, y2, outfolder) == True:
 
-        flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
-        if all(flags):# and flag != "calibration":
-            # if modelid != "EwembI":
-            #     #if outputfile(y1, y2, outfolder) == True:
+                ret = outputfile(y1, y2, outfolder)
+                with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
+                    f.write(datetime.datetime.now().isoformat())
 
-            ret = outputfile(y1, y2, outfolder)
-            with open(os.path.join(outfolder, 'RunComplete'), 'w') as f:
-                f.write(datetime.datetime.now().isoformat())
+            expectedfs = ["strat.csv", "watertemp.csv", "thermodepth.csv", "ice.csv", "icetick.csv",
+                          "snowtick.csv", "sensheatf.csv", "latentheatf.csv", "lakeheatf.csv", "albedo.csv",
+                          "turbdiffheat.csv","sedheatf.csv"]
+            flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
 
+            if all(flags):
+                with open(os.path.join(outfolder, 'RunComplete1'), 'w') as f:
+                    f.write(datetime.datetime.now().isoformat())
+            else:
+                output = "incomplete"
+                for i in np.arange(0,len(flags)):
+                    if flags[i] is False:
+                        output = output + '_' + expectedfs[i]
+                with open(os.path.join(outfolder, output), 'w') as f:
+                    f.write(datetime.datetime.now().isoformat())
 
         # flags = [os.path.exists(os.path.join(outfolder, f)) for f in expectedfs]
         #
@@ -836,142 +961,254 @@ def outputfile(y1,y2,outfolder):
         dates = [d.strftime('%Y-%m-%d') for d in pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='D')]
     # "strat.csv,watertemp.csv,thermodepth.csv,ice.csv,lakeicefrac.csv,snowtick.csv,sensheatf.csv,latentheatf.csv,lakeheatf.csv,albedo.csv,turbdiffheat.csv,sedheatf.csv"
     print("run output")
-    try:
-        if 1==1:
-        #if not os.path.exists(os.path.join(outfolder, "strat.csv")) and not os.path.exists(os.path.join(outfolder, "watertemp.csv")) and not os.path.exists(os.path.join(outfolder, "thermodepth.csv")):
+    if 1==1:
+    #try:
+
+        if not os.path.exists(os.path.join(outfolder, "strat.csv")) or not os.path.exists(os.path.join(outfolder, "watertemp.csv")) \
+                or not os.path.exists(os.path.join(outfolder, "thermodepth.csv")):
+
             with open("{}/Tzt.csv".format(outfolder), "r") as observation_file:
-                rows = list(csv.reader(observation_file))
-                strat = []
-                density = []
-                maxdensity =[]
-                watertemp = []
-                for i in range(0, len(rows)):
-                    data = rows[i]
-                    row = ["%s, 00:00:00"%dates[i]]
-                    waterrow = ["%s, 00:00:00"%dates[i]]
-                    maxrowdensity = ["%s, 00:00:00"%dates[i]]
-                    if abs(calculatedensity(float(data[0]))-calculatedensity(float(data[-1]))) > 0.1:
-                        row.append(1)
-                    else:
-                        row.append(0)
-                    strat.append(row)
+                if 1==1:#try:
+                    rows = list(csv.reader(observation_file))
+
+                    strat = []
                     density = []
-                    for j in range(0, len(data)):
-                        density.append(calculatedensity(float(data[j])))
-                        waterrow.append(float(data[j])+273.15)
-                    watertemp.append(waterrow)
-                    maxrowdensity.append(density.index(max(density)))
-                    maxdensity.append(maxrowdensity)
-                with open(os.path.join(outfolder, "strat.csv"), "w", newline="") as f:
-                    writer = csv.writer(f)
-                    writer.writerows(strat)
-                with open(os.path.join(outfolder, "watertemp.csv"), "w", newline="") as f2:
-                    writer = csv.writer(f2)
-                    writer.writerows(watertemp)
-                with open(os.path.join(outfolder, "thermodepth.csv"), "w", newline="") as f1:
-                    writer = csv.writer(f1)
-                    writer.writerows(maxdensity)
+                    maxdensity =[]
+                    watertemp = []
+                    for i in range(0, len(rows)):
+                        if 1==1:#try:
+                            print('%s of %s'%(i,len(rows)))
+                            data = rows[i]
+
+                            row = ["%s, 00:00:00"%dates[i]]
+                            waterrow = ["%s, 00:00:00"%dates[i]]
+                            maxrowdensity = ["%s, 00:00:00"%dates[i]]
+
+                            if abs(calculatedensity(float(data[0]))-calculatedensity(float(data[-1]))) > 0.1:
+                                row.append(1)
+                            else:
+                                row.append(0)
+                            strat.append(row)
+                            density = []
+
+                            for j in range(0, len(data)):
+                                density.append(calculatedensity(float(data[j])))
+                                waterrow.append(float(data[j])+273.15)
+
+                            watertemp.append(waterrow)
+                            maxrowdensity.append(density.index(max(density)))
+                            maxdensity.append(maxrowdensity)
+                        #except:
+                         #   print("here")
+                    if not os.path.exists(os.path.join(outfolder, "strat.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "strat.csv"), "w", newline="") as f:
+                                writer = csv.writer(f)
+                                writer.writerows(strat)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "strat.csv")):
+                                os.remove(os.path.join(outfolder, "strat.csv"))
+                    if not os.path.exists(os.path.join(outfolder, "watertemp.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "watertemp.csv"), "w", newline="") as f2:
+                                writer = csv.writer(f2)
+                                writer.writerows(watertemp)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "watertemp.csv")):
+                                os.remove(os.path.join(outfolder, "watertemp.csv"))
+
+                    if not os.path.exists( os.path.join(outfolder, "thermodepth.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "thermodepth.csv"), "w", newline="") as f1:
+                                writer = csv.writer(f1)
+                                writer.writerows(maxdensity)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "thermodepth.csv")):
+                                os.remove(os.path.join(outfolder, "thermodepth.csv"))
+                #except:
+                #    print("error")
 
 
 
-        #if not os.path.exists(os.path.join(outfolder, "ice.csv")) and not os.path.exists(os.path.join(outfolder,  "lakeicefrac.csv")) and not os.path.exists(os.path.join(outfolder, "snowtick.csv")):
-            with open("{}/His.csv".format(outfolder), "r") as ice_file:
-                rows = list(csv.reader(ice_file))
-                ice = []
-                lakeicefrac = []
-                snowtick = []
-                for i in range(0, len(rows)):
-                    data = rows[i]
-                    ice.append(["%s, 00:00:00"%dates[i],float(data[6])])
-                    lakeicefrac.append(["%s, 00:00:00"%dates[i],float(data[0])])
-                    snowtick.append(["%s, 00:00:00"%dates[i],float(data[2])])
-                with open(os.path.join(outfolder, "ice.csv"), "w", newline="") as f3:
-                    writer = csv.writer(f3)
-                    writer.writerows(ice)
-                with open(os.path.join(outfolder, "lakeicefrac.csv"), "w", newline="") as f4:
-                    writer = csv.writer(f4)
-                    writer.writerows(lakeicefrac)
-                with open(os.path.join(outfolder, "snowtick.csv"), "w", newline="") as f4:
-                    writer = csv.writer(f4)
-                    writer.writerows(snowtick)
+        if not os.path.exists(os.path.join(outfolder, "ice.csv")) or not os.path.exists(os.path.join(outfolder,  "icetick.csv")) \
+                 or not os.path.exists(os.path.join(outfolder, "snowtick.csv")):
+            if 1==1:#try:
+                with open("{}/His.csv".format(outfolder), "r") as ice_file:
+                    rows = list(csv.reader(ice_file))
+                    ice = []
+                    lakeicefrac = []
+                    snowtick = []
+                    for i in range(0, len(rows)):
+                        data = rows[i]
+                        ice.append(["%s, 00:00:00"%dates[i],float(data[6])])
+                        lakeicefrac.append(["%s, 00:00:00"%dates[i],float(data[0])])
+                        snowtick.append(["%s, 00:00:00"%dates[i],float(data[2])])
+                    if not os.path.exists(os.path.join(outfolder, "ice.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "ice.csv"), "w", newline="") as f3:
+                                writer = csv.writer(f3)
+                                writer.writerows(ice)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "ice.csv")):
+                                os.remove(os.path.join(outfolder, "ice.csv"))
+
+                    if not os.path.exists(os.path.join(outfolder, "icetick.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "icetick.csv"), "w", newline="") as f4:
+                                writer = csv.writer(f4)
+                                writer.writerows(lakeicefrac)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "icetick.csv")):
+                                os.remove(os.path.join(outfolder, "icetick.csv"))
+
+                    if not os.path.exists(os.path.join(outfolder, "snowtick.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "snowtick.csv"), "w", newline="") as f4:
+                                writer = csv.writer(f4)
+                                writer.writerows(snowtick)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "snowtick.csv")):
+                                os.remove(os.path.join(outfolder, "snowtick.csv"))
+            # except:
+            #     print("errpr his")
 
 
-        #if not os.path.exists(os.path.join(outfolder,"sensheatf.csv")) and not os.path.exists(os.path.join(outfolder, "latentheatf.csv")) and not os.path.exists(os.path.join(outfolder, "lakeheatf.csv")) and not os.path.exists(os.path.join(outfolder, "albedo.csv")):
+        if not os.path.exists(os.path.join(outfolder,"sensheatf.csv")) or not os.path.exists(os.path.join(outfolder, "latentheatf.csv")) \
+                or not os.path.exists(os.path.join(outfolder, "lakeheatf.csv")) or not os.path.exists(os.path.join(outfolder, "albedo.csv")):
 
             his = pd.read_csv("{}/His.csv".format(outfolder),names =['0','1','2','3','4','5','6','7'])
-            dates1 = pd.date_range(start='1-1-%s'%y1, periods=len(his))
-            his = his.set_index(dates1)
-            icetemp = his['3'].groupby(pd.Grouper(freq="M",convention='s')).mean()
-            icetemp.to_csv("{}/icetemp.csv".format(outfolder),header=False)
+            print(len(his),len(dates))
+            if dates[0] == '1661-01-01':
+                dates1 = [d.strftime('%Y-%m-%d') for d in pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='M')]
+                y1,y2 = 1681,1780
+                dates = [d.strftime('%Y-%m-%d') for d in pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='D')]
+                print(len(his), len(dates))
+            elif dates[0] == '2211-01-01':
+                dates1 = [d.strftime('%Y-%m-%d') for d in
+                          pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='M')]
+                y1, y2 = 2111,2199
+                dates = [d.strftime('%Y-%m-%d') for d in
+                         pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='D')]
+                print(len(his), len(dates))
+            elif dates[0] == '2261-01-01':
+                dates1 = [d.strftime('%Y-%m-%d') for d in
+                          pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='M')]
+                y1, y2 = 2161,2199
+                dates = [d.strftime('%Y-%m-%d') for d in
+                         pd.period_range('%s-01-01' % (y1), '%s-12-31' % (y2), freq='D')]
+                print(len(his), len(dates))
+            his['date'] = dates
+            his['datetime'] = pd.to_datetime(his['date'])
+            #dates1 = pd.date_range(start='1-1-%s'%y1, periods=len(his))
+            his = his.set_index('datetime')
+            # icetemp = his['3'].groupby(pd.Grouper(freq="M",convention='s')).mean()
+            # icetemp = icetemp.reset_index()
+            # icetemp['datetime'] = dates1
+            #
+            # icetemp.to_csv("{}/icetemp.csv".format(outfolder),header=False,index=False)
 
             turbdiffheat = []
-            with open("{}/Qst.csv".format(outfolder), "r") as qst_file:
-                rows = list(csv.reader(qst_file))
-                sensheatf = []
-                latentheatf = []
-                lakeheatf = []
-                albedo = []
-                for i in range(0, len(rows)):
-                    data = rows[i]
-                    sensheatf.append(["%s, 00:00:00"%dates[i], float(data[3])])
-                    latentheatf.append(["%s, 00:00:00"%dates[i], float(data[4])])
-                    lakeheatf.append(["%s, 00:00:00"%dates[i], float(data[0])+float(data[1])-float(data[2])])
-                    albedo.append(["%s, 00:00:00"%dates[i], float(data[5])])
+            if 1==1:#try:
+                with open("{}/Qst.csv".format(outfolder), "r") as qst_file:
+                    rows = list(csv.reader(qst_file))
+                    sensheatf = []
+                    latentheatf = []
+                    lakeheatf = []
+                    albedo = []
+                    for i in range(0, len(rows)):
+                        data = rows[i]
+                        sensheatf.append(["%s, 00:00:00"%dates[i], float(data[3])])
+                        latentheatf.append(["%s, 00:00:00"%dates[i], float(data[4])])
+                        lakeheatf.append(["%s, 00:00:00"%dates[i], float(data[0])+float(data[1])-float(data[2])])
+                        albedo.append(["%s, 00:00:00"%dates[i], float(data[5])])
+                    if not os.path.exists(os.path.join(outfolder, "sensheatf.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "sensheatf.csv"), "w", newline="") as f:
+                                writer = csv.writer(f)
+                                writer.writerows(sensheatf)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "sensheatf.csv")):
+                                os.remove(os.path.join(outfolder, "sensheatf.csv"))
 
-                with open(os.path.join(outfolder, "sensheatf.csv"), "w", newline="") as f:
-                    writer = csv.writer(f)
-                    writer.writerows(sensheatf)
-                with open(os.path.join(outfolder, "latentheatf.csv"), "w", newline="") as f2:
-                    writer = csv.writer(f2)
-                    writer.writerows(latentheatf)
-                with open(os.path.join(outfolder, "lakeheatf.csv"), "w", newline="") as f1:
-                    writer = csv.writer(f1)
-                    writer.writerows(lakeheatf)
-                with open(os.path.join(outfolder, "albedo.csv"), "w", newline="") as f1:
-                    writer = csv.writer(f1)
-                    writer.writerows(albedo)
+                    if not os.path.exists(os.path.join(outfolder, "latentheatf.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "latentheatf.csv"), "w", newline="") as f2:
+                                writer = csv.writer(f2)
+                                writer.writerows(latentheatf)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "latentheatf.csv")):
+                                os.remove(os.path.join(outfolder, "latentheatf.csv"))
 
+                    if not os.path.exists(os.path.join(outfolder, "lakeheatf.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "lakeheatf.csv"), "w", newline="") as f1:
+                                writer = csv.writer(f1)
+                                writer.writerows(lakeheatf)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "lakeheatf.csv")):
+                                os.remove(os.path.join(outfolder, "lakeheatf.csv"))
 
-        #if not os.path.exists(os.path.join(outfolder,  "turbdiffheat.csv")):
+                    if not os.path.exists(os.path.join(outfolder, "albedo.csv")):
+                        try:
+                            with open(os.path.join(outfolder, "albedo.csv"), "w", newline="") as f1:
+                                writer = csv.writer(f1)
+                                writer.writerows(albedo)
+                        except:
+                            if os.path.exists(os.path.join(outfolder, "albedo.csv")):
+                                os.remove(os.path.join(outfolder, "albedo.csv"))
+            # except:
+            #     print("issues with QST")
 
-            with open("{}/Kzt.csv".format(outfolder), "r") as qst_file:
-                rows = list(csv.reader(qst_file))
-                turbdiffheat = []
+        if not os.path.exists(os.path.join(outfolder,  "turbdiffheat.csv")):
 
-                for i in range(0, len(rows)):
-                    data = rows[i]
-                    turbrow = ["%s, 00:00:00"%dates[i]]
+            if 1==1:#try:
+                with open("{}/Kzt.csv".format(outfolder), "r") as qst_file:
+                    rows = list(csv.reader(qst_file))
+                    turbdiffheat = []
 
-                    for j in range(0, len(data)):
-                        turbrow.append(float(data[j]))
-                    turbdiffheat.append(turbrow)
+                    for i in range(0, len(rows)):
+                        data = rows[i]
+                        turbrow = ["%s, 00:00:00"%dates[i]]
+
+                        for j in range(0, len(data)):
+                            turbrow.append(float(data[j]))
+                        turbdiffheat.append(turbrow)
+
 
                 with open(os.path.join(outfolder, "turbdiffheat.csv"), "w", newline="") as f:
                     writer = csv.writer(f)
                     writer.writerows(turbdiffheat)
+            # except:
+            #     if os.path.exists(os.path.join(outfolder, "turbdiffheat.csv")):
+            #         os.remove(os.path.join(outfolder, "turbdiffheat.csv"))
 
 
-        #if not os.path.exists(os.path.join(outfolder, "sedheatf.csv")):
+        if not os.path.exists(os.path.join(outfolder, "sedheatf.csv")):
             with open("{}/Qzt_sed.csv".format(outfolder), "r") as qst_file:
                 rows = list(csv.reader(qst_file))
                 sedheatf = []
 
-                for i in range(0, len(rows)):
-                    data = rows[i]
-                    sedheat = ["%s, 00:00:00"%dates[i]]
+                try:
+                    for i in range(0, len(rows)):
+                        data = rows[i]
+                        sedheat = ["%s, 00:00:00"%dates[i]]
 
-                    for j in range(0, len(data)):
-                        sedheat.append(float(data[j]))
-                    sedheatf.append(sedheat)
+                        for j in range(0, len(data)):
+                            sedheat.append(float(data[j]))
+                        sedheatf.append(sedheat)
 
-                with open(os.path.join(outfolder, "sedheatf.csv"), "w", newline="") as f:
-                    writer = csv.writer(f)
-                    writer.writerows(sedheatf)
+                    if 1==1:
+                        with open(os.path.join(outfolder, "sedheatf.csv"), "w", newline="") as f:
+                            writer = csv.writer(f)
+                            writer.writerows(sedheatf)
+                except:
+                    if os.path.exists(os.path.join(outfolder, "sedheatf.csv")):
+                        os.remove(os.path.join(outfolder, "sedheatf.csv"))
 
 
         ret = True
-    except:
-        ret = False
+    # except:
+    #     ret = False
     return ret
 
 if __name__ == "__main__":
