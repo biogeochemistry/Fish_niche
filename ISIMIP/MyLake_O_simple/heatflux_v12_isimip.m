@@ -6,7 +6,7 @@
 % Last modified by TSA, 03.03.2005
 
 function [Qsw,Qlw,Qsl,tau,Dayfrac,Dayfracheating,sensheatf,latentheatf,average_alb] = heatflux_v12_isimip(t,GR,CC,Ta,Ra,Pa,Ua,Tw,lat,...
-                                                lon,Hs,Hi,alb_melt_ice,alb_melt_snow,alb_table); 
+                                                lon,Hs,Hi,alb_melt_ice,alb_melt_snow,alb_table) 
 global  Eevapor %testing evaporation amounts
 
 % Daily water surface heat balance fluxes
@@ -20,6 +20,9 @@ global  Eevapor %testing evaporation amounts
 % Dayfrac	: Fraction of daylight (-)
 % Dayfracheating	: Fraction of day when sun is above a threshold angle
 % (alt_trsh)  (-); used to partition heat flux calculations into night and daytime
+% sensheatf     : Sensible heat flux at the lake-atmosphere interface % MC 2019-12-20
+% latentheatf	: Latent heat flux at the lake-atmosphere interface % MC 2019-12-20
+% average_alb	: Average daily surface albedo % MC 2019-12-20
 %
 %
 % Input data:
@@ -43,8 +46,8 @@ global  Eevapor %testing evaporation amounts
 % A = hfbulktc(Ua,10,Ta,2,Ra,2,Pa,Tw);
 A = hfbulktc_speed(Ua,10,Ta,2,Ra,2,Pa,Tw); %function modified (speed-up) by TSA
 Qsl = A(:,1) + A(:,2);
-sensheatf = A(:,1);
-latentheatf = A(:,2);
+sensheatf = A(:,1); % MC 2019-12-20
+latentheatf = A(:,2); % MC 2019-12-20
    % Eevapor=Eevapor+A(:,2); %testing evaporation amounts
    % save Eavapor;
 
@@ -98,7 +101,7 @@ else
      alb = albedo_mod(Trnsmiss, alt, alb_table); %modified albedo function to save execution time
 end 
 
-average_alb = nanmean(alb); % MC 2019-12-20
+average_alb = nanmean(alb); % MC 2019-12-20 Created the variable average_alb
 
 Qma = (1 - alb) .* rad .* Trnsmiss;
 

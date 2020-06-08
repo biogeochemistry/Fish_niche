@@ -146,8 +146,22 @@ InputMx = dlmread(input_filename, '\t', 2, 0);
 
  %% changed below 3:end to 1:end 2011-09-29
 In_Date=InputMx(1:end,1:3);
-In_Met=InputMx(1:end,4:10);
-In_Inflow=InputMx(1:end,11:32);
+
+%% MC 2020-01-20 Add this loop to be able to call simulation when the year of m_start is not the first year of data in the input file
+%(Search the year of m_start into the input file and start the data section at that the first date of this year).
+for ii = 1:length(In_Date) 
+    if(In_Date(ii) == M_start(1))
+        break
+    end
+    if (ii == length(In_Date))
+        error('The input file does not contain the given start date.')
+    end
+end
+
+%%
+In_Date=InputMx(ii:end,1:3);
+In_Met=InputMx(ii:end,4:10);
+In_Inflow=InputMx(ii:end,11:32);
 
 tmet=datenum(In_Date);
 
