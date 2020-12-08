@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="BookmarkManager">
+    <bookmark url="file://$PROJECT_DIR$/Main_fish_niche.py" line="555" />
+  </component>
   <component name="ChangeListManager">
     <list default="true" id="d1b2978b-1fda-4432-a990-b065ff11c1f0" name="Default" comment="">
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" beforeDir="false" afterPath="$PROJECT_DIR$/.idea/workspace.xml" afterDir="false" />
@@ -14,14 +17,126 @@
   </component>
   <component name="FileEditorManager">
     <leaf SIDE_TABS_SIZE_LIMIT_KEY="375">
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/lake_information.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="243">
+              <caret line="1054" column="53" lean-forward="true" selection-start-line="1054" selection-start-column="53" selection-end-line="1054" selection-end-column="53" />
+              <folding>
+                <element signature="e#243#253#0" expanded="true" />
+                <element signature="e#1977#2873#0" />
+                <element signature="e#2908#3314#0" />
+                <element signature="e#3356#14948#0" />
+                <element signature="e#15009#16924#0" />
+                <element signature="e#16999#19057#0" />
+                <element signature="e#19107#20336#0" />
+                <element signature="e#20397#21011#0" />
+                <element signature="e#21071#21683#0" />
+                <element signature="e#22292#35179#0" />
+                <element signature="e#46117#47319#0" />
+                <element signature="e#47398#50877#0" />
+                <element signature="e#50943#51350#0" />
+                <element signature="e#51406#53793#0" />
+                <element signature="e#62362#66085#0" />
+                <element signature="e#66502#73788#0" />
+                <element signature="e#69467#71942#0" />
+                <element signature="e#59375#59820#0" />
+                <element signature="e#62722#63465#0" />
+                <element signature="e#63565#64149#0" />
+                <element signature="e#60929#61301#0" />
+                <element signature="e#61340#61678#0" />
+                <element signature="e#65049#65455#0" />
+                <element signature="e#74980#77117#0" />
+                <element signature="e#77160#79769#0" />
+                <element signature="e#80737#81448#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
       <file pinned="false" current-in-tab="true">
+        <entry file="file://$PROJECT_DIR$/Main_fish_niche.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="170">
+              <caret line="832" column="5" selection-start-line="832" selection-start-column="5" selection-end-line="832" selection-end-column="5" />
+              <folding>
+                <element signature="e#193#202#0" expanded="true" />
+                <element signature="e#3608#8467#0" />
+                <element signature="e#3605#6903#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/run_parallel_mylake.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="3094">
-              <caret line="190" column="30" lean-forward="true" selection-start-line="190" selection-start-column="30" selection-end-line="190" selection-end-column="30" />
+            <state relative-caret-position="383">
+              <caret line="134" selection-start-line="134" selection-end-line="134" />
               <folding>
-                <element signature="e#563#585#0" expanded="true" />
+                <element signature="e#439#461#0" expanded="true" />
               </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/thermocline_finder.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="17">
+              <caret line="1" selection-start-line="1" selection-end-line="1" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/../output_analysis_scripts/FishNiche_output_analysis_scripts2.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="165">
+              <caret line="1781" column="59" selection-start-line="1781" selection-start-column="59" selection-end-line="1781" selection-end-column="66" />
+              <folding>
+                <element signature="e#231#300#0" expanded="true" />
+                <element signature="e#2684#5902#0" />
+                <element signature="e#5973#6777#0" />
+                <element signature="e#6877#7415#0" />
+                <element signature="e#7520#14721#0" />
+                <element signature="e#14813#29480#0" />
+                <element signature="e#29552#32712#0" />
+                <element signature="e#32784#37180#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/pandas/io/parsers.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="451">
+              <caret line="1916" selection-start-line="1916" selection-end-line="1916" />
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$PROJECT_DIR$/calibration_fish_niche.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="139">
+              <caret line="123" column="35" selection-start-line="123" selection-start-column="35" selection-end-line="123" selection-end-column="35" />
+              <folding>
+                <element signature="e#418#455#0" expanded="true" />
+                <element signature="e#2522#4718#0" />
+                <element signature="e#6910#9121#0" />
+                <element signature="e#17962#19402#0" />
+              </folding>
+            </state>
+          </provider>
+        </entry>
+      </file>
+      <file pinned="false" current-in-tab="false">
+        <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/pandas/core/frame.py">
+          <provider selected="true" editor-type-id="text-editor">
+            <state relative-caret-position="436">
+              <caret line="2949" selection-start-line="2949" selection-end-line="2949" />
             </state>
           </provider>
         </entry>
@@ -29,17 +144,11 @@
       <file pinned="false" current-in-tab="false">
         <entry file="file://$PROJECT_DIR$/run_mylakeGoran.py">
           <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="6987">
-              <caret line="419" selection-start-line="419" selection-end-line="419" />
-            </state>
-          </provider>
-        </entry>
-      </file>
-      <file pinned="false" current-in-tab="false">
-        <entry file="file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py">
-          <provider selected="true" editor-type-id="text-editor">
-            <state relative-caret-position="25942">
-              <caret line="1550" column="9" selection-start-line="1550" selection-start-column="9" selection-end-line="1550" selection-end-column="9" />
+            <state relative-caret-position="221">
+              <caret line="54" selection-start-line="54" selection-end-line="73" selection-end-column="33" />
+              <folding>
+                <element signature="e#235#253#0" expanded="true" />
+              </folding>
             </state>
           </provider>
         </entry>
@@ -55,37 +164,47 @@
   </component>
   <component name="FindInProjectRecents">
     <findStrings>
-      <find>pA</find>
-      <find>pB</find>
-      <find>outputfolder</find>
-      <find>points</find>
-      <find>path</find>
-      <find>maxgrad_depth</find>
-      <find>outdir</find>
-      <find>cordexfolder</find>
-      <find>url1</find>
-      <find>[lineStart, lineEnd]</find>
-      <find>url2</find>
-      <find>plt.show ()</find>
-      <find>legen</find>
-      <find>grid</find>
-      <find>bold</find>
-      <find>meanbyday</find>
-      <find>fig2</find>
-      <find>fig3</find>
-      <find>fig4</find>
-      <find>lakenum</find>
-      <find>rows</find>
-      <find>layout</find>
-      <find>j</find>
-      <find>m</find>
-      <find>'pearson</find>
-      <find>rmse_%</find>
-      <find>par</find>
-      <find>FishNiche_plot_volume_param</find>
-      <find>His_data</find>
-      <find>generate_timeseries_his_by_model</find>
+      <find>volume</find>
+      <find>err</find>
+      <find>dflow['T'] = np.nan</find>
+      <find>ylakeinput</find>
+      <find>repd</find>
+      <find>-5</find>
+      <find>runl</find>
+      <find>std_secchi</find>
+      <find>root_mean_square</find>
+      <find>ean_squared_error</find>
+      <find>lake_inp</find>
+      <find>summary_info</find>
+      <find>SCATTER</find>
+      <find>comparison_obs_sims</find>
+      <find>group</find>
+      <find>PERFOM</find>
+      <find>r2_score</find>
+      <find>mylakepar</find>
+      <find>summary_characteristics_lak</find>
+      <find>len(lakes_</find>
+      <find>oxy</find>
+      <find>o2</find>
+      <find>input</find>
+      <find>#len(lakes_</find>
+      <find>iterationoxy</find>
+      <find>mylakeinput</find>
+      <find>2020ini</find>
+      <find>len</find>
+      <find>init</find>
+      <find>mylakeinit</find>
     </findStrings>
+    <replaceStrings>
+      <replace>=</replace>
+      <replace>np.nan</replace>
+      <replace>data</replace>
+      <replace>12,10</replace>
+      <replace>10,8</replace>
+      <replace>temp</replace>
+      <replace>oxygen</replace>
+      <replace>(mg/L)</replace>
+    </replaceStrings>
   </component>
   <component name="Git.Settings">
     <option name="RECENT_GIT_ROOT_PATH" value="$PROJECT_DIR$/.." />
@@ -93,10 +212,6 @@
   <component name="IdeDocumentHistory">
     <option name="CHANGED_PATHS">
       <list>
-        <option value="$USER_HOME$/Igemdata/ms2/traitement_donnees.py" />
-        <option value="$PROJECT_DIR$/testt.py" />
-        <option value="G:/figure/Langtjern Raw/water temperature/make_daily_temp_DO_obs.py" />
-        <option value="$PROJECT_DIR$/test.py" />
         <option value="$PROJECT_DIR$/test2.py" />
         <option value="$PROJECT_DIR$/test3.py" />
         <option value="$PROJECT_DIR$/function_runlakesGoran_par_test_modified.py" />
@@ -138,19 +253,24 @@
         <option value="$PROJECT_DIR$/a_faire_rouler.py" />
         <option value="T:/RMC/Usagers/macot620/optimisation - Copy/lakes/a_faire_rouler_rmse.py" />
         <option value="T:/RMC/Usagers/macot620/optimisation_2018_10_12/lakes/a_faire_rouler_rmse.py" />
-        <option value="$PROJECT_DIR$/run_mylakeGoran.py" />
         <option value="$PROJECT_DIR$/run_parallel_mylake.py" />
         <option value="$PROJECT_DIR$/a_faire_rouler_rmse.py" />
         <option value="D:/Fish_niche1/MDN_FishNiche_2017/lakes/FishNiche_output_analysis_scripts2.py" />
         <option value="E:/Fish_niche/lakes/FishNiche_output_analysis_scripts2.py" />
         <option value="$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py" />
+        <option value="$PROJECT_DIR$/thermocline_finder.py" />
+        <option value="$PROJECT_DIR$/calibration_fish_niche.py" />
+        <option value="$PROJECT_DIR$/run_mylakeGoran.py" />
+        <option value="$PROJECT_DIR$/lake_information.py" />
+        <option value="$PROJECT_DIR$/Main_fish_niche.py" />
       </list>
     </option>
   </component>
-  <component name="ProjectFrameBounds">
-    <option name="x" value="-10" />
-    <option name="width" value="1334" />
-    <option name="height" value="1048" />
+  <component name="ProjectFrameBounds" extendedState="7">
+    <option name="x" value="172" />
+    <option name="y" value="35" />
+    <option name="width" value="1743" />
+    <option name="height" value="850" />
   </component>
   <component name="ProjectInspectionProfilesVisibleTreeState">
     <entry key="Project Default">
@@ -193,7 +313,7 @@
   </component>
   <component name="PropertiesComponent">
     <property name="SHARE_PROJECT_CONFIGURATION_FILES" value="true" />
-    <property name="last_opened_file_path" value="$PROJECT_DIR$" />
+    <property name="last_opened_file_path" value="$PROJECT_DIR$/../output_analysis_scripts/FishNiche_output_analysis_scripts2.py" />
     <property name="settings.editor.selected.configurable" value="com.jetbrains.python.configuration.PyActiveSdkModuleConfigurable" />
     <property name="settings.editor.splitter.proportion" value="0.22839017" />
   </component>
@@ -221,7 +341,7 @@
       </list>
     </option>
   </component>
-  <component name="RunManager" selected="Python.FishNiche_output_analysis_scripts2">
+  <component name="RunManager" selected="Python.Main_fish_niche">
     <configuration name="FishNiche_output_analysis_scripts2 (1)" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lakes" />
       <option name="INTERPRETER_OPTIONS" value="" />
@@ -264,7 +384,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="a_faire_rouler" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="Main_fish_niche" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lakes" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -276,7 +396,7 @@
       <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/a_faire_rouler.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/Main_fish_niche.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -306,7 +426,7 @@
       <option name="INPUT_FILE" value="" />
       <method v="2" />
     </configuration>
-    <configuration name="a_faire_rouler_rmse" type="PythonConfigurationType" factoryName="Python" temporary="true">
+    <configuration name="thermocline_finder" type="PythonConfigurationType" factoryName="Python" temporary="true">
       <module name="lakes" />
       <option name="INTERPRETER_OPTIONS" value="" />
       <option name="PARENT_ENVS" value="true" />
@@ -314,11 +434,11 @@
         <env name="PYTHONUNBUFFERED" value="1" />
       </envs>
       <option name="SDK_HOME" value="" />
-      <option name="WORKING_DIRECTORY" value="T:/RMC/Usagers/macot620/optimisation - Copy/lakes" />
-      <option name="IS_MODULE_SDK" value="false" />
+      <option name="WORKING_DIRECTORY" value="$PROJECT_DIR$" />
+      <option name="IS_MODULE_SDK" value="true" />
       <option name="ADD_CONTENT_ROOTS" value="true" />
       <option name="ADD_SOURCE_ROOTS" value="true" />
-      <option name="SCRIPT_NAME" value="T:/RMC/Usagers/macot620/optimisation - Copy/lakes/a_faire_rouler_rmse.py" />
+      <option name="SCRIPT_NAME" value="$PROJECT_DIR$/thermocline_finder.py" />
       <option name="PARAMETERS" value="" />
       <option name="SHOW_COMMAND_LINE" value="false" />
       <option name="EMULATE_TERMINAL" value="false" />
@@ -330,17 +450,17 @@
     <list>
       <item itemvalue="Python.FishNiche_output_analysis_scripts2 (1)" />
       <item itemvalue="Python.FishNiche_output_analysis_scripts2" />
-      <item itemvalue="Python.a_faire_rouler" />
       <item itemvalue="Python.a_faire_rouler_rmse (1)" />
-      <item itemvalue="Python.a_faire_rouler_rmse" />
+      <item itemvalue="Python.Main_fish_niche" />
+      <item itemvalue="Python.thermocline_finder" />
     </list>
     <recent_temporary>
       <list>
+        <item itemvalue="Python.Main_fish_niche" />
+        <item itemvalue="Python.thermocline_finder" />
         <item itemvalue="Python.FishNiche_output_analysis_scripts2" />
         <item itemvalue="Python.FishNiche_output_analysis_scripts2 (1)" />
         <item itemvalue="Python.a_faire_rouler_rmse (1)" />
-        <item itemvalue="Python.a_faire_rouler_rmse" />
-        <item itemvalue="Python.a_faire_rouler" />
       </list>
     </recent_temporary>
   </component>
@@ -433,21 +553,22 @@
     </todo-panel>
   </component>
   <component name="ToolWindowManager">
-    <frame x="-10" y="0" width="1334" height="1048" extended-state="0" />
+    <frame x="-7" y="-7" width="1550" height="838" extended-state="7" />
+    <editor active="true" />
     <layout>
-      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.034722224" />
+      <window_info content_ui="combo" id="Project" order="0" visible="true" weight="0.024088541" />
       <window_info id="Favorites" order="1" side_tool="true" />
       <window_info id="Structure" order="2" weight="0.25" />
       <window_info anchor="bottom" id="Message" order="0" />
       <window_info anchor="bottom" id="Find" order="1" sideWeight="0.48925886" weight="0.32918552" />
-      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.85559845" visible="true" weight="0.2872928" />
-      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.6181525" weight="0.4004525" />
+      <window_info active="true" anchor="bottom" id="Run" order="2" sideWeight="0.81380206" visible="true" weight="0.2578875" />
+      <window_info anchor="bottom" id="Debug" order="3" sideWeight="0.8411458" weight="0.31138545" />
       <window_info anchor="bottom" id="Cvs" order="4" weight="0.25" />
       <window_info anchor="bottom" id="Inspection" order="5" weight="0.4" />
       <window_info anchor="bottom" id="TODO" order="6" weight="0.32837528" />
       <window_info anchor="bottom" id="Version Control" order="7" />
       <window_info anchor="bottom" id="Terminal" order="8" sideWeight="0.49678457" weight="0.32816228" />
-      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.14440155" side_tool="true" visible="true" weight="0.2852459" />
+      <window_info anchor="bottom" id="Event Log" order="9" sideWeight="0.18619792" side_tool="true" visible="true" weight="0.2578875" />
       <window_info anchor="bottom" id="Python Console" order="10" sideWeight="0.49785176" weight="0.32918552" />
       <window_info anchor="right" id="Commander" order="0" weight="0.4" />
       <window_info anchor="right" id="Ant Build" order="1" weight="0.25" />
@@ -575,6 +696,116 @@
           <line>1555</line>
           <option name="timeStamp" value="693" />
         </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>233</line>
+          <option name="timeStamp" value="712" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>744</line>
+          <option name="timeStamp" value="721" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lake_information.py</url>
+          <line>969</line>
+          <option name="timeStamp" value="776" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>431</line>
+          <option name="timeStamp" value="810" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>418</line>
+          <option name="timeStamp" value="812" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/thermocline_finder.py</url>
+          <line>5</line>
+          <option name="timeStamp" value="813" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/thermocline_finder.py</url>
+          <line>1</line>
+          <option name="timeStamp" value="814" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/thermocline_finder.py</url>
+          <line>2</line>
+          <option name="timeStamp" value="815" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>828</line>
+          <option name="timeStamp" value="847" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>352</line>
+          <option name="timeStamp" value="849" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>616</line>
+          <option name="timeStamp" value="868" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>605</line>
+          <option name="timeStamp" value="889" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lake_information.py</url>
+          <line>962</line>
+          <option name="timeStamp" value="907" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lake_information.py</url>
+          <line>1642</line>
+          <option name="timeStamp" value="909" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lake_information.py</url>
+          <line>1641</line>
+          <option name="timeStamp" value="910" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>239</line>
+          <option name="timeStamp" value="914" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>255</line>
+          <option name="timeStamp" value="915" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lake_information.py</url>
+          <line>1047</line>
+          <option name="timeStamp" value="916" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>214</line>
+          <option name="timeStamp" value="923" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/Main_fish_niche.py</url>
+          <line>272</line>
+          <option name="timeStamp" value="928" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lake_information.py</url>
+          <line>1192</line>
+          <option name="timeStamp" value="933" />
+        </line-breakpoint>
+        <line-breakpoint enabled="true" suspend="THREAD" type="python-line">
+          <url>file://$PROJECT_DIR$/lake_information.py</url>
+          <line>1096</line>
+          <option name="timeStamp" value="936" />
+        </line-breakpoint>
       </breakpoints>
       <default-breakpoints>
         <breakpoint type="python-exception">
@@ -586,16 +817,6 @@
     </breakpoint-manager>
   </component>
   <component name="editorHistoryManager">
-    <entry file="file://G:/figure/Langtjern Raw/water temperature/make_daily_temp_DO_obs.py" />
-    <entry file="file://$USER_HOME$/Downloads/unzip_functions (1).py" />
-    <entry file="file://$USER_HOME$/Downloads/unzip_functions (2).py" />
-    <entry file="file://$USER_HOME$/Downloads/unzip_functions.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/Anaconda3/Lib/site-packages/joblib/parallel.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/Anaconda3/Lib/genericpath.py" />
-    <entry file="file://$PROJECT_DIR$/TrieCouple.py" />
-    <entry file="file://T:/RMC/Usagers/macot620/save/Fish_niche_2018-06/MDN_FishNiche_2017/lakes/mylakeGoran_modified.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/Anaconda3/Lib/site-packages/pandas/core/generic.py" />
-    <entry file="file://$PROJECT_DIR$/complete_data.csv" />
     <entry file="file://$USER_HOME$/Desktop/examen.txt" />
     <entry file="file://$PROJECT_DIR$/testdatetime.py" />
     <entry file="file://$PROJECT_DIR$/2017SwedenList_only_validation_lakes.csv" />
@@ -603,10 +824,10 @@
       <provider selected="true" editor-type-id="text-editor" />
     </entry>
     <entry file="file://$PROJECT_DIR$/2017SwedenList1.csv" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/Anaconda3/Lib/site-packages/matplotlib/cbook/deprecation.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/matplotlib/cbook/deprecation.py" />
     <entry file="file://$PROJECT_DIR$/unziponly.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/Anaconda3/Lib/site-packages/pandas/core/base.py" />
-    <entry file="file://$USER_HOME$/AppData/Local/Continuum/Anaconda3/Lib/codecs.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/pandas/core/base.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/codecs.py" />
     <entry file="file://T:/RMC/Usagers/macot620/save/Fish_niche_2018-06/MDN_FishNiche_2017/lakes/a_faire_rouler.py" />
     <entry file="file://T:/RMC/Usagers/macot620/save/Fish_niche_2018_07/MDN_FishNiche_2017/lakes/mylakeGoran_modified.py" />
     <entry file="file://T:/RMC/Usagers/macot620/save/Fish_niche_2018-06/MDN_FishNiche_2017/lakes/mylakeGoran.py" />
@@ -630,13 +851,7 @@
     <entry file="file://$PROJECT_DIR$/../output_analysis_scripts/Fish_Niche_output_plot_Analysis_script.ipynb" />
     <entry file="file://$USER_HOME$/Fish_niche1/MDN_FishNiche_2017/output_analysis_scripts/FishNiche_output_analysis_scripts2.py" />
     <entry file="file://$USER_HOME$/Fish_niche1/MDN_FishNiche_2017/lakes/a_faire_rouler.py" />
-    <entry file="file://$PROJECT_DIR$/verificationParamByModelScenario.py">
-      <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="460">
-          <caret line="84" column="46" selection-start-line="84" selection-start-column="15" selection-end-line="84" selection-end-column="46" />
-        </state>
-      </provider>
-    </entry>
+    <entry file="file://$PROJECT_DIR$/verificationParamByModelScenario.py" />
     <entry file="file://$PROJECT_DIR$/mylakeGoran.py" />
     <entry file="file://$PROJECT_DIR$/run_initial.py" />
     <entry file="file://T:/RMC/Usagers/macot620/optimisation - Copy/lakes/a_faire_rouler_rmse.py" />
@@ -648,27 +863,143 @@
     <entry file="file://$PROJECT_DIR$/a_faire_rouler.py" />
     <entry file="file://D:/Fish_niche1/MDN_FishNiche_2017/lakes/FishNiche_output_analysis_scripts2.py" />
     <entry file="file://E:/Fish_niche/lakes/FishNiche_output_analysis_scripts2.py" />
+    <entry file="file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py" />
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/ntpath.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="1207">
+          <caret line="75" selection-start-line="75" selection-end-line="75" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/pandas/core/frame.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="436">
+          <caret line="2949" selection-start-line="2949" selection-end-line="2949" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/pandas/core/internals/managers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="224">
+          <caret line="1545" selection-start-line="1545" selection-end-line="1545" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$APPLICATION_HOME_DIR$/helpers/pydev/pydevd.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="221">
+          <caret line="1146" selection-start-line="1146" selection-end-line="1146" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/thermocline_finder.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="17">
+          <caret line="1" selection-start-line="1" selection-end-line="1" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/../output_analysis_scripts/FishNiche_output_analysis_scripts2.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="165">
+          <caret line="1781" column="59" selection-start-line="1781" selection-start-column="59" selection-end-line="1781" selection-end-column="66" />
+          <folding>
+            <element signature="e#231#300#0" expanded="true" />
+            <element signature="e#2684#5902#0" />
+            <element signature="e#5973#6777#0" />
+            <element signature="e#6877#7415#0" />
+            <element signature="e#7520#14721#0" />
+            <element signature="e#14813#29480#0" />
+            <element signature="e#29552#32712#0" />
+            <element signature="e#32784#37180#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
     <entry file="file://$PROJECT_DIR$/run_parallel_mylake.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="3094">
-          <caret line="190" column="30" lean-forward="true" selection-start-line="190" selection-start-column="30" selection-end-line="190" selection-end-column="30" />
+        <state relative-caret-position="383">
+          <caret line="134" selection-start-line="134" selection-end-line="134" />
           <folding>
-            <element signature="e#563#585#0" expanded="true" />
+            <element signature="e#439#461#0" expanded="true" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$USER_HOME$/AppData/Local/Continuum/anaconda3/Lib/site-packages/pandas/io/parsers.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="451">
+          <caret line="1916" selection-start-line="1916" selection-end-line="1916" />
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/calibration_fish_niche.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="139">
+          <caret line="123" column="35" selection-start-line="123" selection-start-column="35" selection-end-line="123" selection-end-column="35" />
+          <folding>
+            <element signature="e#418#455#0" expanded="true" />
+            <element signature="e#2522#4718#0" />
+            <element signature="e#6910#9121#0" />
+            <element signature="e#17962#19402#0" />
           </folding>
         </state>
       </provider>
     </entry>
     <entry file="file://$PROJECT_DIR$/run_mylakeGoran.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="6987">
-          <caret line="419" selection-start-line="419" selection-end-line="419" />
+        <state relative-caret-position="221">
+          <caret line="54" selection-start-line="54" selection-end-line="73" selection-end-column="33" />
+          <folding>
+            <element signature="e#235#253#0" expanded="true" />
+          </folding>
         </state>
       </provider>
     </entry>
-    <entry file="file://$PROJECT_DIR$/FishNiche_output_analysis_scripts2.py">
+    <entry file="file://$PROJECT_DIR$/lake_information.py">
       <provider selected="true" editor-type-id="text-editor">
-        <state relative-caret-position="25942">
-          <caret line="1550" column="9" selection-start-line="1550" selection-start-column="9" selection-end-line="1550" selection-end-column="9" />
+        <state relative-caret-position="243">
+          <caret line="1054" column="53" lean-forward="true" selection-start-line="1054" selection-start-column="53" selection-end-line="1054" selection-end-column="53" />
+          <folding>
+            <element signature="e#243#253#0" expanded="true" />
+            <element signature="e#1977#2873#0" />
+            <element signature="e#2908#3314#0" />
+            <element signature="e#3356#14948#0" />
+            <element signature="e#15009#16924#0" />
+            <element signature="e#16999#19057#0" />
+            <element signature="e#19107#20336#0" />
+            <element signature="e#20397#21011#0" />
+            <element signature="e#21071#21683#0" />
+            <element signature="e#22292#35179#0" />
+            <element signature="e#46117#47319#0" />
+            <element signature="e#47398#50877#0" />
+            <element signature="e#50943#51350#0" />
+            <element signature="e#51406#53793#0" />
+            <element signature="e#62362#66085#0" />
+            <element signature="e#66502#73788#0" />
+            <element signature="e#69467#71942#0" />
+            <element signature="e#59375#59820#0" />
+            <element signature="e#62722#63465#0" />
+            <element signature="e#63565#64149#0" />
+            <element signature="e#60929#61301#0" />
+            <element signature="e#61340#61678#0" />
+            <element signature="e#65049#65455#0" />
+            <element signature="e#74980#77117#0" />
+            <element signature="e#77160#79769#0" />
+            <element signature="e#80737#81448#0" />
+          </folding>
+        </state>
+      </provider>
+    </entry>
+    <entry file="file://$PROJECT_DIR$/Main_fish_niche.py">
+      <provider selected="true" editor-type-id="text-editor">
+        <state relative-caret-position="170">
+          <caret line="832" column="5" selection-start-line="832" selection-start-column="5" selection-end-line="832" selection-end-column="5" />
+          <folding>
+            <element signature="e#193#202#0" expanded="true" />
+            <element signature="e#3608#8467#0" />
+            <element signature="e#3605#6903#0" />
+          </folding>
         </state>
       </provider>
     </entry>

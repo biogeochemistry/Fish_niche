@@ -43,7 +43,8 @@ for T_x = 1:length(T_list)
             d4 = sprintf('EUR-11_%s_%s-%s_%s_%d0101-%d1231', m1, exA, exB, m2, y1A, y1B);
             lakedir = strcat(outputdir2, d4, '\');
             disp(lakedir)
-            try
+            
+            %try
                 T    = csvread(strcat(lakedir, 'Tzt.csv'));
                 lambdazt = csvread(strcat(lakedir, 'lambdazt.csv'));
                 ppfd = csvread(strcat(lakedir, 'PARzt.csv'));
@@ -118,9 +119,9 @@ for T_x = 1:length(T_list)
             
                 i = i + 1;
 	
-            catch
-                warning('O2zt contain NaN')
-            end
+            %catch
+               % warning('O2zt contain NaN')
+            %end
         end
         if i >= 1
             if floor(ppfd_min)==ppfd_min

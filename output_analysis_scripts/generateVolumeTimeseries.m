@@ -9,7 +9,7 @@ path(path, '../output')
 %path(path, 'G:\output-06-08-2018')
 
 warning('off', 'all') 
-y2B = y1B+4;
+y2B = y1B;
 startdate = [y1A, 1, 1];
 i=0;
 %datastart = datenum(startdate);

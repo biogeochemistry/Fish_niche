@@ -1,12 +1,14 @@
-function ModelResult= mylakeGoran(initfile, parfile, inputfile, m_start2, m_stop2, outdir)
+function ModelResult = mylakeGoran_optimize(initfile, parfile, inputfile, m_start2, m_stop2, outdir,calibration)
 
 path(path, '../MyLake_O_simple')%change directory from mylake folder to Mylake_O_simple
 path(path, '../sediments')
 
 warning('off', 'all') 
 
-m_start = datevec(datenum([(m_start2)-2, 1, 1]) ),(1:3); 
-row_remove = days(datetime(m_start2,1,1)-datetime(m_start2,1,1))+1;
+m_start = [(m_start2-8), 1, 1]; 
+ly=@(yr)~rem(yr,400)|rem(yr,100)&~rem(yr,4);
+nbrmoredaysleapyears = ly((m_start2-8):(m_start2-1));
+row_remove = 365*8+sum(nbrmoredaysleapyears)+1;
 m_stop = [(m_stop2), 12, 31]; 
 
 global ies80 Eevapor;
@@ -41,37 +43,43 @@ try
     sed_par_file = 'sediment_parameters.txt';
 
     [zz,Az,Vz,tt,Qst,Kzt,Tzt,Czt,Szt,Pzt,Chlzt,PPzt,DOPzt,DOCzt,DICzt,CO2zt,O2zt,NO3zt,NH4zt,SO4zt,HSzt,H2Szt,Fe2zt,Ca2zt,pHzt,CH4zt,Fe3zt,Al3zt,SiO4zt,SiO2zt,diatomzt,O2_sat_relt,O2_sat_abst,BODzt,Qzt_sed,lambdazt,Attn_zt,PARzt,PARMaxt,P3zt_sed,P3zt_sed_sc,His,DoF,DoM,MixStat,Wt,surfaceflux,oxygenflux,CO2_eqt,~,O2_eqt,K0_O2t,CO2_ppmt,dO2Chlt,dO2BODt,dphotoDOCt,delC_org3,testi1t,testi2t,testi3t, sediments_data_basin1] = ...
-    solvemodel_v2_modified(m_start,m_stop,initfile,'lake', inputfile,'timeseries', parfile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Depositions);
-    
-    ModelResult = compare_model_result_data2(outdir, m_start2+2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),0);
+        solvemodel_v2_modified(m_start,m_stop,initfile,'lake', inputfile,'timeseries', parfile,'lake',In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DOCz,In_DICz,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_TPz_sed,In_Chlz_sed,In_FIM,Ice0,Wt,Inflw,Phys_par,Phys_par_range,Phys_par_names, Bio_par,Bio_par_range,Bio_par_names, Depositions);
+
     % NOTE: All writing of out data takes a few seconds for each file, so it should be conservative, especially in optimization runs
 
+    
+    ModelResult = compare_model_result_data2(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),calibration);
+    
     f1_name = (strcat(outdir, '\Tzt.csv')); % b = binary mode, z = archived file
-    dlmwrite(f1_name, Tzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f1_name, Tzt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f5_name = (strcat(outdir, '\O2zt.csv'));
-    dlmwrite(f5_name, O2zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f5_name, O2zt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f7_name =(strcat(outdir, '\lambdazt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f7_name, lambdazt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f7_name, lambdazt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f8_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f8_name, DOCzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f8_name, DOCzt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f6_name =(strcat(outdir, '\Qst.csv'));%MC add to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f6_name, Qst(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f6_name, Qst(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f7_name =(strcat(outdir, '\Attn_zt.csv'));%MC 2018-05-31 add to comparaison with SDD
-    dlmwrite(f7_name, Attn_zt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f7_name, Attn_zt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
     
     f12_name =(strcat(outdir, '\His.csv'));%MC 2018-05-31 add to comparaison with SDD
-    dlmwrite(f12_name, His(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f12_name, His(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f10_name =(strcat(outdir, '\PARzt.csv'));%MC 2018-05-31 add to comparaison with SDD
-    dlmwrite(f10_name, PARzt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f10_name, PARzt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
     f11_name =(strcat(outdir, '\PARMaxt.csv'));%MC 2018-05-31 add to comparaison with SDD
-    dlmwrite(f11_name, PARMaxt(:, 731:end)', 'delimiter', ',', 'precision', '%.3f');
+    dlmwrite(f11_name, PARMaxt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 catch
+      ModelResult.Dates = [];
+      ModelResult.Depth = [];
+      ModelResult.T_data = [];
+      ModelResult.T_model = [];
 end
 end          
