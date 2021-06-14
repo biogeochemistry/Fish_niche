@@ -36,11 +36,10 @@ timeseries_records{1,5} = 'NTGdays';
 for O2_x = 1:length(O2_list)
     for T_x = 1:length(T_list)
         for Light_x = 1:length(light_list)
-            fprintf(1, 'Outputting for Oxygen %d Temperature %d Light %d\n',O2_list(O2_x),T_list(T_x),light_list(Light_x));
-            if isfile(sprintf('%s/fish_niche_Area_Light%.2f_T%d_O%d_%d-%d.csv',outputdir,light_list(Light_x),T_list(T_x),O2_list(O2_x),y1A,y1B))
-                 continue
-            else
-                for lakenum = 1:nlakes
+             if isfile(filename)
+                 % File exists.
+             else=
+                 for lakenum = 1:nlakes
                
                     ebhex = lakes(lakenum).ebhex;
                     outputdir2 = getOutputPathFromEbHex(csvfiledir, ebhex);
@@ -89,7 +88,7 @@ for O2_x = 1:length(O2_list)
 
                             end
                             for depth = 1:zlen
-%                                 ppatmoment = ppfd(time, depth);
+                                ppatmoment = ppfd(time, depth);
 
                                 if ppfd(time, depth) < ppfd_min
 
@@ -143,9 +142,9 @@ for O2_x = 1:length(O2_list)
                     %catch
                        % warning('O2zt contain NaN')
                     %end
-                end
-                if i >= 1
-                     if floor(ppfd_min)==ppfd_min
+                 end
+                 if i >= 1
+                    if floor(ppfd_min)==ppfd_min
                         if floor(O2_min)==O2_min
                             name = sprintf('%s/fish_niche_Area_Light%d_T%d_O%d_%d-%d.csv',outputdir,ppfd_min,T_max,O2_min,y1A,y1B);
                             exportAreaTimeseries(name,timeseries_records,startdate)
@@ -160,10 +159,12 @@ for O2_x = 1:length(O2_list)
                         end
                     end
                 end
-             end
+            end
+            
 %          fprintf(1, 'Outputting for Light %d\n',light_list(Light_x));
         end
-%         fprintf(1, 'Outputting for Temperature %d\n',T_list(T_x));
+        fprintf(1, 'Outputting for Temperature %d\n',T_list(T_x));
     end
+    fprintf(1, 'Outputting for Oxygen %d Temperature %d Light %d\n',oxy_list(O2_x),T_list(T_x),light_list(Light_x));
 end
 end

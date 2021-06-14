@@ -7,10 +7,11 @@ lakelistfile = 'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenLi
 list = 1:15;
 T_list = [1,list(rem(list,2)==0),15];
 % T_list = [15];
-light_list =[0.5,1,2,4, 8, 12, 16, 20, 25,30,40,50, 60, 70, 80, 90, 100];
+list = 1:100;
+light_list =[0.5,1,2,4, 8, 12, 16, 20, 25,30,40,50, 60, 64, 68, 72, 76, 80, 84, 88, 92, 96, 100];
 % light_list = [100];
-oxy_list = [3.5,3,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10,10.5];
-% oxy_list = [3];
+oxy_list = [3.5,3,4,4.5,5,5.5,6,6.5,7,7.5,8,8.5,9,9.5,10];
+% oxy_list = [3.5];
 m1 = 'ICHEC-EC-EARTH';
 m2 = 'r3i1p1_DMI-HIRHAM5_v1_day';
 exA = 'historical';

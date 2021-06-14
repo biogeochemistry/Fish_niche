@@ -15,7 +15,7 @@ for lakenum = 1:nlakes
    
     lake_id = timeseries_records{lakenum + 1, 1};
     
-    fprintf(1, 'Outputting for lake with id %d\n', lake_id);
+%     fprintf(1, 'Outputting for lake with id %d\n', lake_id);
     
     avg_area= timeseries_records{1+lakenum, 2};
     avg_areabyTotal= timeseries_records{1+lakenum, 3};

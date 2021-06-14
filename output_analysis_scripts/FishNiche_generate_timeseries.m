@@ -1,7 +1,7 @@
 
 
 lakelistfile  = '..\lakes\2017SwedenList_only_validation_lakes.csv';
-outputdir = '..\output';
+outputdir = 'F:\output\';
 
 % The following are for scenario 2 only, it should be automated based on scenario choice.
 m1 = 'ICHEC-EC-EARTH';
@@ -37,12 +37,14 @@ for lakenum = 1:nlakes
     outputdir2 = getOutputPathFromEbHex(outputdir, ebhex);
     d4 = sprintf('EUR-11_%s_%s-%s_%s_%d0101-%d1231', m1, exA, exB, m2, y1A, y2B);
     lakedir = strcat(outputdir2, d4, '\');
-	disp(lakedir)
+	%mylakeGoran_optimizefinal(initfile, parfile, inputfile, m_start2, m_stop2,spin_up, outdir,icedays,calibration)
+    
+    disp(lakedir)
     O2   = csvread(strcat(lakedir, 'O2zt.csv'));
 	T    = csvread(strcat(lakedir, 'Tzt.csv'));
 	lambdazt = csvread(strcat(lakedir, 'lambdazt.csv'));
 	%add to calculate Photosynthetically Available Radiation (PAR) 
-	PAR = importdata((strcat(lakedir, '2017input')),'\t', 2);
+	PAR = importdata((strcat(lakedir, '2020input')),'\t', 2);
 	PAR = getfield(PAR,'data');
 	Global_rad = PAR(731:4382,4);
 	[max_Global,max_I] = max(Global_rad());
@@ -77,8 +79,10 @@ for lakenum = 1:nlakes
         
         %surface_attn = Attn(time, 1);
         for depth = 1:zlen
+           
             PAR_calculated = Global_rad(time)*exp(lambdazt(time,depth));%PAR
-			PAR_maximal = max_Global*exp(lambdazt(max_I,1));
+            
+            PAR_maximal = max_Global*exp(lambdazt(max_I,1));
             if O2(time, depth) > 3000 
                 volume_O2_above_3000(time) = volume_O2_above_3000(time) + area_at_depth(depth);
             end

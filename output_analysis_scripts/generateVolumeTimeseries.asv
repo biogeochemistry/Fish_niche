@@ -42,7 +42,7 @@ for lakenum = 1:nlakes
 		O2   = csvread(strcat(lakedir, 'O2zt.csv'));
 		T    = csvread(strcat(lakedir, 'Tzt.csv'));
 		PARzt = csvread(strcat(lakedir, 'PARzt.csv'));
-%         PARMaxt = csvread(strcat(lakedir, 'PARMaxt.csv'));
+        PARMaxt = csvread(strcat(lakedir, 'PARMaxt.csv'));
 		%add to calculate optical habitat (incident radiation Iz)
 		%His = csvread(strcat(lakedir, 'His.csv'));
 %         Qzt = csvread(strcat(lakedir, 'Qst.csv'));
