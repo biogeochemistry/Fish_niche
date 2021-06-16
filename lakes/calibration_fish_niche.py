@@ -105,7 +105,7 @@ class CalibrationInfo(LakeInfo):
     Class contains all the attributes needed to run the calibration.
     """
 
-    def __init__(self, lake_name, lake_id, subid, ebhex, area, depth, longitude, latitude, volume,scenarioid):
+    def __init__(self, lake_name, lake_id, subid, ebhex, area, depth, mean, longitude, latitude, volume, turnover,scenarioid,outputfolder= r'F:\output',calibration=True,old=False):
         """
         Initiates the class. CalibrationInfo inherites from the class LakeInfo all the attributes and functions.
         :param lake_name: Type string. Long lake's name.
@@ -121,8 +121,19 @@ class CalibrationInfo(LakeInfo):
         :param k_sod: Type float: by default 500. Sedimentary oxygen demand (mg m-2 d-1).
         :param i_sc_doc: Type float: by default 1. Scaling factor for inflow concentration of DOC  (-)
         """
-        super().__init__(lake_name, lake_id, subid, ebhex, area, depth, longitude, latitude, volume,scenarioid)
+        super().__init__(lake_name, lake_id, subid, ebhex, area, depth, mean, longitude, latitude, volume, turnover,
+                 swab1='default',swab0='default',cshelter='default',isct='default',iscv='default',
+                 isco='default',iscdoc='default',ksod='default',kbod='default',kzn0='default',albice='default',
+                         albsnow='default',scenarioid=scenarioid,outputfolder=outputfolder,
+                         calibration=calibration,old=old)
         self.selected_depth = temp_by_lake.get(lake_name, None)
+        if calibration:
+            if old:
+                self.outdir_path = self.old_calibration_path
+            else:
+                self.outdir_path = self.calibration_path
+        else:
+            self.outdir_path = self.outdir
 
 
     def optimize_differential_evolution(self, modelid="EWEMBI", scenarioid="historical"):
@@ -171,7 +182,7 @@ class CalibrationInfo(LakeInfo):
             open("{}/{}/{}/Calibration_problem.txt".format(self.output_path, "EWEMBI", "historical"), "w").close()
             print("problem with the calibration: lake %s" % self.lake_name)
 
-    def variables_by_depth(self):
+    def variables_by_depth(self,start=2001,end=2010):
         """
         Creates a new csv file with the observed temperatures separated in columns by depths.
         :return: None
@@ -180,7 +191,7 @@ class CalibrationInfo(LakeInfo):
         observation_file = self.observation_file
         obs_file = pd.read_excel(observation_file,lake_id)
         obs_file['date'] = pd.to_datetime(obs_file['date'])
-        obs_file = obs_file[(obs_file['date'] >= pd.datetime(self.start_year, 1, 1)) & (obs_file['date'] <= pd.datetime(self.end_year, 12, 31))]
+        obs_file = obs_file[(obs_file['date'] >= pd.datetime(int(start), 1, 1)) & (obs_file['date'] <= pd.datetime(int(end), 12, 31))]
 
         axisx = obs_file.iloc[:,0].unique()
         axisy = obs_file.iloc[:,1].unique()
@@ -220,17 +231,18 @@ class CalibrationInfo(LakeInfo):
         temperature = temperature.dropna(axis=0, how='all')
 
         print(len(list(temperature.index.values)))
-        temperature.to_csv(os.path.join(self.calibration_path, "Observed_Temperature.csv"))
+        temperature.to_csv(os.path.join(self.outdir_path, "Observed_Temperature.csv"))
+
 
         oxygen = pd.DataFrame(index=axisx, columns=axisy, data=datasetO)
         oxygen = oxygen.dropna(axis=1, how='all')
         oxygen = oxygen.dropna(axis=0, how='all')
-        oxygen.to_csv(os.path.join(self.calibration_path, "Observed_Oxygen.csv"))
+        oxygen.to_csv(os.path.join(self.outdir_path, "Observed_Oxygen.csv"))
 
         secchi = pd.DataFrame(index=axisx, columns=axisy, data=datasetS)
         secchi = secchi.dropna(axis=1, how='all')
         secchi = secchi.dropna(axis=0, how='all')
-        secchi.to_csv(os.path.join(self.calibration_path, "Observed_Secchi.csv"))
+        secchi.to_csv(os.path.join(self.outdir_path, "Observed_Secchi.csv"))
 
 
         print("observation done ... ... ... ... ")

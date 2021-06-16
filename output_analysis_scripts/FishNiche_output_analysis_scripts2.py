@@ -29,17 +29,18 @@ from matplotlib.dates import YearLocator, MonthLocator, DateFormatter, DayLocato
 # import matplotlib as mpl
 from datetime import date, datetime
 from os import path
+import xlsxwriter
 
 from csv import reader
 # from function_runlakesGoran_par_test import runlakesGoran_par
-import pandas.plotting._converter
+import pandas as pd
 
-pandas.plotting._converter.register()
+#pandas.plotting._converter.register()
 plt.style.use('seaborn-poster')
 
 outputfolderdata = r'..\figure_calibration\Figure_test_oxygen'
-datafolder = r'D:\Fish_niche\output'
-outputfolder = r'C:\Users\macot620\Documents\GitHub\Fish_niche\output'
+datafolder = r'F:\output'
+outputfolder = r'F:\output'
 models = {1:('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
           2:('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1_day'),
           3:('MPI-M-MPI-ESM-LR', 'r1i1p1_CLMcom-CCLM4-8-17_v1_day'),
@@ -697,7 +698,7 @@ def FishNiche_generate_timeseries(filename, scenarioid, modelid):
     m1, m2 = models[modelid]
     y2B = y1B + 4
 
-    with open(filename, 'rU')as f:
+    with open(filename, 'r')as f:
         lakes = f.readlines()
         nlakes = len(lakes)
 
@@ -929,7 +930,7 @@ def FishNiche_cathegories(lakelistfile):
     # fig1.savefig("histogram.eps")
     # fig1.savefig("histogram.png")
     plt.show()
-def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, datafolder):
+def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, datafolder,partype="50"):
     years = YearLocator() # every year
     months = MonthLocator() # every month
     yearsFmt = DateFormatter('%Y')
@@ -941,7 +942,9 @@ def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, d
     fig1 = plt.figure()
     ax1 = plt.subplot(211)
     for group in [1]:
-        datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s1.csv' % group))
+        datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s%s.csv' % (group,partype)))
+        datasheet_all.columns = ["Date", "Model", "Scenario", "Lake_group", "Lake_id", "pT", "pO2", "pPAR",
+                                 "TotalVolume", "phabitable"]
         datasheet_all['Date'] = pd.to_datetime(datasheet_all['Date'], format="%Y-%m-%d")
         datasheet_all.set_index('Date', inplace=True)
         datasheet2 = datasheet_all
@@ -959,10 +962,10 @@ def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, d
                 datasheet_scenario = datasheet_scenario.loc['2090-12-31':]
             for model in [2]:
                 datasheet = datasheet_scenario.loc[datasheet_scenario['Model'] == model]
-                datasheet['%0_O2'] = 100-(datasheet['%_O2'] * 100)
+                datasheet['p0O2'] = 100-(datasheet['pO2'] * 100)
                 sumbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).sum()
-                ax1.plot_date(tt, sumbyday['%0_O2'], '-', color='black', lw=2, ms=3)
-                ax1.plot_date(tt, sumbyday['%0_O2'], '-', color='red', lw=2, ms=3)
+                ax1.plot_date(tt, sumbyday['p0O2'], '-', color='black', lw=2, ms=3)
+                ax1.plot_date(tt, sumbyday['p0O2'], '-', color='red', lw=2, ms=3)
                 ax1.set_xlim([datetime(2000, 1, 1), datetime(2000, 12, 31)])
                 plt.ylabel("% Volume O2")
                 ax4 = ax1
@@ -975,23 +978,23 @@ def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, d
                 plt.setp(plt.gca().get_xticklabels(), rotation=45, horizontalalignment='right')
                 plt.tight_layout() 
                 plt.show()
-        fig1.savefig(path.join(datafolder, "Figure_2.png" ) )  
+        fig1.savefig(path.join(datafolder, "Figure_2%s.png"%partype ) )
                     #plt.yticks([0, 25, 50, 75, +100])
-                    #ax4.plot_date(tt, meanbyday['%0_O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+                    #ax4.plot_date(tt, meanbyday['p0O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
                     #                ms=3)
-                    # ax4.plot_date(tt, meanlessmargin['%_O2'], ':', color=color[model], lw=2, ms=3)
+                    # ax4.plot_date(tt, meanlessmargin['pO2'], ':', color=color[model], lw=2, ms=3)
                     # ax4.annotate('Oxygen barrier(O>15C)', xy=(80, 80), xycoords='figure points')
-                    # ax4.plot_date(tt, meanbyday['%_O2'] - margin_of_error['%_O2'], 'r--', lw=2, ms=3)
-                    # ax4.fill_between(tt, meanbyday['%_O2'], meanlessmargin['%_O2'], color=color2[model],alpha='0.2')
-                    # ax4.fill_between(tt, meanbyday['%_O2'], meanplusmargin['%_O2'], color=color2[model], alpha='0.2')
+                    # ax4.plot_date(tt, meanbyday['pO2'] - margin_of_error['pO2'], 'r--', lw=2, ms=3)
+                    # ax4.fill_between(tt, meanbyday['pO2'], meanlessmargin['pO2'], color=color2[model],alpha='0.2')
+                    # ax4.fill_between(tt, meanbyday['pO2'], meanplusmargin['pO2'], color=color2[model], alpha='0.2')
                     #plt.gca().invert_yaxis()
                    
 
                 
                 #datasheet.to_csv('D:\Fish_niche\output\test_%s.csv'%(scenario))
-#                datasheet['%0_T'] = datasheet['%_T'] * 100
-#                datasheet['%0_O2'] = datasheet['%_O2'] * 100
-#                datasheet['%0_PAR'] = datasheet['%_PAR'] * 100
+#                datasheet['p0T'] = datasheet['pT'] * 100
+#                datasheet['p0O2'] = datasheet['pO2'] * 100
+#                datasheet['p0PAR'] = datasheet['pPAR'] * 100
 #
 #                if len(datasheet)!= 0:
 #                    listonplot.append(model)
@@ -1001,12 +1004,12 @@ def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, d
 #                    
 #
 #                    # z_critical = stats.norm.ppf(q=0.975) # Get the z-critical value*
-#                    sumbyday['%0_O22'] = 100 - sumbyday['%0_O2']
+#                    sumbyday['p0O22'] = 100 - sumbyday['p0O2']
 #                   
-#                    # minbyday['%0_O22'] =100- minbyday['%0_O2']
-#                    # maxbyday['%0_O22'] = 100-maxbyday['%0_O2']
-#                    # minbyday['%0_PAR2'] = 100 - minbyday['%0_PAR']
-#                    # maxbyday['%0_PAR2'] = 100 - maxbyday['%0_PAR']
+#                    # minbyday['p0O22'] =100- minbyday['p0O2']
+#                    # maxbyday['p0O22'] = 100-maxbyday['p0O2']
+#                    # minbyday['p0PAR2'] = 100 - minbyday['p0PAR']
+#                    # maxbyday['p0PAR2'] = 100 - maxbyday['p0PAR']
 #
 #                    stats.norm.ppf(q=0.025)
 #                    # margin_of_error = z_critical *(stdbyday/sqrt(countbyday.iloc[0,0]))
@@ -1014,31 +1017,31 @@ def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, d
 #
 #                    #fig1 = plt.figure(2 * group * i, figsize=(18.0, 10.0))
 #                    
-#                    #ax1.fill_between(tt, meanbyday['%0_T'], meanlessmargin['%0_T'], color='lightblue', alpha='0.5')
-#                    #ax1.fill_between(tt, meanbyday['%0_T'], meanplusmargin['%0_T'], color='lightblue', alpha='0.5')
-#                    #ax1.plot_date(tt, meanbyday['%0_T'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2, ms=3)
+#                    #ax1.fill_between(tt, meanbyday['p0T'], meanlessmargin['p0T'], color='lightblue', alpha='0.5')
+#                    #ax1.fill_between(tt, meanbyday['p0T'], meanplusmargin['p0T'], color='lightblue', alpha='0.5')
+#                    #ax1.plot_date(tt, meanbyday['p0T'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2, ms=3)
 #                    # ax1.annotate('Temperature barrier(T>15C)', xy=(80, 80), xycoords='figure points')
-#                    # ax1.plot_date(tt, meanbyday['%_T']-margin_of_error['%_T'],'k--',lw=2, ms=3)
-#                    #ax1.fill_between(tt, meanbyday['%0_PAR2'], meanplusmargin['%0_PAR2'], color='green', alpha='0.2')
-#                    #ax1.fill_between(tt, meanbyday['%0_PAR2'], meanlessmargin['%0_PAR2'], color='green', alpha='0.2')
-#                    #ax1.plot_date(tt, meanbyday['%0_PAR2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+#                    # ax1.plot_date(tt, meanbyday['pT']-margin_of_error['pT'],'k--',lw=2, ms=3)
+#                    #ax1.fill_between(tt, meanbyday['p0PAR2'], meanplusmargin['p0PAR2'], color='green', alpha='0.2')
+#                    #ax1.fill_between(tt, meanbyday['p0PAR2'], meanlessmargin['p0PAR2'], color='green', alpha='0.2')
+#                    #ax1.plot_date(tt, meanbyday['p0PAR2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
 #                    #                ms=3)
 #                    # ax1.annotate('PAR barrier(PAR)', xy=(80, 80), xycoords='figure points')
-#                    # ax1.plot_date(tt, meanbyday['%_PAR'] - margin_of_error['%_PAR'], 'g--', lw=2, ms=3)
-#                    #ax1.fill_between(tt, meanbyday['%0_O22'], meanlessmargin['%0_O22'], color='red', alpha='0.1')
+#                    # ax1.plot_date(tt, meanbyday['pPAR'] - margin_of_error['pPAR'], 'g--', lw=2, ms=3)
+#                    #ax1.fill_between(tt, meanbyday['p0O22'], meanlessmargin['p0O22'], color='red', alpha='0.1')
 #                    if scenario =='historical':
 #                        if model == 1:
-#                            ax1.fill_between(tt, 0, sumbyday['%0_O22'], color='black', alpha='0.3')
-#                            #ax1.fill_between(tt, meanbyday['%0_O2'], meanplusmargin['%0_O2'], color='red', alpha='0.3')
-#                        ax1.plot_date(tt, sumbyday['%0_O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
+#                            ax1.fill_between(tt, 0, sumbyday['p0O22'], color='black', alpha='0.3')
+#                            #ax1.fill_between(tt, meanbyday['p0O2'], meanplusmargin['p0O2'], color='red', alpha='0.3')
+#                        ax1.plot_date(tt, sumbyday['p0O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
 #
 #                    else:
 #                        if model ==1:
-#                            ax1.fill_between(tt, 0, sumbyday['%0_O22'], color='red', alpha='0.3')
-#                            #ax1.fill_between(tt, meanbyday['%0_O2'], meanplusmargin['%0_O2'], color='red', alpha='0.3')
-#                        ax1.plot_date(tt, sumbyday['%0_O22'], '-', color=plt.cm.Reds((model / 10)+ 0.3), lw=2,ms=3)
+#                            ax1.fill_between(tt, 0, sumbyday['p0O22'], color='red', alpha='0.3')
+#                            #ax1.fill_between(tt, meanbyday['p0O2'], meanplusmargin['p0O2'], color='red', alpha='0.3')
+#                        ax1.plot_date(tt, sumbyday['p0O22'], '-', color=plt.cm.Reds((model / 10)+ 0.3), lw=2,ms=3)
 #
-#                    #ax1.plot_date(tt, meanplusmargin['%0_O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
+#                    #ax1.plot_date(tt, meanplusmargin['p0O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
 #
 #                    ax1.autoscale_view()
 #
@@ -1050,13 +1053,13 @@ def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, d
 #                    ax4 = ax1
 #                    #ax4.set_ylim(0, 100, 50)
 #                    #plt.yticks([0, 25, 50, 75, +100])
-#                    #ax4.plot_date(tt, meanbyday['%0_O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+#                    #ax4.plot_date(tt, meanbyday['p0O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
 #                    #                ms=3)
-#                    # ax4.plot_date(tt, meanlessmargin['%_O2'], ':', color=color[model], lw=2, ms=3)
+#                    # ax4.plot_date(tt, meanlessmargin['pO2'], ':', color=color[model], lw=2, ms=3)
 #                    # ax4.annotate('Oxygen barrier(O>15C)', xy=(80, 80), xycoords='figure points')
-#                    # ax4.plot_date(tt, meanbyday['%_O2'] - margin_of_error['%_O2'], 'r--', lw=2, ms=3)
-#                    # ax4.fill_between(tt, meanbyday['%_O2'], meanlessmargin['%_O2'], color=color2[model],alpha='0.2')
-#                    # ax4.fill_between(tt, meanbyday['%_O2'], meanplusmargin['%_O2'], color=color2[model], alpha='0.2')
+#                    # ax4.plot_date(tt, meanbyday['pO2'] - margin_of_error['pO2'], 'r--', lw=2, ms=3)
+#                    # ax4.fill_between(tt, meanbyday['pO2'], meanlessmargin['pO2'], color=color2[model],alpha='0.2')
+#                    # ax4.fill_between(tt, meanbyday['pO2'], meanplusmargin['pO2'], color=color2[model], alpha='0.2')
 #                    #plt.gca().invert_yaxis()
 #                    ax4.xaxis.set_major_locator(months)
 #                    ax4.xaxis.set_minor_locator(mondays)
@@ -1111,7 +1114,7 @@ def FishNiche_plot_volume02(lakelistfile, listscenarios, listmodels, calivari, d
 #            fig1.savefig(
 #                    path.join(datafolder, "Figure_synthese_mean100.png"))
 #            print('completed')
-def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, datafolder):
+def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, datafolder,partype="50"):
     years = YearLocator() # every year
     months = MonthLocator() # every month
     yearsFmt = DateFormatter('%Y')
@@ -1121,7 +1124,9 @@ def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, d
     color2 = ['white', 'blue', 'black', 'magenta', 'cyan', 'red', 'yellow']
     i = 0
     for group in [1]:
-        datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s1.csv' % group))
+        datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s%s.csv' % (group,partype)))
+        datasheet_all.columns = ["Date", "Model", "Scenario", "Lake_group", "Lake_id", "pT", "pO2", "pPAR",
+                                 "TotalVolume", "phabitable"]
         datasheet_all['Date'] = pd.to_datetime(datasheet_all['Date'], format="%Y-%m-%d")
         datasheet_all.set_index('Date', inplace=True)
         datasheet2 = datasheet_all
@@ -1135,8 +1140,10 @@ def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, d
             datasheet_scenario = datasheet_all.loc[datasheet_all['Scenario'] == scenario]
             if scenario == 'historical':
                 datasheet_scenario = datasheet_scenario.loc[:'1982-12-31']
+                datasheet_scenario['Scenario'] = 2
             else:
                 datasheet_scenario = datasheet_scenario.loc['2090-12-31':]
+                datasheet_scenario['Scenario'] = 8
                 # datasheet_scenario = datasheet_scenario.loc['2060-12-31':'2080-12-31']
                 # datasheet_scenario = datasheet_scenario.loc[:'2050-12-31']
             # ttyear = datasheet2.index
@@ -1144,9 +1151,9 @@ def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, d
             listonplot = []
             for model in [1, 2, 3, 4, 5, 6]:
                 datasheet = datasheet_scenario.loc[datasheet_scenario['Model'] == model]
-                datasheet['%0_T'] = datasheet['%_T'] * 100
-                datasheet['%0_O2'] = datasheet['%_O2'] * 100
-                datasheet['%0_PAR'] = datasheet['%_PAR'] * 100
+                datasheet['p0T'] = datasheet['pT'] * 100
+                datasheet['p0O2'] = datasheet['pO2'] * 100
+                datasheet['p0PAR'] = datasheet['pPAR'] * 100
 
                 if len(datasheet)!= 0:
                     listonplot.append(model)
@@ -1159,53 +1166,53 @@ def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, d
                     stdbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).std()
 
                     # z_critical = stats.norm.ppf(q=0.975) # Get the z-critical value*
-                    meanbyday['%0_O22'] = 100 - meanbyday['%0_O2']
-                    meanbyday['%0_PAR2'] = 100 - meanbyday['%0_PAR']
-                    stdbyday['%0_O22'] = stdbyday['%0_O2']
-                    stdbyday['%0_PAR2'] = stdbyday['%0_PAR']
-                    # minbyday['%0_O22'] =100- minbyday['%0_O2']
-                    # maxbyday['%0_O22'] = 100-maxbyday['%0_O2']
-                    # minbyday['%0_PAR2'] = 100 - minbyday['%0_PAR']
-                    # maxbyday['%0_PAR2'] = 100 - maxbyday['%0_PAR']
+                    meanbyday['p0O22'] = 100 - meanbyday['p0O2']
+                    meanbyday['p0PAR2'] = 100 - meanbyday['p0PAR']
+                    stdbyday['p0O22'] = stdbyday['p0O2']
+                    stdbyday['p0PAR2'] = stdbyday['p0PAR']
+                    # minbyday['p0O22'] =100- minbyday['p0O2']
+                    # maxbyday['p0O22'] = 100-maxbyday['p0O2']
+                    # minbyday['p0PAR2'] = 100 - minbyday['p0PAR']
+                    # maxbyday['p0PAR2'] = 100 - maxbyday['p0PAR']
 
                     stats.norm.ppf(q=0.025)
                     # margin_of_error = z_critical *(stdbyday/sqrt(countbyday.iloc[0,0]))
                     meanplusmargin = meanbyday + stdbyday
-                    meanplusmargin.loc[meanplusmargin['%0_T'] > 100, '%0_T'] = 100
-                    meanplusmargin.loc[meanplusmargin['%0_PAR2'] > 100, '%0_PAR2'] = 100
-                    meanplusmargin.loc[meanplusmargin['%0_O22'] > 100, '%0_O22'] = 100
+                    meanplusmargin.loc[meanplusmargin['p0T'] > 100, 'p0T'] = 100
+                    meanplusmargin.loc[meanplusmargin['p0PAR2'] > 100, 'p0PAR2'] = 100
+                    meanplusmargin.loc[meanplusmargin['p0O22'] > 100, 'p0O22'] = 100
                     meanlessmargin = meanbyday - stdbyday
-                    meanlessmargin.loc[meanlessmargin['%0_T'] < 0, '%0_T'] = 0
-                    meanlessmargin.loc[meanlessmargin['%0_PAR2'] < 0, '%0_PAR2'] = 0
-                    meanlessmargin.loc[meanlessmargin['%0_O22'] < 0, '%0_O22'] = 0
+                    meanlessmargin.loc[meanlessmargin['p0T'] < 0, 'p0T'] = 0
+                    meanlessmargin.loc[meanlessmargin['p0PAR2'] < 0, 'p0PAR2'] = 0
+                    meanlessmargin.loc[meanlessmargin['p0O22'] < 0, 'p0O22'] = 0
 
                     #fig1 = plt.figure(2 * group * i, figsize=(18.0, 10.0))
                     
-                    #ax1.fill_between(tt, meanbyday['%0_T'], meanlessmargin['%0_T'], color='lightblue', alpha='0.5')
-                    #ax1.fill_between(tt, meanbyday['%0_T'], meanplusmargin['%0_T'], color='lightblue', alpha='0.5')
-                    #ax1.plot_date(tt, meanbyday['%0_T'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2, ms=3)
+                    #ax1.fill_between(tt, meanbyday['p0T'], meanlessmargin['p0T'], color='lightblue', alpha='0.5')
+                    #ax1.fill_between(tt, meanbyday['p0T'], meanplusmargin['p0T'], color='lightblue', alpha='0.5')
+                    #ax1.plot_date(tt, meanbyday['p0T'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2, ms=3)
                     # ax1.annotate('Temperature barrier(T>15C)', xy=(80, 80), xycoords='figure points')
-                    # ax1.plot_date(tt, meanbyday['%_T']-margin_of_error['%_T'],'k--',lw=2, ms=3)
-                    #ax1.fill_between(tt, meanbyday['%0_PAR2'], meanplusmargin['%0_PAR2'], color='green', alpha='0.2')
-                    #ax1.fill_between(tt, meanbyday['%0_PAR2'], meanlessmargin['%0_PAR2'], color='green', alpha='0.2')
-                    #ax1.plot_date(tt, meanbyday['%0_PAR2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+                    # ax1.plot_date(tt, meanbyday['pT']-margin_of_error['pT'],'k--',lw=2, ms=3)
+                    #ax1.fill_between(tt, meanbyday['p0PAR2'], meanplusmargin['p0PAR2'], color='green', alpha='0.2')
+                    #ax1.fill_between(tt, meanbyday['p0PAR2'], meanlessmargin['p0PAR2'], color='green', alpha='0.2')
+                    #ax1.plot_date(tt, meanbyday['p0PAR2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
                     #                ms=3)
                     # ax1.annotate('PAR barrier(PAR)', xy=(80, 80), xycoords='figure points')
-                    # ax1.plot_date(tt, meanbyday['%_PAR'] - margin_of_error['%_PAR'], 'g--', lw=2, ms=3)
-                    #ax1.fill_between(tt, meanbyday['%0_O22'], meanlessmargin['%0_O22'], color='red', alpha='0.1')
+                    # ax1.plot_date(tt, meanbyday['pPAR'] - margin_of_error['pPAR'], 'g--', lw=2, ms=3)
+                    #ax1.fill_between(tt, meanbyday['p0O22'], meanlessmargin['p0O22'], color='red', alpha='0.1')
                     if scenario =='historical':
                         if model == 1:
-                            ax1.fill_between(tt, 0, meanplusmargin['%0_O22'], color='black', alpha='0.3')
-                            #ax1.fill_between(tt, meanbyday['%0_O2'], meanplusmargin['%0_O2'], color='red', alpha='0.3')
-                        ax1.plot_date(tt, meanbyday['%0_O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
+                            ax1.fill_between(tt, 0, meanplusmargin['p0O22'], color='black', alpha='0.3')
+                            #ax1.fill_between(tt, meanbyday['p0O2'], meanplusmargin['p0O2'], color='red', alpha='0.3')
+                        ax1.plot_date(tt, meanbyday['p0O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
 
                     else:
                         if model ==1:
-                            ax1.fill_between(tt, 0, meanplusmargin['%0_O22'], color='red', alpha='0.3')
-                            #ax1.fill_between(tt, meanbyday['%0_O2'], meanplusmargin['%0_O2'], color='red', alpha='0.3')
-                        ax1.plot_date(tt, meanbyday['%0_O22'], '-', color=plt.cm.Reds((model / 10)+ 0.3), lw=2,ms=3)
+                            ax1.fill_between(tt, 0, meanplusmargin['p0O22'], color='red', alpha='0.3')
+                            #ax1.fill_between(tt, meanbyday['p0O2'], meanplusmargin['p0O2'], color='red', alpha='0.3')
+                        ax1.plot_date(tt, meanbyday['p0O22'], '-', color=plt.cm.Reds((model / 10)+ 0.3), lw=2,ms=3)
 
-                    #ax1.plot_date(tt, meanplusmargin['%0_O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
+                    #ax1.plot_date(tt, meanplusmargin['p0O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,ms=3)
 
                     ax1.autoscale_view()
 
@@ -1217,13 +1224,13 @@ def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, d
                     ax4 = ax1
                     ax4.set_ylim(0, 100, 50)
                     #plt.yticks([0, 25, 50, 75, +100])
-                    #ax4.plot_date(tt, meanbyday['%0_O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+                    #ax4.plot_date(tt, meanbyday['p0O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
                     #                ms=3)
-                    # ax4.plot_date(tt, meanlessmargin['%_O2'], ':', color=color[model], lw=2, ms=3)
+                    # ax4.plot_date(tt, meanlessmargin['pO2'], ':', color=color[model], lw=2, ms=3)
                     # ax4.annotate('Oxygen barrier(O>15C)', xy=(80, 80), xycoords='figure points')
-                    # ax4.plot_date(tt, meanbyday['%_O2'] - margin_of_error['%_O2'], 'r--', lw=2, ms=3)
-                    # ax4.fill_between(tt, meanbyday['%_O2'], meanlessmargin['%_O2'], color=color2[model],alpha='0.2')
-                    # ax4.fill_between(tt, meanbyday['%_O2'], meanplusmargin['%_O2'], color=color2[model], alpha='0.2')
+                    # ax4.plot_date(tt, meanbyday['pO2'] - margin_of_error['pO2'], 'r--', lw=2, ms=3)
+                    # ax4.fill_between(tt, meanbyday['pO2'], meanlessmargin['pO2'], color=color2[model],alpha='0.2')
+                    # ax4.fill_between(tt, meanbyday['pO2'], meanplusmargin['pO2'], color=color2[model], alpha='0.2')
                     #plt.gca().invert_yaxis()
                     ax4.xaxis.set_major_locator(months)
                     ax4.xaxis.set_minor_locator(mondays)
@@ -1276,10 +1283,10 @@ def FishNiche_plot_volume01(lakelistfile, listscenarios, listmodels, calivari, d
             plt.show()
             # fig1.savefig(path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.png" %(group, scenario)))
             fig1.savefig(
-                    path.join(datafolder, "Figure_synthese_B_group_%s_scenario_%s_mean100.png" %(group, scenario)))
+                    path.join(datafolder, "Figure_synthese_B_group_%s_scenario_%s_mean%s.png" %(group, scenario,partype)))
             print('completed')
 
-def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, datafolder):
+def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, datafolder,partype="50"):
     years = YearLocator() # every year
     months = MonthLocator() # every month
     yearsFmt = DateFormatter('%Y')
@@ -1288,36 +1295,42 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
     modelname = ['KNM', 'DMI', 'MPI', 'MOH', 'IPS', 'CNR']
     color2 = ['white', 'blue', 'black', 'magenta', 'cyan', 'red', 'yellow']
     i = 0
-    for group in [1]:
-        datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s5.csv' % group))
+    for group in [1,2,3]:
+
+        datasheet_all = pd.read_csv(path.join(datafolder, 'complete_data_%s%s.csv' % (group,partype)))
+        datasheet_all.columns = ["Date","Model","Scenario","Lake_group","Lake_id","pT","pO2","pPAR","TotalVolume","phabitable"]
         datasheet_all['Date'] = pd.to_datetime(datasheet_all['Date'], format="%Y-%m-%d")
         datasheet_all.set_index('Date', inplace=True)
         datasheet2 = datasheet_all
-        for scenario in ['historical',  'rcp85']:
-            fig1 = plt.figure()
+        for scenario in ['historical','rcp45','rcp85']:
             i += 1
+
             tt = pd.date_range(start='2000-01-01', end='2000-12-31')
 
             datasheet_scenario = datasheet_all.loc[datasheet_all['Scenario'] == scenario]
             if scenario == 'historical':
                 datasheet_scenario = datasheet_scenario.loc[:'1982-12-31']
+                datasheet_scenario['Scenario'] = 2
             else:
                 datasheet_scenario = datasheet_scenario.loc['2090-12-31':]
+                datasheet_scenario['Scenario'] = 8
                 # datasheet_scenario = datasheet_scenario.loc['2060-12-31':'2080-12-31']
                 # datasheet_scenario = datasheet_scenario.loc[:'2050-12-31']
             # ttyear = datasheet2.index
             # ttyear = ttyear.drop_duplicates(keep='first')
             listonplot = []
-            for model in [1, 2, 3, 4, 5, 6]:
+            for model in listmodels:
                 datasheet = datasheet_scenario.loc[datasheet_scenario['Model'] == model]
-                datasheet['%0_T'] = datasheet['%_T'] * 100
-                datasheet['%0_O2'] = datasheet['%_O2'] * 100
-                datasheet['%0_PAR'] = datasheet['%_PAR'] * 100
-                datasheet['%0_habitable'] = datasheet['%_habitable']*100
+                datasheet['p0T'] = datasheet['pT'] * 100
+                datasheet['p0O2'] = datasheet['pO2'] * 100
+                datasheet['p0PAR'] = datasheet['pPAR'] * 100
+                datasheet['p0habitable'] = datasheet['phabitable']*100
+
+
+
 
                 if len(datasheet)!= 0:
                     listonplot.append(model)
-
                     medianbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).quantile(0.5)
                     minbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).quantile(0.25)
                     maxbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).quantile(0.75)
@@ -1326,24 +1339,27 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
                     stdbyday = datasheet.groupby([datasheet.index.month, datasheet.index.day]).std()
 
                     # z_critical = stats.norm.ppf(q=0.975) # Get the z-critical value*
-                    meanbyday['%0_O22'] = 100 - meanbyday['%0_O2']
-                    meanbyday['%0_PAR2'] = 100 - meanbyday['%0_PAR']
-                    stdbyday['%0_O22'] = stdbyday['%0_O2']
-                    stdbyday['%0_PAR2'] = stdbyday['%0_PAR']
-                    # minbyday['%0_O22'] =100- minbyday['%0_O2']
-                    # maxbyday['%0_O22'] = 100-maxbyday['%0_O2']
-                    # minbyday['%0_PAR2'] = 100 - minbyday['%0_PAR']
-                    # maxbyday['%0_PAR2'] = 100 - maxbyday['%0_PAR']
+                    meanbyday['p0O22'] = 100 - meanbyday['p0O2']
+                    meanbyday['p0PAR2'] = 100 - meanbyday['p0PAR']
+                    stdbyday['p0O22'] = stdbyday['p0O2']
+                    stdbyday['p0PAR2'] = stdbyday['p0PAR']
+                    # minbyday['p0O22'] =100- minbyday['p0O2']
+                    # maxbyday['p0O22'] = 100-maxbyday['p0O2']
+                    # minbyday['p0PAR2'] = 100 - minbyday['p0PAR']
+                    # maxbyday['p0PAR2'] = 100 - maxbyday['p0PAR']
                     datahabitable = pd.DataFrame()
                     #datahabitable["Date"]=tt
-                    datahabitable["min"]=minbyday['%0_habitable']
-                    datahabitable["max"]=maxbyday['%0_habitable']
-                    datahabitable["median"]=medianbyday['%0_habitable']
-                    datahabitable["mean"]=meanbyday['%0_habitable']
-                    datahabitable["std"]=stdbyday['%0_habitable']
+                    datahabitable["min"]=minbyday['p0habitable']
+                    datahabitable["max"]=maxbyday['p0habitable']
+                    datahabitable["median"]=medianbyday['p0habitable']
+                    datahabitable["mean"]=meanbyday['p0habitable']
+                    datahabitable["std"]=stdbyday['p0habitable']
                    
                     
                     path_excel= path.join(datafolder,"habitable_all50.xlsx")
+                    if not os.path.exists(path_excel):
+                        workbook = xlsxwriter.Workbook(path_excel)
+                        workbook.close()
                     book = load_workbook(path_excel)
                     writer = pd.ExcelWriter(path_excel, engine = 'openpyxl')
                     writer.book = book
@@ -1355,31 +1371,34 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
                     stats.norm.ppf(q=0.025)
                     # margin_of_error = z_critical *(stdbyday/sqrt(countbyday.iloc[0,0]))
                     meanplusmargin = meanbyday + stdbyday
-                    meanplusmargin.loc[meanplusmargin['%0_T'] > 100, '%0_T'] = 100
-                    meanplusmargin.loc[meanplusmargin['%0_PAR2'] > 100, '%0_PAR2'] = 100
-                    meanplusmargin.loc[meanplusmargin['%0_O22'] > 100, '%0_O22'] = 100
+                    meanplusmargin.loc[meanplusmargin['p0T'] > 100, 'p0T'] = 100
+                    meanplusmargin.loc[meanplusmargin['p0PAR2'] > 100, 'p0PAR2'] = 100
+                    meanplusmargin.loc[meanplusmargin['p0O22'] > 100, 'p0O22'] = 100
                     meanlessmargin = meanbyday - stdbyday
-                    meanlessmargin.loc[meanlessmargin['%0_T'] < 0, '%0_T'] = 0
-                    meanlessmargin.loc[meanlessmargin['%0_PAR2'] < 0, '%0_PAR2'] = 0
-                    meanlessmargin.loc[meanlessmargin['%0_O22'] < 0, '%0_O22'] = 0
+                    meanlessmargin.loc[meanlessmargin['p0T'] < 0, 'p0T'] = 0
+                    meanlessmargin.loc[meanlessmargin['p0PAR2'] < 0, 'p0PAR2'] = 0
+                    meanlessmargin.loc[meanlessmargin['p0O22'] < 0, 'p0O22'] = 0
 
-                    fig1 = plt.figure(2 * group * i, figsize=(18.0, 10.0))
+                    fig1 = plt.figure( (2*100)+(group*10) +(i), figsize=(18.0, 10.0))
                     ax1 = plt.subplot(211)
-                    ax1.fill_between(tt, meanbyday['%0_T'], meanlessmargin['%0_T'], color='lightblue', alpha='0.5')
-                    ax1.fill_between(tt, meanbyday['%0_T'], meanplusmargin['%0_T'], color='lightblue', alpha='0.5')
-                    ax1.plot_date(tt, meanbyday['%0_T'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2, ms=3)
-                    # ax1.annotate('Temperature barrier(T>15C)', xy=(80, 80), xycoords='figure points')
-                    # ax1.plot_date(tt, meanbyday['%_T']-margin_of_error['%_T'],'k--',lw=2, ms=3)
-                    ax1.fill_between(tt, meanbyday['%0_PAR2'], meanplusmargin['%0_PAR2'], color='green', alpha='0.2')
-                    ax1.fill_between(tt, meanbyday['%0_PAR2'], meanlessmargin['%0_PAR2'], color='green', alpha='0.2')
-                    ax1.plot_date(tt, meanbyday['%0_PAR2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
-                                    ms=3)
+                    ax1.fill_between(tt, meanbyday['p0T'], meanlessmargin['p0T'], color='lightblue', alpha='0.5')
+                    ax1.fill_between(tt, meanbyday['p0T'], meanplusmargin['p0T'], color='lightblue', alpha='0.5')
+                    ax1.plot_date(tt, meanbyday['p0T'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2, ms=3)
+
                     # ax1.annotate('PAR barrier(PAR)', xy=(80, 80), xycoords='figure points')
-                    # ax1.plot_date(tt, meanbyday['%_PAR'] - margin_of_error['%_PAR'], 'g--', lw=2, ms=3)
-                    ax1.fill_between(tt, meanbyday['%0_O22'], meanlessmargin['%0_O22'], color='red', alpha='0.1')
-                    ax1.fill_between(tt, meanbyday['%0_O22'], meanplusmargin['%0_O22'], color='red', alpha='0.1')
-                    ax1.plot_date(tt, meanbyday['%0_O22'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+                    # ax1.plot_date(tt, meanbyday['pPAR'] - margin_of_error['pPAR'], 'g--', lw=2, ms=3)
+                    ax1.fill_between(tt, meanbyday['p0O22'], meanlessmargin['p0O22'], color='red', alpha='0.1')
+                    ax1.fill_between(tt, meanbyday['p0O22'], meanplusmargin['p0O22'], color='red', alpha='0.1')
+                    ax1.plot_date(tt, meanbyday['p0O22'], '-', color=plt.cm.binary((model / 10) + 0.3), lw=2,
+                                  ms=3)
+
+                    # ax1.annotate('Temperature barrier(T>15C)', xy=(80, 80), xycoords='figure points')
+                    # ax1.plot_date(tt, meanbyday['pT']-margin_of_error['pT'],'k--',lw=2, ms=3)
+                    ax1.fill_between(tt, meanbyday['p0PAR2'], meanplusmargin['p0PAR2'], color='green', alpha='0.2')
+                    ax1.fill_between(tt, meanbyday['p0PAR2'], meanlessmargin['p0PAR2'], color='green', alpha='0.2')
+                    ax1.plot_date(tt, meanbyday['p0PAR2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
                                     ms=3)
+
 
                     ax1.autoscale_view()
 
@@ -1391,13 +1410,13 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
                     ax4 = ax1.twinx()
                     ax4.set_ylim(0, 100, 50)
                     plt.yticks([0, 25, 50, 75, +100])
-                    ax4.plot_date(tt, meanbyday['%0_O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
+                    ax4.plot_date(tt, meanbyday['p0O2'], '-', color=plt.cm.binary((model / 10)+ 0.3), lw=2,
                                     ms=3)
-                    # ax4.plot_date(tt, meanlessmargin['%_O2'], ':', color=color[model], lw=2, ms=3)
+                    # ax4.plot_date(tt, meanlessmargin['pO2'], ':', color=color[model], lw=2, ms=3)
                     # ax4.annotate('Oxygen barrier(O>15C)', xy=(80, 80), xycoords='figure points')
-                    # ax4.plot_date(tt, meanbyday['%_O2'] - margin_of_error['%_O2'], 'r--', lw=2, ms=3)
-                    # ax4.fill_between(tt, meanbyday['%_O2'], meanlessmargin['%_O2'], color=color2[model],alpha='0.2')
-                    # ax4.fill_between(tt, meanbyday['%_O2'], meanplusmargin['%_O2'], color=color2[model], alpha='0.2')
+                    # ax4.plot_date(tt, meanbyday['pO2'] - margin_of_error['pO2'], 'r--', lw=2, ms=3)
+                    # ax4.fill_between(tt, meanbyday['pO2'], meanlessmargin['pO2'], color=color2[model],alpha='0.2')
+                    # ax4.fill_between(tt, meanbyday['pO2'], meanplusmargin['pO2'], color=color2[model], alpha='0.2')
                     plt.gca().invert_yaxis()
                     ax4.xaxis.set_major_locator(months)
                     ax4.xaxis.set_minor_locator(mondays)
@@ -1432,15 +1451,15 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
                     # plt.title('group %s scenario %s'%(group,scenario))# scenario %s' %(group,scenario))
                     plt.tight_layout()
 
-            interet = []
-            ert = []
-            for i in [1, 2, 3, 4, 5, 6]:
-                interet.append(mlines.Line2D([], [], color=plt.cm.binary((i / 10)+ 0.3), markersize=3,
-                                                 label=modelname[i - 1]))
+                    interet = []
+                    ert = []
+                    for i in [1, 2, 3, 4, 5, 6]:
+                        interet.append(mlines.Line2D([], [], color=plt.cm.binary((i / 10)+ 0.3), markersize=3,
+                                                         label=modelname[i - 1]))
 
-            ert.append(Patch(color='green', alpha=0.2, label='PAR'))
-            ert.append(Patch(color='lightblue', alpha=0.5, label='T'))
-            ert.append(Patch(color='red', alpha=0.1, label='DO'))
+                    ert.append(Patch(color='green', alpha=0.2, label='PAR'))
+                    ert.append(Patch(color='lightblue', alpha=0.5, label='T'))
+                    ert.append(Patch(color='red', alpha=0.1, label='DO'))
 
             first_legend = plt.legend(loc='upper center', bbox_to_anchor=(0.4, -0.2), fancybox=True, shadow=True,
                                         ncol=1, handles=ert)
@@ -1451,8 +1470,12 @@ def FishNiche_plot_volume(lakelistfile, listscenarios, listmodels, calivari, dat
             #plt.show()
             # fig1.savefig(path.join(datafolder, "Figure_synthese_A2_group_%s_scenario_%s_mean.png" %(group, scenario)))
             fig1.savefig(
-                path.join(datafolder, "Figure_synthese_A1_group_%s_scenario_%s_mean_50.svg" %(group, scenario)))
+                path.join(datafolder, "Figure_synthese_A1_group_%s_scenario_%s_mean_%s.svg" %(group, scenario,partype)))
+            fig1.savefig(
+                path.join(datafolder, "Figure_synthese_A1_group_%s_scenario_%s_mean_%s.png" % (group, scenario,partype)))
             print('completed')
+            fig1.clear()
+            plt.close()
 
 def FishNiche_plot_volume_param(param, lakelistfile, listscenarios, listmodels, calivari, datafolder):
     years = YearLocator() # every year
@@ -1907,7 +1930,7 @@ def generate_timeseries_his_by_model(listmodels, listscenarios, lakelistfile, da
     #                                                              index=False)
     # print('end')
 
-def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafolder):
+def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafolder,partype="50"):
     i = 0
     complete_data = pd.DataFrame()
     for model in listmodels:
@@ -1922,8 +1945,9 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                 f.close()
 #            lake_id, subid, name, eh, area, depth, longitude, latitude, volume \
 #                = lakes[1].strip().split(',')
-            lake_id, subid, name, eh, area, depth, longitude, latitude, volume, mean_depth, sediment, mean_calculated = lakes[i].strip().split(',')
-            
+            lake_id, subid, name, eh, area, depth, longitude, latitude, mean_depth,volume,turnover, sediment, sub,catch,cl,scl= lakes[i].strip().split(',')
+
+
             eh = eh[2:] if eh[:2] == '0x' else eh
             while len(eh)< 6:
                 eh = '0' + eh
@@ -1933,24 +1957,25 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                                  'EUR-11_%s_%s-%s_%s_%s0101-%s1231' %(m1, exA, exB, m2, y1A, y2B))
             tzt_dir = path.join(outdir, 'Tzt.csv')
             # print(tzt_dir)
-            if not path.exists(path.join(datafolder, 'fish_niche_export50_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+            if not path.exists(path.join(datafolder, 'fish_niche_export%s_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(partype,
                     m1, exA, exB, m2, y1A, y2B))):
-                 # if os.path.exists(os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
-#                 print(tzt_dir)
-#                 if os.path.exists(tzt_dir):
-#                cmd = 'matlab -wait -r -nosplash -nodesktop generateVolumeTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' %(lakelistfile, m1, m2, exA, y1A, exB, y1B, datafolder)
-#                print(cmd)
-#                os.system(cmd)
-                print('nan')
-            else:
+                # if os.path.exists(os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
+                print(tzt_dir)
+                if os.path.exists(tzt_dir):
+                    cmd = 'matlab -wait -r -nosplash -nodesktop generateVolumeTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' %(lakelistfile, m1, m2, exA, y1A, exB, y2B, datafolder)
+                    print(cmd)
+                    os.system(cmd)
+                    print('nan')
+            if path.exists( path.join(datafolder, 'fish_niche_export%s_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(partype,
+                                    m1, exA, exB, m2, y1A, y2B))):
 
-               datasheet = path.join(datafolder, 'fish_niche_export50_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(
+               datasheet = path.join(datafolder, 'fish_niche_export%s_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(partype,
                    m1, exA, exB, m2, y1A, y2B))
                #print(datasheet)
                timeseries = pd.read_csv(datasheet)
                timeseries['Date'] = pd.to_datetime(timeseries['Date'], format="%d.%m.%Y")
                timeseries_select = pd.DataFrame(
-                   columns=['Date', 'Model', 'Scenario', 'Lake_group','Lake_id', '%_T', '%_O2', '%_PAR', 'Total Volume','%_habitable'])
+                   columns=['Date', 'Model', 'Scenario', 'Lake_group','Lake_id', 'pT', 'pO2', 'pPAR', 'Total Volume','phabitable'])
                
                timeseries_select['Date'] = timeseries['Date']
                timeseries_select['Scenario'] = exA
@@ -1959,12 +1984,12 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                timeseries_select['Lake_id'] = timeseries['lakeid']
                timeseries_select.loc[timeseries['Total Volume'] < 1.0e7, 'Lake_group'] = 1
                timeseries_select.loc[timeseries['Total Volume'] > 5.0e9, 'Lake_group'] = 3
-               timeseries_select['%_T'] = timeseries['Volume with T < 15 C'] / timeseries['Total Volume']
-               timeseries_select['%_O2'] = timeseries['Volume with O2 > 3000'] / timeseries['Total Volume']
-               timeseries_select['%_PAR'] = timeseries['Volume with PPFD > 50'] / timeseries['Total Volume']
-               timeseries_select.loc[timeseries_select['%_O2']<= timeseries_select['%_PAR'],'%_habitable'] = timeseries_select['%_T']-(1-timeseries_select['%_O2'])
-               timeseries_select.loc[timeseries_select['%_O2']> timeseries_select['%_PAR'],'%_habitable'] = timeseries_select['%_T']-(1-timeseries_select['%_PAR'])
-               timeseries_select.loc[timeseries_select['%_habitable']<0,'%_habitable'] = 0
+               timeseries_select['pT'] = timeseries['Volume with T < 15 C'] / timeseries['Total Volume']
+               timeseries_select['pO2'] = timeseries['Volume with O2 > 3000'] / timeseries['Total Volume']
+               timeseries_select['pPAR'] = timeseries['Volume with PPFD > %s'%partype] / timeseries['Total Volume']
+               timeseries_select.loc[timeseries_select['pO2']<= timeseries_select['pPAR'],'phabitable'] = timeseries_select['pT']-(1-timeseries_select['pO2'])
+               timeseries_select.loc[timeseries_select['pO2']> timeseries_select['pPAR'],'phabitable'] = timeseries_select['pT']-(1-timeseries_select['pPAR'])
+               timeseries_select.loc[timeseries_select['phabitable']<0,'phabitable'] = 0
                timeseries_select['Model'] = model 
                print('completed')
                if i == 0:
@@ -1974,14 +1999,11 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                else:
                    complete_data = complete_data.append(timeseries_select, ignore_index=True)
                    print('added')
-    complete_data.loc[complete_data['Lake_group'] == 1].to_csv(path.join(datafolder, 'complete_data_15_id.csv'),
-                                                                 index=False)
+    complete_data.loc[complete_data['Lake_group'] == 1].to_csv(path.join(datafolder, 'complete_data_1%s.csv'%partype),index=False)
     print('1_save')
-#    complete_data.loc[complete_data['Lake_group'] == 2].to_csv(path.join(datafolder, 'complete_data_25.csv'),
-#                                                                 index=False)
-#    print('2_save')
-#    complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'complete_data_35.csv'),
-#                                                                 index=False)
+    complete_data.loc[complete_data['Lake_group'] == 2].to_csv(path.join(datafolder, 'complete_data_2%s.csv'%partype), index=False)
+    print('2_save')
+    complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'complete_data_3%s.csv'%partype), index=False)
     print('end')
 
 def FishNiche_validate_results(scenarioid, modelid, lakelistfile, calivari, k_BOD):
@@ -3783,8 +3805,7 @@ def FishNiche_mean_k_BOD_graph(scenarioid, modelid, lakelistfile, calivari, vari
 if __name__ == '__main__':
     a = 0
     # runlakesGoran_par('test.csv', 4, 2)
-    # lakes = FishNiche_generate_timeseries(r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
-    #     2017SwedenList_only_validation_lakes.csv', 2, 4)
+    #lakes = FishNiche_generate_timeseries(r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList_only_validation_lakes.csv', 2, 4)
     # FishNiche_cathegories(r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\2017SwedenList.csv')
     # FishNiche_validate_results(2, 4, r'C:\Users\Marianne\Documents\Fish_niche1\MDN_FishNiche_2017\lakes\
     # 2017SwedenList_only_validation_lakes.csv', 'Final', 0.0001)
@@ -3806,13 +3827,13 @@ if __name__ == '__main__':
     # FishNiche_graph_temp_time(2, 4, r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\test.csv')
     # plt.show()
     #FishNiche_plot_volume_param('His',r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
-    #generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],r'D:\Fish_niche\lakes\2017SwedenList.csv',datafolder)
-    FishNiche_plot_volume02(r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
-    # 
-    #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'D:\Fish_niche\lakes\2017SwedenList.csv', datafolder)
+    #generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 5, 8],r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',datafolder)#,"one_Pourcent")
+    FishNiche_plot_volume(r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',   [1, 2, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6], 1, datafolder)#,"one_Pourcent")
+    # #
+    # #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'D:\Fish_niche\lakes\2017SwedenList.csv', datafolder)
     # FishNiche_plot_volume_param('His', r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
     #     2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
-    #FishNiche_plot_volume01(r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
+    # FishNiche_plot_volume01(r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\
     #     2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
     # 
     #generate_timeseries_his_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], r'C:\Users\Administrateur\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', datafolder)

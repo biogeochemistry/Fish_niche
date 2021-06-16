@@ -8,31 +8,20 @@ Then launches MyLake for the specified lake.
 __author__ = "Julien Bellavance and Marianne Cote"
 
 import csv
-import os
-import numpy as np
 import datetime
-import netCDF4 as Ncdf
-import pandas as pd
+import os
 import statistics
-from sklearn.metrics import r2_score, mean_squared_error
-from math import sqrt, floor
+
+import h5py
+import math
+import netCDF4 as Ncdf
 import numpy as np
 import pandas as pd
-import h5py
-import datetime
-import os
-import shutil
-import bz2
-import math
-import sys
-import matplotlib.pyplot as plt
-import seaborn as sns
-from statsmodels.sandbox.regression.predstd import wls_prediction_std
-import matplotlib.pyplot as plt
-import matplotlib
-from matplotlib.patches import Rectangle
-from scipy import stats
-import statsmodels.api as sm
+
+from math import sqrt, floor, log10, log
+from sklearn.metrics import r2_score, mean_squared_error
+
+from Graphics import Graphics
 
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
 
@@ -51,19 +40,47 @@ scenarios = {1: ('historical', 1971, 'historical', 1976),
              7: ('rcp85', 2061, 'rcp85', 2066),
              8: ('rcp85', 2091, 'rcp85', 2096)}
 
-cordexfolder = 'F:\MCote output\optimisation_2018_10_12\cordex' #5-24-2018 MC #Need to be change depending where the climatic files where
+cordexfolder = r'F:\MCote output\optimisation_2018_10_12\cordex'  # 5-24-2018 MC #Need to be change depending where
+#                                                                   the climatic files where
 inflowfolder = r'C:\Users\macot620\Documents\GitHub\Fish_niche\sweden_inflow_data'
-outputfolder = r'F:\output' #5-9-2018 MC
+outputfolder = r'F:\output'  # 5-9-2018 MC
 observation_folder = "Observations"
 input_folder = "Inputs"
 
 output_folder = r"D:\output_fish_niche"
 
-lakes_data = pd.read_csv("2017SwedenList.csv",encoding='ISO-8859-1')
+lakes_data = pd.read_csv("2017SwedenList.csv", encoding='ISO-8859-1')
 lakes_data = lakes_data.set_index("lake_id").to_dict()
-lakes_list = list(lakes_data.get("name").keys())
+# lakes_list = list(lakes_data.get("name").keys())
 lakes_list = list(lakes_data.get("ebhex").keys())
 
+def round_decimals_down(number:float, decimals:int=2):
+    """
+    Returns a value rounded down to a specific number of decimal places.
+    """
+    if not isinstance(decimals, int):
+        raise TypeError("decimal places must be an integer")
+    elif decimals < 0:
+        raise ValueError("decimal places has to be 0 or more")
+    elif decimals == 0:
+        return math.floor(number)
+
+    factor = 10 ** decimals
+    return math.floor(number * factor) / factor
+
+def round_decimals_up(number:float, decimals:int=2):
+    """
+    Returns a value rounded up to a specific number of decimal places.
+    """
+    if not isinstance(decimals, int):
+        raise TypeError("decimal places must be an integer")
+    elif decimals < 0:
+        raise ValueError("decimal places has to be 0 or more")
+    elif decimals == 0:
+        return math.ceil(number)
+
+    factor = 10 ** decimals
+    return math.ceil(number * factor) / factor
 
 def simulation_years(modelid, scenarioid):
     """
@@ -535,12 +552,39 @@ def get_latitude(lake_name, forcing_data_directory):
         print("problem!")
 
 
+years_by_ebhex = {
+    310: [2006, 2010],
+    698: [2005, 2009],
+    6950: [2006, 2010],
+    14939: [2005, 2009],
+    16765: [2006, 2010],
+    30704: [2005, 2010],
+    31895: [2005, 2009],
+    32276: [2006, 2010],
+    33494: [2006, 2010],
+    33590: [2006, 2010],
+    67035: [2003, 2007],
+    99045: [2006, 2010]}
+
+
+def get_key(val):
+    for key, value in years_by_ebhex.items():
+        # print(val, key)
+        if val == key:
+            return value
+
+    return "key doesn't exist"
+
+
 class LakeInfo:
     """
     Class containing all info needed by the script to run model and calibration.
     """
 
-    def __init__(self, lake_name, lake_id, subid, ebhex, area, depth, longitude, latitude, volume, scenarioid=2):
+    def __init__(self, lake_name, lake_id, subid, ebhex, area, depth, mean, longitude, latitude, volume, turnover,
+                 swab1='default', swab0='default', cshelter='default', isct='default', iscv='default',
+                 isco='default', iscdoc='default', ksod='default', kbod='default', kzn0='default', albice='default',
+                 albsnow='default', scenarioid=2, modelid=2, calibration=False, outputfolder=r'F:\output',old = False):
         """
         initiate parameters
         :param lake_name: string containing the long name of the lake
@@ -551,10 +595,18 @@ class LakeInfo:
         self.subid = subid
         self.area = area
         self.depth = depth
+        self.mean = mean
         self.volume = volume
         self.longitude = longitude
         self.latitude = latitude
         self.observation_file = os.path.join(inflowfolder, "Validation_data_for_lookup.xlsx")
+        self.turnover = turnover
+        if turnover <= 3:
+            self.spin_up = 3
+        elif turnover <= 5:
+            self.spin_up = 5
+        else:
+            self.spin_up = 5
 
         ebhex = ebhex[2:] if ebhex[:2] == '0x' else ebhex
         while len(ebhex) < 6:
@@ -563,326 +615,895 @@ class LakeInfo:
         outdir = os.path.join(outputfolder, d1, d2, d3)
 
         self.output_path = outdir
-
+        self.old = old
+        self.old_calibration_path = os.path.join(self.output_path,
+                                                 "EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231",
+                                                 "calibration_result_old")
         exA, y1A, exB, y1B = scenarios[scenarioid]
-        self.start_year = y1A
-        self.end_year = y1B + 4
-        self.calibration_path = os.path.join(self.output_path,
-                                             "EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231")
-        if os.path.exists(os.path.join(self.calibration_path, "Calibration_Complete.csv")):
-            data = pd.read_csv(os.path.join(self.calibration_path, "Calibration_Complete.csv"), header=None)
-            if os.path.exists(os.path.join(self.calibration_path, "Calibration_CompleteOXY.csv")):
-                dataOXY = pd.read_csv(os.path.join(self.calibration_path, "Calibration_CompleteOXY.csv"), header=None)
+        m1, m2 = models[modelid]
+        y2B = y1B + 4
+        if get_key(lake_id) != "key doesn't exist":
+            years = get_key(lake_id)
+            self.start_year = years[0]
+            self.end_year = years[1]
+        else:
+            self.start_year = y1A
+            self.end_year = y1B + 4
+        self.start_year = 2001
+        self.end_year = 2010
 
-                if os.path.exists(os.path.join(self.calibration_path, "2017par")):
-                    with open(os.path.join(self.calibration_path, "2017par")) as f:
-                        lines = f.readlines()
-                        for line in lines:
-                            line = line.split(sep="	")
-                            line[0] = line[0].replace(" ", "")
+        # oldcalibration_path = os.path.join(self.output_path,
+        #                                      "EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231")
 
-                            if line[0] == "Kz_N0":
-                                self.kz_n0 = data.iloc[0, 0]
+        if old:
+            self.calibration_path = self.old_calibration_path
+        else:
+            self.calibration_path = os.path.join(self.output_path,
+                                             "EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231",
+                                             "calibration_result")
 
-                            elif line[0] == "C_shelter":
-                                self.c_shelter = data.iloc[0, 1]
+        self.outdir = os.path.join(self.output_path,
+                                   'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
+                                       m1, exA, exB, m2, y1A, y2B))
 
+        #
+        # for file in["Observed_Secchi.csv","Observed_Oxygen.csv","Observed_Temperature.csv","Calibration_Complete.csv","Calibration_CompleteOXY.csv"]:
+        #     if not os.path.exists(self.calibration_path):
+        #         os.makedirs(self.calibration_path)
+        #     if os.path.exists(os.path.join(oldcalibration_path, file)):
+        #         shutil.move(os.path.join(oldcalibration_path, file),self.calibration_path)
+        # for path, currentDirectory, files in os.walk(oldcalibration_path):
+        #     if path == self.calibration_path:
+        #         break
+        #     for file in files:
+        #         if file.startswith("Calibration_C"):
+        #             shutil.move(os.path.join(oldcalibration_path, file),self.calibration_path)
+        print([swab1, swab0, cshelter, iscv, isct, isco, iscdoc, ksod, kbod, kzn0, albice, albsnow],
+              all(e == 'default' for e in
+                  [swab1, swab0, cshelter, iscv, isct, isco, iscdoc, ksod, kbod, kzn0, albice, albsnow]))
+        for e in [swab1, swab0, cshelter, iscv, isct, isco, iscdoc, ksod, kbod, kzn0, albice, albsnow]:
+            if e != 'default':
+                print("here")
 
-                            elif line[0] == "alb_melt_ice":
-                                self.alb_melt_ice = data.iloc[0, 2]
+        if not all(e == 'default' for e in
+                   [swab1, swab0, cshelter, iscv, isct, isco, iscdoc, ksod, kbod, kzn0, albice, albsnow]):
 
-                            elif line[0] == "alb_melt_snow":
-                                self.alb_melt_snow = data.iloc[0, 3]
+            # self.start_year = y1A
+            # self.end_year = y1B + 4
 
-                            elif line[0] == "I_scV":
-                                self.i_scv = data.iloc[0, 4]
-
-                            elif line[0] == "I_scT":
-                                self.i_sct = data.iloc[0, 5]
-
-                            elif line[0] == "I_scO":
-                                self.i_sco = dataOXY.iloc[0, 3]
-
-                            elif line[0] == "I_scDOC":
-                                self.i_sc_doc = dataOXY.iloc[0, 0]
-
-                            elif line[0] == "swa_b0":
-                                self.swa_b0 = data.iloc[0, 6]
-
-                            elif line[0] == "swa_b1":
-                                self.swa_b1 = data.iloc[0, 7]
-
-                            elif line[0] == "k_BOD":
-                                self.k_bod = dataOXY.iloc[0, 1]
-
-                            elif line[0] == "k_SOD":
-                                self.k_sod = dataOXY.iloc[0, 2]
-
-                elif os.path.exists(os.path.join(self.calibration_path, "2020par")):
-                    with open(os.path.join(self.calibration_path, "2020par")) as f:
-                        lines = f.readlines()
-                        for line in lines:
-                            line = line.split(sep="	")
-                            line[0] = line[0].replace(" ", "")
-
-                            if line[0] == "Kz_N0":
-                                self.kz_n0 = data.iloc[0, 0]
-
-                            elif line[0] == "C_shelter":
-                                self.c_shelter = data.iloc[0, 1]
-
-
-                            elif line[0] == "alb_melt_ice":
-                                self.alb_melt_ice = data.iloc[0, 2]
-
-                            elif line[0] == "alb_melt_snow":
-                                self.alb_melt_snow = data.iloc[0, 3]
-
-                            elif line[0] == "I_scV":
-                                self.i_scv = data.iloc[0, 4]
-
-                            elif line[0] == "I_scT":
-                                self.i_sct = data.iloc[0, 5]
-
-                            elif line[0] == "I_scO":
-                                self.i_sco = dataOXY.iloc[0, 3]
-
-                            elif line[0] == "I_scDOC":
-                                self.i_sc_doc = dataOXY.iloc[0, 0]
-
-                            elif line[0] == "swa_b0":
-                                self.swa_b0 = data.iloc[0, 6]
-
-                            elif line[0] == "swa_b1":
-                                self.swa_b1 = data.iloc[0, 7]
-
-                            elif line[0] == "k_BOD":
-                                self.k_bod = dataOXY.iloc[0, 1]
-
-                            elif line[0] == "k_SOD":
-                                self.k_sod = dataOXY.iloc[0, 2]
-
-                else:
-                    self.kz_n0 = data.iloc[0, 0]
-                    self.c_shelter = data.iloc[0, 1]
-                    self.alb_melt_ice = data.iloc[0, 2]
-                    self.alb_melt_snow = data.iloc[0, 3]
-                    self.i_scv = data.iloc[0, 4]
-                    self.i_sct = data.iloc[0, 5]
-                    self.swa_b0 = data.iloc[0, 6]
-                    self.swa_b1 = data.iloc[0, 7]
-                    self.k_bod = dataOXY.iloc[0, 1]
-                    self.k_sod = dataOXY.iloc[0, 2]
-                    self.i_sc_doc = dataOXY.iloc[0, 0]
-                    self.i_sco = dataOXY.iloc[0, 3]
-
-            else:
-                if os.path.exists(os.path.join(self.calibration_path, "2017par")):
-                    with open(os.path.join(self.calibration_path, "2017par")) as f:
-                        lines = f.readlines()
-                        for line in lines:
-                            line = line.split(sep="	")
-                            line[0] = line[0].replace(" ", "")
-
-                            if line[0] == "Kz_N0":
-                                self.kz_n0 = data.iloc[0, 0]
-
-                            elif line[0] == "C_shelter":
-                                self.c_shelter = data.iloc[0, 1]
-
-
-                            elif line[0] == "alb_melt_ice":
-                                self.alb_melt_ice = data.iloc[0, 2]
-
-                            elif line[0] == "alb_melt_snow":
-                                self.alb_melt_snow = data.iloc[0, 3]
-
-                            elif line[0] == "I_scV":
-                                self.i_scv = data.iloc[0, 4]
-
-                            elif line[0] == "I_scT":
-                                self.i_sct = data.iloc[0, 5]
-
-                            elif line[0] == "I_scO":
-                                self.i_sco = line[1]
-
-
-                            elif line[0] == "I_scDOC":
-                                self.i_sc_doc = line[1]
-
-                            elif line[0] == "swa_b0":
-                                self.swa_b0 = data.iloc[0, 6]
-
-                            elif line[0] == "swa_b1":
-                                self.swa_b1 = data.iloc[0, 7]
-
-                            elif line[0] == "k_BOD":
-                                self.k_bod = line[1]
-
-                            elif line[0] == "k_SOD":
-                                self.k_sod = line[1]
-
-                elif os.path.exists(os.path.join(self.calibration_path, "2020par")):
-                    with open(os.path.join(self.calibration_path, "2020par")) as f:
-                        lines = f.readlines()
-                        for line in lines:
-                            line = line.split(sep="	")
-                            line[0] = line[0].replace(" ", "")
-
-                            if line[0] == "Kz_N0":
-                                self.kz_n0 = data.iloc[0, 0]
-
-                            elif line[0] == "C_shelter":
-                                self.c_shelter = data.iloc[0, 1]
-
-
-                            elif line[0] == "alb_melt_ice":
-                                self.alb_melt_ice = data.iloc[0, 2]
-
-                            elif line[0] == "alb_melt_snow":
-                                self.alb_melt_snow = data.iloc[0, 3]
-
-                            elif line[0] == "I_scV":
-                                self.i_scv = data.iloc[0, 4]
-
-                            elif line[0] == "I_scT":
-                                self.i_sct = data.iloc[0, 5]
-
-                            elif line[0] == "I_scO":
-                                self.i_sco = line[1]
-
-                            elif line[0] == "I_scDOC":
-                                self.i_sc_doc = line[1]
-
-                            elif line[0] == "swa_b0":
-                                self.swa_b0 = data.iloc[0, 6]
-
-                            elif line[0] == "swa_b1":
-                                self.swa_b1 = data.iloc[0, 7]
-
-                            elif line[0] == "k_BOD":
-                                self.k_bod = line[1]
-
-                            elif line[0] == "k_SOD":
-                                self.k_sod = line[1]
-
-                else:
-                    self.kz_n0 = data.iloc[0, 0]
-                    self.c_shelter = data.iloc[0, 1]
-                    self.alb_melt_ice = data.iloc[0, 2]
-                    self.alb_melt_snow = data.iloc[0, 3]
-                    self.i_scv = data.iloc[0, 4]
-                    self.i_sct = data.iloc[0, 5]
-                    self.i_sco = 1
-                    self.swa_b0 = data.iloc[0, 6]
-                    self.swa_b1 = data.iloc[0, 7]
-                    self.k_bod = 500
-                    self.k_sod = 0.1
-                    self.i_sc_doc = 1
+            self.swa_b1 = swab1
+            self.swa_b0 = swab0
+            self.c_shelter = cshelter
+            self.i_scv = iscv
+            self.i_sco = isco
+            self.i_sc_doc = iscdoc
+            self.k_sod = ksod
+            self.k_bod = kbod
+            self.kz_n0 = kzn0
+            self.alb_melt_snow = albsnow
+            self.alb_melt_ice = albice
+            self.i_sct = isct
 
         else:
-            if os.path.exists(os.path.join(self.calibration_path, "2017par")):
-                with open(os.path.join(self.calibration_path, "2017par")) as f:
-                    lines = f.readlines()
-                    for line in lines:
-                        line = line.split(sep="	")
-                        line[0] = line[0].replace(" ", "")
+            if not calibration:
+                try:
+                    if os.path.exists(os.path.join(self.outdir, "Observed_Secchi.csv")):
+                        swa_b1value = pd.read_csv(os.path.join(self.outdir, "Observed_Secchi.csv"))
+                        mean_swa_b1 = round(1.48 / (swa_b1value.iloc[:, 1].mean()), 4)
+                    else:
+                        mean_swa_b1 = 1
+                except:
+                    mean_swa_b1 = 1
 
-                        if line[0] == "Kz_N0":
-                            self.kz_n0 = line[1]
+                if os.path.exists(os.path.join(self.outdir, "Calibration_Complete.csv")):
+                    data = pd.read_csv(os.path.join(self.outdir, "Calibration_Complete.csv"), header=None)
+                    if os.path.exists(os.path.join(self.outdir, "Calibration_CompleteOXY.csv")):
+                        dataOXY = pd.read_csv(os.path.join(self.outdir, "Calibration_CompleteOXY.csv"),
+                                              header=None)
 
-                        elif line[0] == "C_shelter":
-                            self.c_shelter = line[1]
+                        if os.path.exists(os.path.join(self.outdir, "2017par")):
+                            with open(os.path.join(self.outdir, "2017par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
 
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
 
-                        elif line[0] == "alb_melt_ice":
-                            self.alb_melt_ice = line[1]
-
-                        elif line[0] == "alb_melt_snow":
-                            self.alb_melt_snow = line[1]
-
-                        elif line[0] == "I_scV":
-                            self.i_scv = line[1]
-
-                        elif line[0] == "I_scT":
-                            self.i_sct = line[1]
-
-                        elif line[0] == "I_scO":
-                            self.i_sco = line[1]
-
-
-                        elif line[0] == "I_scDOC":
-                            self.i_sc_doc = line[1]
-
-                        elif line[0] == "swa_b0":
-                            self.swa_b0 = line[1]
-
-                        elif line[0] == "swa_b1":
-                            self.swa_b1 = line[1]
-
-                        elif line[0] == "k_BOD":
-                            self.k_bod = line[1]
-
-                        elif line[0] == "k_SOD":
-                            self.k_sod = line[1]
-
-            elif os.path.exists(os.path.join(self.calibration_path, "2020par")):
-                with open(os.path.join(self.calibration_path, "2020par")) as f:
-                    lines = f.readlines()
-                    for line in lines:
-                        line = line.split(sep="	")
-                        line[0] = line[0].replace(" ", "")
-
-                        if line[0] == "Kz_N0":
-                            self.kz_n0 = line[1]
-
-                        elif line[0] == "C_shelter":
-                            self.c_shelter = line[1]
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
 
 
-                        elif line[0] == "alb_melt_ice":
-                            self.alb_melt_ice = line[1]
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice = line[1]  # data.iloc[0, 2]
 
-                        elif line[0] == "alb_melt_snow":
-                            self.alb_melt_snow = line[1]
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = data.iloc[0, 3]
 
-                        elif line[0] == "I_scV":
-                            self.i_scv = line[1]
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = data.iloc[0, 4]
 
-                        elif line[0] == "I_scT":
-                            self.i_sct = line[1]
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = data.iloc[0, 5]
 
-                        elif line[0] == "I_scO":
-                            self.i_sco = line[1]
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = dataOXY.iloc[0, 3]
 
-                        elif line[0] == "I_scDOC":
-                            self.i_sc_doc = line[1]
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = dataOXY.iloc[0, 0]
 
-                        elif line[0] == "swa_b0":
-                            self.swa_b0 = line[1]
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 6]
 
-                        elif line[0] == "swa_b1":
-                            self.swa_b1 = line[1]
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        # self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]]
 
-                        elif line[0] == "k_BOD":
-                            self.k_bod = line[1]
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = dataOXY.iloc[0, 1]
 
-                        elif line[0] == "k_SOD":
-                            self.k_sod = line[1]
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = dataOXY.iloc[0, 2]
+
+                        elif os.path.exists(os.path.join(self.outdir, "2020par")):
+                            with open(os.path.join(self.outdir, "2020par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
+
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
+
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
+
+
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice = line[1]  # data.iloc[0, 2]
+
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = line[1]  # data.iloc[0, 3]
+
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = line[1]  # data.iloc[0, 4]
+
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = line[1]  # data.iloc[0, 5]
+
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = dataOXY.iloc[0, 3]
+
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = dataOXY.iloc[0, 0]
+
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 2]  # data.iloc[0, 6]
+
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 3]  # data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        # self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]
+
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = dataOXY.iloc[0, 1]
+
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = dataOXY.iloc[0, 2]
+
+                        else:
+                            self.kz_n0 = data.iloc[0, 0]
+                            self.c_shelter = data.iloc[0, 1]
+                            self.alb_melt_ice = 0.6  # data.iloc[0, 2]
+                            self.alb_melt_snow = 0.9  # data.iloc[0, 3]
+                            self.i_scv = data.iloc[0, 4]
+                            self.i_sct = data.iloc[0, 5]
+                            # self.swa_b0 = data.iloc[0, 6]
+                            self.swa_b0 = 2.5
+                            self.swa_b1 = mean_swa_b1
+                            # self.swa_b1 = data.iloc[0, 7]
+                            self.k_bod = dataOXY.iloc[0, 1]
+                            self.k_sod = dataOXY.iloc[0, 2]
+                            self.i_sc_doc = dataOXY.iloc[0, 0]
+                            self.i_sco = dataOXY.iloc[0, 3]
+
+                    else:
+                        if os.path.exists(os.path.join(self.outdir, "2017par")):
+                            with open(os.path.join(self.outdir, "2017par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
+
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
+
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
+
+
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice = line[1]  # data.iloc[0, 2]
+
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = data.iloc[0, 3]
+
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = data.iloc[0, 4]
+
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = data.iloc[0, 5]
+
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = line[1]
+
+
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = line[1]
+
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 6]
+
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        # self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]
+
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = line[1]
+
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = line[1]
+
+                        elif os.path.exists(os.path.join(self.outdir, "2020par")):
+                            with open(os.path.join(self.outdir, "2020par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
+
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
+
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
+
+
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice = line[1]  # data.iloc[0, 2]
+
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = line[1]  # data.iloc[0, 3]
+
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = line[1]  # data.iloc[0, 4]
+
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = line[1]  # data.iloc[0, 5]
+
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = line[1]
+
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = line[1]
+
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 2]  # data.iloc[0, 6]
+
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 3]  # data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        # self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]
+
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = line[1]
+
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = line[1]
+
+                        else:
+                            self.kz_n0 = data.iloc[0, 0]
+                            self.c_shelter = data.iloc[0, 1]
+                            try:
+                                self.alb_melt_ice = 0.6  # data.iloc[0, 2]
+                                self.alb_melt_snow = 0.9  # data.iloc[0, 3]
+                                self.i_scv = 1.15  # data.iloc[0, 4]
+                                self.i_sct = 0  # data.iloc[0, 5]
+                                self.i_sco = 1
+                                self.swa_b0 = 2.5  # data.iloc[0, 6]
+                            except:
+                                self.alb_melt_ice = 0.6
+                                self.alb_melt_snow = 0.9
+                                self.i_scv = 1.15
+                                self.i_sct = 0
+                                self.i_sco = 1
+                                self.swa_b0 = data.iloc[0, 3]
+
+                            try:
+                                self.swa_b1 = data.iloc[0, 7]
+                            except:
+                                self.swa_b1 = mean_swa_b1
+                            # self.swa_b1 = data.iloc[0, 7]
+                            self.k_bod = 500
+                            self.k_sod = 0.1
+                            self.i_sc_doc = 1
+
+                else:
+                    if os.path.exists(os.path.join(self.outdir, "2017par")):
+                        with open(os.path.join(self.outdir, "2017par")) as f:
+                            lines = f.readlines()
+                            for line in lines:
+                                line = line.split(sep="	")
+                                line[0] = line[0].replace(" ", "")
+
+                                if line[0] == "Kz_N0":
+                                    self.kz_n0 = line[1]
+
+                                elif line[0] == "C_shelter":
+                                    self.c_shelter = line[1]
+
+
+                                elif line[0] == "alb_melt_ice":
+                                    self.alb_melt_ice = line[1]
+
+                                elif line[0] == "alb_melt_snow":
+                                    self.alb_melt_snow = line[1]
+
+                                elif line[0] == "I_scV":
+                                    self.i_scv = line[1]
+
+                                elif line[0] == "I_scT":
+                                    self.i_sct = line[1]
+
+                                elif line[0] == "I_scO":
+                                    self.i_sco = line[1]
+
+
+                                elif line[0] == "I_scDOC":
+                                    self.i_sc_doc = line[1]
+
+                                elif line[0] == "swa_b0":
+                                    self.swa_b0 = line[1]
+
+
+                                elif line[0] == "swa_b1":
+
+                                    self.swa_b1 = mean_swa_b1
+
+                                    # self.swa_b1 = line[1]
+
+                                elif line[0] == "k_BOD":
+                                    self.k_bod = line[1]
+
+                                elif line[0] == "k_SOD":
+                                    self.k_sod = line[1]
+
+                    elif os.path.exists(os.path.join(self.outdir, "2020par")):
+                        with open(os.path.join(self.outdir, "2020par")) as f:
+                            lines = f.readlines()
+                            for line in lines:
+                                line = line.split(sep="	")
+                                line[0] = line[0].replace(" ", "")
+
+                                if line[0] == "Kz_N0":
+                                    self.kz_n0 = line[1]
+
+                                elif line[0] == "C_shelter":
+                                    self.c_shelter = line[1]
+
+
+                                elif line[0] == "alb_melt_ice":
+                                    self.alb_melt_ice = line[1]
+
+                                elif line[0] == "alb_melt_snow":
+                                    self.alb_melt_snow = line[1]
+
+                                elif line[0] == "I_scV":
+                                    self.i_scv = line[1]
+
+                                elif line[0] == "I_scT":
+                                    self.i_sct = line[1]
+
+                                elif line[0] == "I_scO":
+                                    self.i_sco = line[1]
+
+                                elif line[0] == "I_scDOC":
+                                    self.i_sc_doc = line[1]
+
+                                elif line[0] == "swa_b0":
+                                    self.swa_b0 = line[1]
+
+                                elif line[0] == "swa_b1":
+                                    self.swa_b1 = mean_swa_b1
+                                    # self.swa_b1 = line[1]
+
+                                elif line[0] == "k_BOD":
+                                    self.k_bod = line[1]
+
+                                elif line[0] == "k_SOD":
+                                    self.k_sod = line[1]
+
+                    else:
+                        self.kz_n0 = 7.00E-05
+                        self.c_shelter = "NaN"
+                        self.alb_melt_ice = 0.6
+                        self.alb_melt_snow = 0.9
+                        self.i_scv = 1.339
+                        self.i_sct = 1.781
+                        self.i_sco = 1
+                        self.swa_b0 = 2.5
+                        self.swa_b1 = 1
+                        self.k_bod = 0.001
+                        self.k_sod = 100
+                        self.i_sc_doc = 4.75
 
             else:
-                self.kz_n0 = 7.00E-05
-                self.c_shelter = "NaN"
-                self.alb_melt_ice = 0.6
-                self.alb_melt_snow = 0.9
-                self.i_scv = 1.339
-                self.i_sct = 1.781
-                self.i_sco = 1
-                self.swa_b0 = 2.5
-                self.swa_b1 = 1
-                self.k_bod = 0.1
-                self.k_sod = 500
-                self.i_sc_doc = 1
+                # if get_key(lake_id) != "key doesn't exist":
+                #     years = get_key(lake_id)
+                #     self.start_year = years[0]
+                #     self.end_year = years[1]
+                # else:
+                #     self.start_year = y1A
+                #     self.end_year = y1B + 4
+
+                try:
+                    if os.path.exists(os.path.join(self.calibration_path, "Observed_Secchi.csv")):
+                        swa_b1value = pd.read_csv(os.path.join(self.calibration_path, "Observed_Secchi.csv"))
+                        mean_swa_b1 = round(1.48 / (swa_b1value.iloc[:, 1].mean()), 4)
+                    else:
+                        mean_swa_b1 = 1
+                except:
+                    mean_swa_b1 = 1
+
+                if os.path.exists(os.path.join(self.calibration_path, "Calibration_Complete.csv")):
+                    data = pd.read_csv(os.path.join(self.calibration_path, "Calibration_Complete.csv"), header=None)
+                    if os.path.exists(os.path.join(self.calibration_path, "Calibration_CompleteOXY.csv")):
+                        dataOXY = pd.read_csv(os.path.join(self.calibration_path, "Calibration_CompleteOXY.csv"),
+                                              header=None)
+
+                        if os.path.exists(os.path.join(self.calibration_path, "2017par")):
+                            with open(os.path.join(self.calibration_path, "2017par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
+
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
+
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
+
+
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice = data.iloc[0, 2]
+
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = data.iloc[0, 3]
+
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = data.iloc[0, 4]
+
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = data.iloc[0, 5]
+
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = dataOXY.iloc[0, 3]
+
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = dataOXY.iloc[0, 0]
+
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 6]
+
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        # self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]]
+
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = dataOXY.iloc[0, 1]
+
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = dataOXY.iloc[0, 2]
+
+                        elif os.path.exists(os.path.join(self.calibration_path, "2020par")):
+                            with open(os.path.join(self.calibration_path, "2020par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
+
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
+
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
+
+
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice = data.iloc[0, 2]
+
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = data.iloc[0, 3]
+
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = data.iloc[0, 4]
+
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = data.iloc[0, 5]
+
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = dataOXY.iloc[0, 3]
+
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = dataOXY.iloc[0, 0]
+
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 6]
+
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        #   self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]
+
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = dataOXY.iloc[0, 1]
+
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = dataOXY.iloc[0, 2]
+
+                        else:
+                            self.kz_n0 = data.iloc[0, 0]
+                            self.c_shelter = data.iloc[0, 1]
+                            self.alb_melt_ice = data.iloc[0, 2]
+                            self.alb_melt_snow = data.iloc[0, 3]
+                            self.i_scv = data.iloc[0, 4]
+                            self.i_sct = data.iloc[0, 5]
+                            self.swa_b0 = data.iloc[0, 6]
+                            #self.swa_b0 = 2.5
+                            #self.swa_b1 = mean_swa_b1
+                            self.swa_b1 = data.iloc[0, 7]
+                            self.k_bod = dataOXY.iloc[0, 1]
+                            self.k_sod = dataOXY.iloc[0, 2]
+                            self.i_sc_doc = dataOXY.iloc[0, 0]
+                            self.i_sco = dataOXY.iloc[0, 3]
+
+                    else:
+                        if os.path.exists(os.path.join(self.calibration_path, "2017par")):
+                            with open(os.path.join(self.calibration_path, "2017par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
+
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
+
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
+
+
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice =  data.iloc[0, 2]
+
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = data.iloc[0, 3]
+
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = data.iloc[0, 4]
+
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = data.iloc[0, 5]
+
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = line[1]
+
+
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = line[1]
+
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 6]
+
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        # self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]
+
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = line[1]
+
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = line[1]
+
+                        elif os.path.exists(os.path.join(self.calibration_path, "2020par")):
+                            with open(os.path.join(self.calibration_path, "2020par")) as f:
+                                lines = f.readlines()
+                                for line in lines:
+                                    line = line.split(sep="	")
+                                    line[0] = line[0].replace(" ", "")
+
+                                    if line[0] == "Kz_N0":
+                                        self.kz_n0 = data.iloc[0, 0]
+
+                                    elif line[0] == "C_shelter":
+                                        self.c_shelter = data.iloc[0, 1]
+
+
+                                    elif line[0] == "alb_melt_ice":
+                                        self.alb_melt_ice = data.iloc[0, 2]
+
+                                    elif line[0] == "alb_melt_snow":
+                                        self.alb_melt_snow = data.iloc[0, 3]
+
+                                    elif line[0] == "I_scV":
+                                        self.i_scv = data.iloc[0, 4]
+
+                                    elif line[0] == "I_scT":
+                                        self.i_sct = data.iloc[0, 5]
+
+                                    elif line[0] == "I_scO":
+                                        self.i_sco = line[1]
+
+                                    elif line[0] == "I_scDOC":
+                                        self.i_sc_doc = line[1]
+
+                                    elif line[0] == "swa_b0":
+                                        # self.swa_b0 = 2.5
+                                        self.swa_b0 = data.iloc[0, 6]
+
+                                    elif line[0] == "swa_b1":
+                                        try:
+                                            self.swa_b1 = data.iloc[0, 7]
+                                        except:
+                                            self.swa_b1 = mean_swa_b1
+                                        # self.swa_b1 = data.iloc[0, 7]
+                                        # self.swa_b1 = data.iloc[0, 6]
+
+                                    elif line[0] == "k_BOD":
+                                        self.k_bod = line[1]
+
+                                    elif line[0] == "k_SOD":
+                                        self.k_sod = line[1]
+
+                        else:
+                            self.kz_n0 = data.iloc[0, 0]
+                            self.c_shelter = data.iloc[0, 1]
+                            try:
+                                self.alb_melt_ice = data.iloc[0, 2]
+                                self.alb_melt_snow = data.iloc[0, 3]
+                                self.i_scv = data.iloc[0, 4]
+                                self.i_sct = data.iloc[0, 5]
+                                self.i_sco = 1
+                                self.swa_b0 = data.iloc[0, 6]
+                            except:
+                                self.alb_melt_ice = 0.6
+                                self.alb_melt_snow = 0.9
+                                self.i_scv = 1.15
+                                self.i_sct = 0
+                                self.i_sco = 1
+                                self.swa_b0 = data.iloc[0, 3]
+
+                            try:
+                                self.swa_b1 = data.iloc[0, 7]
+                            except:
+                                self.swa_b1 = mean_swa_b1
+                            # self.swa_b1 = data.iloc[0, 7]
+                            self.k_bod = 500
+                            self.k_sod = 0.1
+                            self.i_sc_doc = 1
+
+                else:
+                    if os.path.exists(os.path.join(self.calibration_path, "2017par")):
+                        with open(os.path.join(self.calibration_path, "2017par")) as f:
+                            lines = f.readlines()
+                            for line in lines:
+                                line = line.split(sep="	")
+                                line[0] = line[0].replace(" ", "")
+
+                                if line[0] == "Kz_N0":
+                                    self.kz_n0 = line[1]
+
+                                elif line[0] == "C_shelter":
+                                    self.c_shelter = line[1]
+
+
+                                elif line[0] == "alb_melt_ice":
+                                    self.alb_melt_ice = line[1]
+
+                                elif line[0] == "alb_melt_snow":
+                                    self.alb_melt_snow = line[1]
+
+                                elif line[0] == "I_scV":
+                                    self.i_scv = line[1]
+
+                                elif line[0] == "I_scT":
+                                    self.i_sct = line[1]
+
+                                elif line[0] == "I_scO":
+                                    self.i_sco = line[1]
+
+
+                                elif line[0] == "I_scDOC":
+                                    self.i_sc_doc = line[1]
+
+                                elif line[0] == "swa_b0":
+                                    self.swa_b0 = line[1]
+
+
+                                elif line[0] == "swa_b1":
+
+                                    self.swa_b1 = mean_swa_b1
+
+                                    # self.swa_b1 = line[1]
+
+                                elif line[0] == "k_BOD":
+                                    self.k_bod = line[1]
+
+                                elif line[0] == "k_SOD":
+                                    self.k_sod = line[1]
+
+                    elif os.path.exists(os.path.join(self.calibration_path, "2020par")):
+                        with open(os.path.join(self.calibration_path, "2020par")) as f:
+                            lines = f.readlines()
+                            for line in lines:
+                                line = line.split(sep="	")
+                                line[0] = line[0].replace(" ", "")
+
+                                if line[0] == "Kz_N0":
+                                    self.kz_n0 = line[1]
+
+                                elif line[0] == "C_shelter":
+                                    self.c_shelter = line[1]
+
+
+                                elif line[0] == "alb_melt_ice":
+                                    self.alb_melt_ice = line[1]
+
+                                elif line[0] == "alb_melt_snow":
+                                    self.alb_melt_snow = line[1]
+
+                                elif line[0] == "I_scV":
+                                    self.i_scv = line[1]
+
+                                elif line[0] == "I_scT":
+                                    self.i_sct = line[1]
+
+                                elif line[0] == "I_scO":
+                                    self.i_sco = line[1]
+
+                                elif line[0] == "I_scDOC":
+                                    self.i_sc_doc = line[1]
+
+                                elif line[0] == "swa_b0":
+                                    self.swa_b0 = line[1]
+
+                                elif line[0] == "swa_b1":
+                                    self.swa_b1 = mean_swa_b1
+                                    # self.swa_b1 = line[1]
+
+                                elif line[0] == "k_BOD":
+                                    self.k_bod = line[1]
+
+                                elif line[0] == "k_SOD":
+                                    self.k_sod = line[1]
+
+                    else:
+                        self.kz_n0 = 7.00E-05
+                        self.c_shelter = "NaN"
+                        self.alb_melt_ice = 0.6
+                        self.alb_melt_snow = 0.9
+                        self.i_scv = 1.339
+                        self.i_sct = 1.781
+                        self.i_sco = 1
+                        self.swa_b0 = 2.5
+                        self.swa_b1 = 1
+                        self.k_bod = 0.001
+                        self.k_sod = 100
+                        self.i_sc_doc = 4.75
+
+    def variables_by_depth(self,start=2001,end=2010,calibration = False, old=False):
+        """
+        Creates a new csv file with the observed temperatures separated in columns by depths.
+        :return: None
+        """
+        lake_id = "%s"%self.lake_id
+        observation_file = self.observation_file
+        obs_file = pd.read_excel(observation_file,lake_id)
+        obs_file['date'] = pd.to_datetime(obs_file['date'])
+        obs_file = obs_file[(obs_file['date'] >= pd.datetime(int(start), 1, 1)) & (obs_file['date'] <= pd.datetime(int(end), 12, 31))]
+
+        axisx = obs_file.iloc[:,0].unique()
+        axisy = obs_file.iloc[:,1].unique()
+        datasetT = []
+        datasetO = []
+        datasetS = []
+        for date in axisx:
+            valueatdepthT = []
+            valueatdepthO = []
+            valueatdepthS = []
+            for depth in axisy:
+                row = obs_file.loc[(obs_file['date'] == date) & (obs_file['depth(max)'] == depth)]
+                if not row.empty:
+                    if len(list(row.index.values)) != 1:
+                        valueatdepthT.append(float(row.iloc[:, 3].mean(skipna=True)))
+                        valueatdepthO.append(float(row.iloc[:, 2].mean(skipna=True)))
+                        valueatdepthS.append(float(row.iloc[:, 4].mean(skipna=True)))
+                    else:
+                        try:
+                            valueatdepthT.append(float(row.iloc[:,3]))
+                            valueatdepthO.append(float(row.iloc[:,2]))
+                            valueatdepthS.append(float(row.iloc[:,4]))
+                        except:
+                            print("rer")
+                else:
+                    valueatdepthT.append(np.nan)
+                    valueatdepthO.append(np.nan)
+                    valueatdepthS.append(np.nan)
+            datasetT.append(valueatdepthT)
+            datasetO.append(valueatdepthO)
+            datasetS.append(valueatdepthS)
+
+        if calibration:
+            if old:
+                outdir_path = self.old_calibration_path
+            else:
+                outdir_path = self.calibration_path
+        else:
+            outdir_path = self.output_path
+
+        temperature = pd.DataFrame(index=axisx,columns=axisy, data=datasetT)
+        print(len(list(temperature.index.values)))
+        temperature = temperature.dropna(axis=1, how='all')
+        temperature = temperature.dropna(axis=0, how='all')
+
+        print(len(list(temperature.index.values)))
+        temperature.to_csv(os.path.join(outdir_path, "Observed_Temperature.csv"))
+
+
+        oxygen = pd.DataFrame(index=axisx, columns=axisy, data=datasetO)
+        oxygen = oxygen.dropna(axis=1, how='all')
+        oxygen = oxygen.dropna(axis=0, how='all')
+        oxygen.to_csv(os.path.join(outdir_path, "Observed_Oxygen.csv"))
+
+        secchi = pd.DataFrame(index=axisx, columns=axisy, data=datasetS)
+        secchi = secchi.dropna(axis=1, how='all')
+        secchi = secchi.dropna(axis=0, how='all')
+        secchi.to_csv(os.path.join(outdir_path, "Observed_Secchi.csv"))
+
+
+        print("observation done ... ... ... ... ")
 
     def runlake(self, modelid, scenarioid):
         """
@@ -925,7 +1546,6 @@ class LakeInfo:
         else:
             datesB = pd.date_range(pd.datetime(y1B, 1, 1), pd.datetime(y2B, 12, 31), freq='d').tolist()
 
-
         outdir = os.path.join(self.output_path,
                               'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
                                   m1, exA, exB, m2, y1A, y2B))
@@ -941,7 +1561,7 @@ class LakeInfo:
         else:
             parp = os.path.join(outdir, '2020par')
         inputp = os.path.join(outdir, '2020input')
-        if os.path.exists(os.path.join(outdir, '2020REDOCOMPLETE')):
+        if os.path.exists(os.path.join(outdir, '20210507REDOCOMPLETE')):
             print('lake %s is already completed' % self.ebhex)
             # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
             #    f.write ( 'lake %s is already completed\n' % ebhex )
@@ -957,18 +1577,19 @@ class LakeInfo:
 
             self.mylakeinit(initp)
             self.mylakepar(parp)
-            self.mylakeinput(pA, pB, datesA, datesB,inflowfilename, inputp)
-            cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran_optimize(\'%s\',\'%s\',\'%s\',%d,%d,\'%s\',%d);quit' % (
-            initp, parp, inputp, y1A , y2B, outdir,1)
+            self.mylakeinput(pA, pB, datesA, datesB, inflowfilename, inputp)
+            cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran_optimize(\'%s\',\'%s\',\'%s\',%d,%d,%d,\'%s\',%d);quit' % (
+                initp, parp, inputp, y1A, y2B, self.spin_up, outdir, 1)
             print(cmd)
             os.system(cmd)
-        #     # for f in [initp, parp, inputp]:
-        #     #    os.system ( 'bzip2 -f -k %s' % f )
-            expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'PARMaxt.csv', 'PARzt.csv', 'His.csv', 'lambdazt.csv']
+            #     # for f in [initp, parp, inputp]:
+            #     #    os.system ( 'bzip2 -f -k %s' % f )
+            expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'PARMaxt.csv', 'PARzt.csv',
+                          'His.csv', 'lambdazt.csv']
             flags = [os.path.exists(os.path.join(outdir, f)) for f in expectedfs]
 
             if all(flags):
-                with open(os.path.join(outdir, '2020REDOCOMPLETE'), 'w') as f:
+                with open(os.path.join(outdir, '20210507REDOCOMPLETE'), 'w') as f:
                     f.write(datetime.datetime.now().isoformat())
                 ret = False
             #         ret = 0
@@ -976,7 +1597,112 @@ class LakeInfo:
 
         return ret
 
-    def lake_input(self, modelid, scenarioid):
+    def runlakefinal(self, modelid, scenarioid, calibration=False,old=False):
+        """
+
+        :param modelid: model used
+        :param scenarioid: scenario used
+        :param ebhex: ebhex number
+        :param subid: Reference number
+        :param depth: depth used for initiate Mylake (see mylakeinit())
+        :param area: area used for initiate Mylake (see mylakeinit())
+        :param longitude: longitude coordinate for Mylake (see mylakepar())
+        :param latitude: latitude coordinate for Mylake (see mylakepar())
+        :return:
+        .. note:: see above lines for models and scenarios (dictionaries). ebhex: EBhex
+        """
+        # 5-7-2018 MC
+        ret = True
+        exA, y1A, exB, y1B = scenarios[scenarioid]
+        m1, m2 = models[modelid]
+        y2A = y1A + 4
+        y2B = y1B + 4
+
+        if modelid == 4:  # 5-18-2018 MC
+            pA = {v: '%s/Lakes_%s_EUR-11_%s_%s_%s_%s0101-%s1230.h5' %
+                     (cordexfolder, v, m1, exA, m2, y1A, y2A) for v in variables}
+            pB = {v: '%s/Lakes_%s_EUR-11_%s_%s_%s_%s0101-%s1230.h5' %
+                     (cordexfolder, v, m1, exB, m2, y1B, y2B) for v in variables}
+        else:
+            pA = {v: '%s/Lakes_%s_EUR-11_%s_%s_%s_%s0101-%s1231.h5' %
+                     (cordexfolder, v, m1, exA, m2, y1A, y2A) for v in variables}
+            pB = {v: '%s/Lakes_%s_EUR-11_%s_%s_%s_%s0101-%s1231.h5' %
+                     (cordexfolder, v, m1, exB, m2, y1B, y2B) for v in variables}
+
+        inflowfilename = '%s/sweden_inflow_data_20010101_20101231.h5' % inflowfolder  # This is hard coded for now
+        datesA = pd.date_range(pd.datetime(y1A, 1, 1), pd.datetime(y2A, 12, 31), freq='d').tolist()
+        if pA['clt'].find('EUR-11_MOHC-HadGEM2-ES_rcp85_r1i1p1_SMHI-RCA4_v1_day_2091') != -1:
+            datesB = pd.date_range(pd.datetime(y1B, 1, 1), pd.datetime(y2B - 1, 12, 31), freq='d').tolist()
+        elif pA['clt'].find('EUR-11_MOHC-HadGEM2-ES_rcp45_r1i1p1_SMHI-RCA4_v1_day_2091') != -1:
+            datesB = pd.date_range(pd.datetime(y1B, 1, 1), pd.datetime(y2B - 1, 11, 30), freq='d').tolist()
+        else:
+            datesB = pd.date_range(pd.datetime(y1B, 1, 1), pd.datetime(y2B, 12, 31), freq='d').tolist()
+
+        if calibration:
+            if old:
+                outdir = self.old_calibration_path
+            else:
+                outdir = self.calibration_path
+            calibration = 1
+        else:
+            outdir = self.outdir
+            calibration = 0
+
+        if self.lake_id in [32276, 310, 14939, 30704, 31895, 6950, 99045, 33590, 33494, 698, 16765, 67035]:
+            calibration = 1
+        if not os.path.exists(outdir):
+            os.makedirs(outdir)
+
+        # creation of empty files before risks of bug: MC 2018-07-10
+
+        initp = os.path.join(outdir, '2020init')
+        if os.path.exists(os.path.join(outdir, '2017par')):
+            parp = os.path.join(outdir, '2020par')
+        else:
+            parp = os.path.join(outdir, '2020par')
+        inputp = os.path.join(outdir, '2020input')
+        if os.path.exists(os.path.join(outdir, '20210602REDOCOMPLETE')):
+            print('lake %s is already completed' % self.ebhex)
+            # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
+            #    f.write ( 'lake %s is already completed\n' % ebhex )
+            #    f.close ()
+            ret = 0
+        else:
+            # empty = pd.DataFrame(np.nan, index=np.arange(0,len(datesA+datesB)), columns=np.arange(1,int(depth)+1))
+            # for i in ['Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv']:
+            #     empty.to_csv('%s/%s'%(outdir,i),na_rep='NA',header=False,index=False)
+            # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
+            #     f.write ('empty files created\n')
+            #     f.close ()
+
+            self.mylakeinit(initp)
+            self.mylakepar(parp)
+            self.mylakeinput(pA, pB, datesA, datesB, inflowfilename, inputp)
+            cmd = 'matlab -wait -r -nosplash -nodesktop mylakeGoran_optimizefinal_all(\'%s\',\'%s\',\'%s\',%d,%d,%d,\'%s\',%d);quit' % (
+                initp, parp, inputp, y1A, y2B, self.spin_up, outdir, calibration)
+            print(cmd)
+            os.system(cmd)
+            if self.lake_id in [32276, 310, 14939, 30704, 31895, 6950, 99045, 33590, 33494, 698, 16765, 67035] and m2 == 'r3i1p1_DMI-HIRHAM5_v1_day' and y1A == 2001:
+                cmd = 'matlab -wait -r -nosplash -nodesktop compare_model_result_old_data(\'%s\',%d,%d);quit' % (
+                    outdir, y1A,y2B)
+                print(cmd)
+                os.system(cmd)
+            #     # for f in [initp, parp, inputp]:
+            #     #    os.system ( 'bzip2 -f -k %s' % f )
+            expectedfs = ['Tzt.csv', 'O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv', 'PARMaxt.csv', 'PARzt.csv',
+                          'His.csv', 'lambdazt.csv']
+            flags = [os.path.exists(os.path.join(outdir, f)) for f in expectedfs]
+
+            if all(flags):
+                with open(os.path.join(outdir, '20210602REDOCOMPLETE'), 'w') as f:
+                    f.write(datetime.datetime.now().isoformat())
+                ret = False
+            #         ret = 0
+        #     ret = 0 if all(flags) else
+
+        return ret
+
+    def lake_input(self, modelid, scenarioid, calibration=False):
         """
 
         :param modelid: model used
@@ -1016,9 +1742,11 @@ class LakeInfo:
         else:
             datesB = pd.date_range(pd.datetime(y1B, 1, 1), pd.datetime(y2B, 12, 31), freq='d').tolist()
 
-        outdir = os.path.join(self.output_path,
-                              'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
-                                  m1, exA, exB, m2, y1A, y2B))
+        if calibration:
+            outdir = self.calibration_path
+
+        else:
+            outdir = self.outdir
 
         if not os.path.exists(outdir):
             os.makedirs(outdir)
@@ -1037,13 +1765,13 @@ class LakeInfo:
             #    f.write ( 'lake %s is already completed\n' % ebhex )
             #    f.close ()
             ret = 0
-        #else:
-            # empty = pd.DataFrame(np.nan, index=np.arange(0,len(datesA+datesB)), columns=np.arange(1,int(depth)+1))
-            # for i in ['Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv']:
-            #     empty.to_csv('%s/%s'%(outdir,i),na_rep='NA',header=False,index=False)
-            # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
-            #     f.write ('empty files created\n')
-            #     f.close ()
+        # else:
+        # empty = pd.DataFrame(np.nan, index=np.arange(0,len(datesA+datesB)), columns=np.arange(1,int(depth)+1))
+        # for i in ['Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv']:
+        #     empty.to_csv('%s/%s'%(outdir,i),na_rep='NA',header=False,index=False)
+        # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
+        #     f.write ('empty files created\n')
+        #     f.close ()
 
         self.mylakeinit(initp)
         self.mylakepar(parp)
@@ -1065,7 +1793,7 @@ class LakeInfo:
         # #     ret = 0 if all(flags) else 100
         # # return ret
 
-    def mylakeinit(self,outdir):
+    def mylakeinit(self, outdir):
         """
             create a file of a lake initiated with a max_depth and area.
             Assumes to have a cone shaped bathymetry curve
@@ -1079,12 +1807,14 @@ class LakeInfo:
         depth_levels = np.arange(0, self.depth, depth_resolution)
         if self.depth not in depth_levels:
             depth_levels = np.concatenate((depth_levels, np.array([self.depth])))  # a enlever
-        areas = self.area * (depth_levels - self.depth) ** 2 / self.depth ** 2
+        # areas = self.area * (depth_levels - self.depth) ** 2 / self.depth ** 2
+        areas = np.array([round(Area_base_i(i, self.area, self.depth, self.mean), 3) for i in depth_levels])
         lines = [
             '\t'.join(
-                [('%.2f' % d), ('%.0f' % a)] + ['4'] + ['0'] * 5 + ['%s' % (2000 * float(self.i_sc_doc))] + ['0'] * 5 + ['12000'] + [
-                    '0'] * 15)  # MC 06-01-2018 add I_scDOC and initial 8000 become 2000#MC 06-29-2018 12000
-            # Z, Az and T, ...., DOC, .... DO, ...
+                [('%.2f' % d), ('%.0f' % a)] + ['4'] + ['0'] * 5 + ['%s' % (2000 * float(self.i_sc_doc))] + [
+                    '0'] * 5 + ['12000'] + ['0'] * 15)
+            # MC 06-01-2018 add I_scDOC and initial 8000 become 2000#MC 06-29-2018 12000
+            # Z,        Az and          T, ...., DOC, .... DO, ...
             for d, a in zip(depth_levels, areas)]
         # lines[0] = lines[0] + '\t0\t0'  # snow and ice, plus 16 dummies
         firstlines = '''-999	"MyLake init"
@@ -1097,7 +1827,7 @@ class LakeInfo:
         with open(os.path.join(outdir), 'w') as f:
             f.write('\n'.join(lines))
 
-    def mylakepar(self,outdir):
+    def mylakepar(self, outdir):
         """
         Creates the MyLake parameter file. If the file LAE_para_all1.txt is present, it will be used to prepare the
         parameters. Otherwise, the string in this function using the parameter's value from the class will be used.
@@ -1111,7 +1841,7 @@ class LakeInfo:
                 out = infile.read() % (
                     self.latitude, self.longitude, self.kz_n0, self.c_shelter, self.alb_melt_ice,
                     self.alb_melt_snow,
-                    self.i_scv, self.i_sct, self.i_sc_doc, self.swa_b0, self.swa_b1, self.k_bod, self.k_sod)
+                    self.i_scv, self.i_sct, self.i_sc_doc, self.swa_b0, self.swa_b1, self.k_bod, self.k_sod,self.i_sco)
 
 
 
@@ -1177,11 +1907,11 @@ class LakeInfo:
                 SS_C	0.25	NaN	NaN	 
                 density_org_H_nc	1.95	NaN	NaN	 
                 density_inorg_H_nc	2.65	NaN	NaN	 
-                I_scO	1	NaN	NaN	(-)
-            ''' %(
+                I_scO	%s	NaN	NaN	(-)
+            ''' % (
                 self.kz_n0, self.c_shelter, self.latitude, self.longitude, self.alb_melt_ice,
                 self.alb_melt_snow,
-                self.i_scv, self.i_sct, self.i_sc_doc, self.swa_b0, self.swa_b1, self.k_bod, self.k_sod)
+                self.i_scv, self.i_sct, self.i_sc_doc, self.swa_b0, self.swa_b1, self.k_bod, self.k_sod,self.i_sco)
 
         outpath = outdir
 
@@ -1192,8 +1922,7 @@ class LakeInfo:
 
         return outpath
 
-
-    def mylakeinput(self,pA, pB, datesA, datesB,inflowfile, outpath):
+    def mylakeinput(self, pA, pB, datesA, datesB, inflowfile, outpath):
         """
         create a file containing the informations relatively to Mylake
         :param pA: dictionary of paths to HDF5 files
@@ -1227,7 +1956,8 @@ class LakeInfo:
 
         if pA['clt'].find('MOHC-HadGEM2-ES') != -1 and pA['clt'].find('r1i1p1_SMHI-RCA4_v1_day') != -1:  # 5-24-2018 MC
             dfmissingdata = pd.concat(
-                [self.take5_missingdata(pA, datesA, self.ebhex), self.take5_missingdata(pB, datesB, self.ebhex)])  # 5-24-2017 MC
+                [self.take5_missingdata(pA, datesA, self.ebhex),
+                 self.take5_missingdata(pB, datesB, self.ebhex)])  # 5-24-2017 MC
             if datesB[-1] == pd.datetime(2099, 11, 30):  # 2018-08-01 MC
                 dfmissingdata = dfmissingdata[:-31]
             df = dfmissingdata.interpolate()  # 5-24-2018 MC
@@ -1235,7 +1965,7 @@ class LakeInfo:
             df = pd.concat([self.take5(pA, datesA, self.ebhex), self.take5(pB, datesB, self.ebhex)])
 
         ndays = len(datesA) + len(datesB)
-        calibration_time = (datesA[0]-pd.datetime(datesA[0].year-8, datesA[0].month, datesA[0].day)).days
+        calibration_time = (datesA[0] - pd.datetime(datesA[0].year - self.spin_up, datesA[0].month, datesA[0].day)).days
 
         df.index = np.arange(ndays)
         dflow = self.inflow5(inflowfile, datesA + datesB, self.subid)
@@ -1248,9 +1978,12 @@ class LakeInfo:
         mlndays = calibration_time + ndays
         # repeati = list(range(366)) + list(range(365)) + list(range(ndays)) # old version MC
         repeati = list(range(calibration_time)) + list(range(ndays))
+
         spacer = np.repeat([0], repeats=ndays)[repeati].reshape((mlndays, 1))
+
         # stream_Q = np.repeat([2000], repeats = ndays)[repeati].reshape((mlndays, 1))
         # stream_T = np.repeat([10], repeats = ndays)[repeati].reshape((mlndays, 1))
+
         stream_O = np.repeat([12000], repeats=ndays)[repeati].reshape(
             (mlndays, 1))  # MC 06-01-2018 initial parameters stream_O:8000
         stream_C = np.repeat([0.5], repeats=ndays)[repeati].reshape((mlndays, 1))
@@ -1299,7 +2032,7 @@ class LakeInfo:
                 g.write(f.read().replace('-99999999', 'NaN'))
         os.unlink(temporarypath)
 
-    def take5(self,pdict, dates, ebhex):
+    def take5(self, pdict, dates, ebhex):
         """
         Create a dataFrame containing the values predicted of (clt,hurs,pr,ps,rsds,sfcWind,tas) for each dates
         :param pdict: dictionary of paths to HDF5 files (see pA and pB)
@@ -1329,7 +2062,7 @@ class LakeInfo:
         df['tas'] = h5py.File(pdict['tas'], mode='r')[e][:] - 273.15
         return df
 
-    def take5_missingdata(self,pdict, dates, ebhex):  # 5-24-2018 MC
+    def take5_missingdata(self, pdict, dates, ebhex):  # 5-24-2018 MC
         """
         Create a dataFrame containing the values predicted of (clt,hurs,pr,ps,rsds,sfcWind,tas) for each dates
         :param pdict: dictionary of paths to HDF5 files (see pA and pB)
@@ -1399,7 +2132,7 @@ class LakeInfo:
         dfinal = pd.DataFrame(dates, columns=['date'])
         return pd.concat([dfinal, df], axis=1)
 
-    def nbrleapyears(self,start, end):  # MC 2018-07-10
+    def nbrleapyears(self, start, end):  # MC 2018-07-10
         """
         determine the number of leap years in the date range
         :param start: start year
@@ -1413,7 +2146,7 @@ class LakeInfo:
             start += 1
         return nbryears
 
-    def inflow5(self,filename, dates, subId):
+    def inflow5(self, filename, dates, subId):
         """
         create a dataFrame containing the values of (Q,T,TP,DOP) for each dates
         :param filename: filename of the file containing inflow information
@@ -1456,18 +2189,23 @@ class LakeInfo:
             dflow['T'] = h5py.File(filename, mode='r')['%d/T' % subId][:]
             dflow['TP'] = h5py.File(filename, mode='r')['%d/TP' % subId][:]
             dflow['DOP'] = h5py.File(filename, mode='r')['%d/DOP' % subId][:]
-            #dflow['T'] = np.nan #remove inflow temperature; issue for some lake with the ice covert formation.
+            dflow['T'] = np.nan #remove inflow temperature; issue for some lake with the ice covert formation.
         return dflow
 
-    def performance_analysis(self):
+    def performance_analysis(self, calibration=True,old=False):
         """
         Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
         :return: Score, a float representing the overall performance of the current simulation.
         """
+        if calibration:
+            outfolder = self.calibration_path
+            if old:
+                outfolder = self.old_calibration_path
+        else:
+            outfolder = self.outdir
 
-
-        if os.path.exists("{}/Tztcompare.csv".format(self.calibration_path)):
-            with open("{}/Tztcompare.csv".format(self.calibration_path), "r") as file:
+        if os.path.exists("{}/Tztcompare.csv".format(outfolder)):
+            with open("{}/Tztcompare.csv".format(outfolder), "r") as file:
                 reader = list(csv.reader(file))
 
                 date_list = []
@@ -1475,26 +2213,24 @@ class LakeInfo:
                 obs_list = []
                 sims_list = []
 
-
             for item in reader[1:]:
                 date_list.append(item[0])
                 depth_list.append(item[1])
                 obs_list.append(item[2])
                 sims_list.append(item[3])
 
-
             sosT = sums_of_squares(obs_list, sims_list)
 
-            rmseT,rmsenT = root_mean_square(obs_list, sims_list)
+            rmseT, rmsenT = root_mean_square(obs_list, sims_list)
 
             r_sqT = r_squared(obs_list, sims_list)
         else:
             sosT = np.nan
-            rmseT,rmsenT = np.nan,np.nan
+            rmseT, rmsenT = np.nan, np.nan
             r_sqT = np.nan
 
-        if os.path.exists("{}/O2ztcompare.csv".format(self.calibration_path)):
-            with open("{}/O2ztcompare.csv".format(self.calibration_path), "r") as file:
+        if os.path.exists("{}/O2ztcompare.csv".format(outfolder)):
+            with open("{}/O2ztcompare.csv".format(outfolder), "r") as file:
                 reader = list(csv.reader(file))
 
                 date_list = []
@@ -1510,16 +2246,16 @@ class LakeInfo:
 
             sosO = sums_of_squares(obs_list, sims_list)
 
-            rmseO,rmsenO = root_mean_square(obs_list, sims_list)
+            rmseO, rmsenO = root_mean_square(obs_list, sims_list)
 
             r_sqO = r_squared(obs_list, sims_list)
         else:
             sosO = np.nan
-            rmseO,rmsenO = np.nan,np.nan
+            rmseO, rmsenO = np.nan, np.nan
             r_sqO = np.nan
 
-        if os.path.exists("{}/Secchicompare.csv".format(self.calibration_path)):
-            with open("{}/Secchicompare.csv".format(self.calibration_path), "r") as file:
+        if os.path.exists("{}/Secchicompare.csv".format(outfolder)):
+            with open("{}/Secchicompare.csv".format(outfolder), "r") as file:
                 reader = list(csv.reader(file))
 
                 date_list = []
@@ -1533,26 +2269,35 @@ class LakeInfo:
                 obs_list.append(item[2])
                 sims_list.append(item[3])
 
+            with open("{}/Attn_zt.csv".format(outfolder), "r") as file2:
+                reader2 = list(csv.reader(file2))
+
             sosS = sums_of_squares(obs_list, sims_list)
 
-            rmseS,rmsenS = root_mean_square(obs_list, sims_list)
+            rmseS, rmsenS = root_mean_square(obs_list, sims_list)
 
             r_sqS = r_squared(obs_list, sims_list)
+
+            secchiO_m = np.mean([float(i) for i in obs_list])
+            secchiM_m = np.mean([float(i) for i in sims_list])
+            secchiO_st = np.std([float(i) for i in obs_list])
+            secchiM_st = np.std([float(i) for i in sims_list])
         else:
             sosS = np.nan
-            rmseS,rmsenS = np.nan,np.nan
+            rmseS, rmsenS = np.nan, np.nan
             r_sqS = np.nan
-
-
+            secchiM_m, secchiO_m = np.nan, np.nan
+            secchiM_st, secchiO_st = np.nan, np.nan
 
         print("Analysis of {}.".format(self.lake_name))
-        print("Sums of squares : {}, {}, {}".format(sosT,sosO,sosS))
-        print("RMSE : {}, {}, {}".format(rmseT,rmseO,rmseS))
-        print("R squared : {}, {}, {}".format(r_sqT,r_sqO,r_sqS))
+        print("Sums of squares : {}, {}, {}".format(sosT, sosO, sosS))
+        print("RMSE : {}, {}, {}".format(rmseT, rmseO, rmseS))
+        print("R squared : {}, {}, {}".format(r_sqT, r_sqO, r_sqS))
 
-        return [rmseT,rmseO,rmseS],[rmsenT,rmsenO,rmsenS], [r_sqT,r_sqO,r_sqS]
+        return [rmseT, rmseO, rmseS], [rmsenT, rmsenO, rmsenS], [r_sqT, r_sqO, r_sqS], [secchiO_m, secchiM_m,
+                                                                                        secchiO_st, secchiM_st]
 
-    def outputfile(self):
+    def outputfile(self, calibration=False,old=False, scenarioid=2, modelid=2):
         """
         Function calculating all variables asked by ISIMIP and formates them into a txt file.
         :param y1: Initial year of the simulation
@@ -1560,8 +2305,17 @@ class LakeInfo:
         :param outfolder: folder directory to where the raw data produce by the model are.
         :return: None
         """
-        y1,y2 = self.start_year-8, self.end_year
-        outfolder = self.calibration_path
+        y1, y2 = self.start_year - 8, self.end_year
+
+        if calibration:
+            if old:
+                outfolder=self.old_calibration_path
+            else:
+                outfolder = self.calibration_path
+        else:
+            outfolder = self.outdir
+
+        # outfolder = self.calibration_path
         try:
             dates = [d.strftime('%Y-%m-%d') for d in pd.date_range('%s-01-01' % y1, '%s-12-31' % y2)]
         except:
@@ -1627,149 +2381,196 @@ class LakeInfo:
                 except:
                     print("error")
 
-    def comparison_obs_sims(self,thermocline):
-        """
-        Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
-        :return: Score, a float representing the overall performance of the current simulation.
-        """
+    def comparison_obs_sims_new(self, thermocline, calibration=False,outputfolder=r'F:\output'):
+            # Default values
+            ice_modeled = False
+            start = 2001
+            end = 2010
+            calibration_methods = ['calculated','old_calculated','estimated']
+            levels = ['surface', 'deepwater']
+            variables = ["Tzt" ,"O2zt"]
 
+            if calibration:
+                outfolder = self.calibration_path
+            else:
+                outfolder = self.outdir
 
-        if os.path.exists("{}/Tztcompare.csv".format(self.calibration_path)):
-            variable = "Temperature"
-            data = pd.read_csv("{}/Tztcompare.csv".format(self.calibration_path),header=None)
-            data.columns = ['Dates', 'Depth','Observed %s (°C)'%variable, 'Modeled %s (°C)'%variable]
-            all_data = pd.read_csv("{}/Tzt.csv".format(self.calibration_path),header=None)
-            jj = ["%s" % (i) for i in np.arange(0.5,len(all_data),1)]
-            all_data.columns = ["%s" % (i) for i in np.arange(0.5,len(all_data),1)]
-            thermocline = data['Depth'].median()
-            dataunder = data[data['Depth'] <= thermocline]
-            dataover = data[data['Depth'] > thermocline]
-            alldataover = []
-            alldataunder = []
-            depthunder = []
-            depthover = []
-            for i in data['Depth'].unique():
-                if i <= thermocline:
-                    depthunder.append(i)
-                    if i in np.arange(0.5, len(all_data), 1):
-                        dataa = all_data['%s' % i].tolist()
-                    else:
-                        if (round(i) - floor(i)) == 1:
-                            dataa= [findYPoint(round(i) - 0.5, round(i), all_data.iloc[round(i) - 0.5, y],
-                                        all_data.iloc[round(i), y], i) for y in range(1, len(all_data))]
-                        else:
-                            dataa = [findYPoint(round(i), round(i)+0.5, all_data.iloc[round(i) , y],
-                                                all_data.iloc[round(i)+0.5, y], i) for y in range(1, len(all_data))]
-                    alldataunder.append(dataa)
+            ### Creatin of the ice cover variable
+            if os.path.exists((os.path.join(outfolder, "His.csv"))):
+                ice_modeled = True
+                icedata = pd.read_csv(os.path.join(outfolder, "His.csv"),header=None)
+                dates = pd.date_range(start='1/1/%s' % start, end='12/31/%s' % end)
+                print(len(dates), len(icedata))
+                if len(dates) == len(icedata):
+                    icedata = icedata.set_index(dates)
+                    icedata['date'] = dates
                 else:
-                    depthover.append(i)
-                    if i in np.arange(0.5, len(all_data), 1):
-                        dataa = all_data['%s' % i].tolist()
+                    dates = pd.date_range(start='1/1/%s' % self.start_year, end='12/31/%s' % self.end_year)
+                    icedata= icedata.set_index(dates)
+                    icedata['date'] = dates
+                ice_cover = icedata.iloc[:,[6,8]]
+            else:
+                print("No ice cover modeled for lake %s" % self.lake_name)
+
+
+            for variable in variables:
+                # Data Treatement
+                #self.variables_by_depth(2001, 2010, calibration=True,old=False)
+                # self.runlakefinal(2,2, calibration=True,old=False)
+                try:
+                    ### Creation Obs and Sim variables
+                    if os.path.exists(os.path.join(outfolder, "%scompare.csv" % variable)):
+                        data = pd.read_csv(os.path.join(outfolder, "%scompare.csv" % variable), header=None,
+                                           names=['Date', 'Depth', 'Observations', 'Modelisation'])
+
+                        data['Dates'] = pd.to_datetime(data["Date"])
+                        data = data.set_index(data['Dates'])
+                        initial_date = data['Dates'].min()
+                        final_date = data['Dates'].max()
+                        depth_range = data["Depth"].unique()
+                        ice_cover = ice_cover.loc["%s-01-01" % str(initial_date.year):"%s-12-31" % str(final_date.year)]
+                        ### Division of the dataset into variable under and over thermocline
+
+                        comparison_target = pd.DataFrame(index=data['Dates'], columns=calibration_methods)
+                        comparison_target['Observations'] = data['Observations']
+                        date = pd.date_range(start="%s-01-01" % str(initial_date.year),
+                                             end="%s-12-31" % str(final_date.year))
+
+                        frame = {"Dates": date}
+                        modelfinalresult = pd.DataFrame(frame).set_index(date)
+                        depth_layers = {}
+                        for depthlevel in levels:
+
+                            #division of the dataset by how they have beeen generated
+                            for modelresult in calibration_methods:
+
+                                if modelresult == 'calculated':
+                                    modeldata = pd.read_csv(os.path.join(self.calibration_path, "%s.csv" % variable), header=None)
+                                    try:
+                                        data_target = pd.read_csv(
+                                            os.path.join(self.calibration_path, "%scompare.csv" % variable), header=None,
+                                            names=['Date', 'Depth', 'Observations', 'Modelisation']).set_index('Date')
+                                        comparison_target[modelresult] = data_target['Modelisation']
+                                    except:
+                                        self.variables_by_depth(2001, 2010,True, False)
+                                        self.runlakefinal(2, 2, calibration=True, old=False)
+                                        print(self.calibration_path)
+
+                                        # cmd = 'matlab -wait -r -nosplash -nodesktop compare_model_result_old_data(\'%s\',%d,%d);quit' % (
+                                        #     self.calibration_path, 2001, 2010)
+                                        # print(cmd)
+                                        # os.system(cmd)
+                                        data_target = pd.read_csv(
+                                            os.path.join(self.calibration_path, "%scompare.csv" % variable), header=None,
+                                            names=['Date', 'Depth', 'Observations', 'Modelisation']).set_index('Date')
+                                        comparison_target[modelresult] = data_target['Modelisation']
+                                elif modelresult == 'old_calculated':
+                                    modeldata = pd.read_csv(os.path.join(self.old_calibration_path, "%s.csv" % variable), header=None)
+                                    try:
+                                        data_target = pd.read_csv(os.path.join(self.old_calibration_path, "%scompare.csv" % variable), header=None,
+                                                              names=['Date', 'Depth', 'Observations', 'Modelisation']).set_index('Date')
+                                        comparison_target[modelresult] = data_target['Modelisation']
+                                    except:
+                                        self.variables_by_depth(2001, 2010,True,True)
+                                        self.runlakefinal(2, 2, calibration=True, old=True)
+                                        print(self.old_calibration_path)
+                                        # cmd = 'matlab -wait -r -nosplash -nodesktop compare_model_result_old_data(\'%s\',%d,%d);quit' % (
+                                        #     self.old_calibration_path, 2001, 2010)
+                                        # print(cmd)
+                                        # os.system(cmd)
+                                        data_target = pd.read_csv(
+                                            os.path.join(self.old_calibration_path, "%scompare.csv" % variable), header=None,
+                                            names=['Date', 'Depth', 'Observations', 'Modelisation']).set_index('Date')
+                                        comparison_target[modelresult] = data_target['Modelisation']
+                                else:
+                                    modeldata = pd.read_csv(os.path.join(self.outdir, "%s.csv" % variable), header=None)
+
+                                    try:
+                                        data_target = pd.read_csv(
+                                            os.path.join(self.outdir, "%scompare.csv" % variable), header=None,
+                                            names=['Date', 'Depth', 'Observations', 'Modelisation']).set_index('Date')
+                                        comparison_target[modelresult] = data_target['Modelisation']
+                                    except:
+                                        self.variables_by_depth(2001, 2010,False, False)
+                                        self.runlakefinal(2, 2, calibration=False, old=False)
+                                        print(self.outdir)
+                                        # cmd = 'matlab -wait -r -nosplash -nodesktop compare_model_result_old_data(\'%s\',%d,%d);quit' % (
+                                        #     self.outdir, 2001, 2010)
+                                        # print(cmd)
+                                        # os.system(cmd)
+                                        data_target = pd.read_csv(
+                                            os.path.join(self.outdir, "%scompare.csv" % variable), header=None,
+                                            names=['Date', 'Depth', 'Observations', 'Modelisation']).set_index('Date')
+                                        comparison_target[modelresult] = data_target['Modelisation']
+
+
+                                dates = pd.date_range(start='1/1/%s' % start, end='12/31/%s' % end)
+                                if len(dates) == len(modeldata):
+                                    modeldata = modeldata.set_index(dates)
+                                else:
+                                    dates = pd.date_range(start='1/1/%s' % self.start_year, end='12/31/%s' % self.end_year)
+                                    modeldata = modeldata.set_index(dates)
+
+                                modeldata = modeldata.loc["%s-01-01" % str(initial_date.year):"%s-12-31" % str(final_date.year)]
+
+                                if depthlevel == 'surface':
+                                    subdatabydepth = [depth for depth in depth_range if depth < thermocline]
+                                else:
+                                    subdatabydepth = [depth for depth in depth_range if depth >= thermocline]
+
+
+                                # Select depth representing the layers
+
+                                numberbydepth = list(
+                                    data[data['Depth'].isin(subdatabydepth)].groupby(['Depth']).count()['Observations'])
+
+                                if len(numberbydepth) == 1:
+                                    depthlayer = subdatabydepth[0]
+                                elif len(numberbydepth) < 1:
+                                    depthlayer = "no data"
+                                else:
+                                    max_position = [i for i, x in enumerate(numberbydepth) if x == max(numberbydepth)]
+                                    max1 = max_position[0]
+                                    if depthlevel == "deepwater":
+                                        depthlayer = float(subdatabydepth[max_position[-1]])
+                                    else:
+                                        depthlayer = float(subdatabydepth[max_position[0]])
+                                    # depthlayer = subdatabydepth[numberbydepth.index(max(numberbydepth)]
+
+                                if depthlayer != "no data":
+
+                                    if (floor(depthlayer) + 0.5) == depthlayer:
+                                        modelatlayer = list(modeldata[int(floor(depthlayer))])
+                                    elif (floor(depthlayer) + 0.5) > depthlayer:
+                                        modelatlayer = [findYPoint((floor(depthlayer)) - 0.5, int(floor(depthlayer)) + 0.5,
+                                                                   modeldata.iloc[y, int(floor(depthlayer)) - 1],
+                                                                   modeldata.iloc[y, int(floor(depthlayer))], depthlayer) for y in
+                                                        range(0, len(modeldata))]
+                                    else:
+                                        modelatlayer = [
+                                            findYPoint(round(depthlayer), round(depthlayer) + 1,
+                                                       modeldata.iloc[y, int(floor(depthlayer))],
+                                                       modeldata.iloc[y, floor(depthlayer) + 1], depthlayer) for y in
+                                            range(0, len(modeldata))]
+
+                                    if variable == "O2zt":
+                                        modelatlayer = [element * 0.001 for element in modelatlayer]
+
+                                    modelfinalresult['%s_Model_%s' % (modelresult, depthlevel)] = modelatlayer
+
+                                    depth_layers[depthlevel] = depthlayer
+
+
+
+                        #### Creation of the figures
+
+                        Graphics(self.lake_name,outputfolder).comparison_obs_sims_plot(variable, calibration_methods,modelfinalresult, data,depth_layers,comparison_target, ice_cover,icecovertarea=True)
+
+
                     else:
-                        if (round(i) - floor(i)) == 1:
-                            dataa= [findYPoint(round(i) - 0.5, round(i), all_data.iloc[round(i) - 0.5, y],
-                                        all_data.iloc[round(i), y], i) for y in range(1, len(all_data))]
-                        else:
-                            dataa = [findYPoint(round(i), round(i) + 0.5, all_data.iloc[round(i), y],
-                                                all_data.iloc[round(i) + 0.5, y], i) for y in range(1, len(all_data))]
-                    alldataover.append(dataa)
-
-
-
-
-            colorpalette = sns.color_palette("colorblind")
-
-            sns.set(font_scale=2)
-            sns.set_style("ticks")
-
-            plt.grid(False)
-            plt.figure(figsize=(20, 10))
-            #sns.lineplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder, color="black")
-            for i in np.arange(0,len(alldataunder),1):
-                sns.lineplot(x="Dates", y='Modeled %s (°C)' % variable, data=alldataunder[i], color=colorpalette[i])
-                sns.scatterplot(x="Dates", y='Modeled %s (°C)' % variable, data=alldataunder[i], markers="-o",
-                                color=colorpalette[i], label='Modeled %s(%s m)' % (variable, depthunder[i]))
-
-            sns.scatterplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder,markers="-o-", color="black", label ='Observation %s (0-%s m)' % (variable,thermocline))
-
-            plt.xticks(rotation=15)
-            ax = plt.axes()
-            ax.xaxis.set_major_locator(plt.MaxNLocator(15))
-            plt.savefig("comparison_%s_%s_epi.png" % (self.lake_name, variable))
-            plt.close()
-            sns.set(font_scale=2)
-            sns.set_style("ticks")
-            plt.grid(False)
-            plt.figure(figsize=(20, 10))
-            #sns.lineplot(x="Dates", y='Observed %s (°C)' % variable, data=dataover, color="black")
-            for i in np.arange(0,len(alldataover),1):
-                sns.lineplot(x="Dates", y='Modeled %s (°C)' % variable, data=alldataover[i], color=colorpalette[i])
-                sns.scatterplot(x="Dates", y='Modeled %s (°C)' % variable, data=alldataover[i], markers="-o",
-                                color=colorpalette[i], label='Modeled %s(%s m)' % (variable, depthover[i]))
-
-            sns.lineplot(x="Dates", y='Modeled %s (°C)' % variable, data=dataover, color=colorpalette[3])
-            sns.scatterplot(x="Dates", y='Modeled %s (°C)' % variable, data=dataover, markers="-o",
-                            color=colorpalette[3], label='Modeled %s (%s-%s °C)' % (variable, thermocline, self.depth))
-
-            sns.scatterplot(x="Dates", y='Observed %s (°C)' % variable, data=dataover, markers="-o-", color="black",
-                            label='Observed %s (%s-%s °C)' % (variable,thermocline,self.depth))
-
-
-            plt.xticks(rotation=15)
-            ax = plt.axes()
-            ax.xaxis.set_major_locator(plt.MaxNLocator(15))
-            plt.savefig("comparison_%s_%s_hypo.png" % (self.lake_name, variable))
-            plt.close()
-
-        if os.path.exists("{}/O2ztcompare.csv".format(self.calibration_path)):
-            variable = "Oxygen"
-            data = pd.read_csv("{}/O2ztcompare.csv".format(self.calibration_path), header=None)
-            data.columns = ['Dates', 'Depth', 'Observed %s (mg/L)' % variable, 'Modeled %s (mg/L)' % variable]
-            thermocline = data['Depth'].median()
-            dataunder = data[data['Depth'] <= thermocline]
-            dataover = data[data['Depth'] > thermocline]
-
-            colorpalette = sns.color_palette("colorblind", 7)
-            sns.set(font_scale=2)
-            sns.set_style("ticks")
-
-            plt.grid(False)
-            plt.figure(figsize=(20, 10))
-            sns.lineplot(x="Dates", y='Observed %s (mg/L)' % variable, data=dataunder, color="black")
-            sns.lineplot(x="Dates", y='Modeled %s (mg/L)' % variable, data=dataunder, color=colorpalette[0])
-            sns.scatterplot(x="Dates", y='Observed %s (mg/L)' % variable, data=dataunder, markers="-o-", color="black",
-                            label='Observed %s (0-%s mg/L) ' % (variable,thermocline))
-
-            sns.scatterplot(x="Dates", y='Modeled %s (mg/L)' % variable, data=dataunder, markers="-o",
-                            color=colorpalette[0], label='Modeled %s (0-%s mg/L) ' % (variable,thermocline))
-            plt.xticks(rotation=15)
-            ax = plt.axes()
-            ax.xaxis.set_major_locator(plt.MaxNLocator(15))
-            plt.savefig("comparison_%s_%s_epi.png" % (self.lake_name, variable))
-            plt.close()
-            sns.set(font_scale=2)
-            sns.set_style("ticks")
-
-            plt.grid(False)
-            plt.figure(figsize=(20, 10))
-            sns.lineplot(x="Dates", y='Observed %s (mg/L)' % variable, data=dataover, color="black")
-            sns.lineplot(x="Dates", y='Modeled %s (mg/L)' % variable, data=dataover, color=colorpalette[3])
-            sns.scatterplot(x="Dates", y='Observed %s (mg/L)' % variable, data=dataover, markers="-o-", color="black",
-                            label='Observed %s (%s-%s mg/L) ' % (variable,thermocline,self.depth))
-
-            sns.scatterplot(x="Dates", y='Modeled %s (mg/L)' % variable, data=dataover, markers="-o",
-                            color=colorpalette[3], label='Modeled %s (%s-%s mg/L) ' % (variable,thermocline,self.depth))
-
-            plt.xticks(rotation=15)
-            ax = plt.axes()
-            ax.xaxis.set_major_locator(plt.MaxNLocator(15))
-            plt.savefig("comparison_%s_%s_hypo.png" % (self.lake_name, variable))
-
-            plt.close()
-
-
-
-
+                        print("comparison file of %s doesn't exist"%variable)
+                except:
+                    print("tttt")
 
 def sums_of_squares(obs_list, sims_list):
     """
@@ -1786,7 +2587,6 @@ def sums_of_squares(obs_list, sims_list):
 
     return sums
 
-
 def root_mean_square(obs_list, sims_list):
     """
     Finds the root_mean_square for the temperatures listed in the comparison file.
@@ -1794,20 +2594,21 @@ def root_mean_square(obs_list, sims_list):
     :param sims_list: A list of simulated temperatures.
     :return: The result of the root mean square as a float.
     """
+
     d = pd.DataFrame(list(zip(obs_list, sims_list)),
-               columns =['obs', 'sim'])
+                     columns=['obs', 'sim'])
 
     d["obs"] = d["obs"].astype(float)
     d["sim"] = d["sim"].astype(float)
+
     try:
-        results = mean_squared_error(d["obs"],d["sim"])
+        results = mean_squared_error(d["obs"], d["sim"])
         results = sqrt(results)
-        resultsnormalise = sqrt(mean_squared_error(d["obs"],d["sim"]))/(max(d["obs"])-min(d["obs"]))
+        resultsnormalise = sqrt(mean_squared_error(d["obs"], d["sim"])) / (max(d["obs"]) - min(d["obs"]))
     except:
         results = np.nan
         resultsnormalise = np.nan
-    return results,resultsnormalise
-
+    return results, resultsnormalise
 
 def r_squared(obs_list, sims_list):
     """
@@ -1831,11 +2632,10 @@ def r_squared(obs_list, sims_list):
         except IndexError:
             break
     try:
-        rsquare = r2_score(x,y)
+        rsquare = r2_score(x, y)
     except:
         rsquare = np.nan
     return rsquare
-
 
 def standard_deviation(obs_list):
     """
@@ -1852,7 +2652,6 @@ def standard_deviation(obs_list):
 
     return statistics.stdev(observations)
 
-
 def rmse_by_sd(obs_list, rmse):
     """
     Divides RMSE of the simulations by the SD of the observations
@@ -1866,7 +2665,6 @@ def rmse_by_sd(obs_list, rmse):
         results = "Error_Zero_Division"
     return results
 
-
 def calculatedensity(temp):
     """
     Calculate density by using equation giving in ISIMIP lake model protocol.
@@ -1878,149 +2676,6 @@ def calculatedensity(temp):
                (1.001685e-4 * t ** 3) - (1.120083e-6 * t ** 4) + (6.536336e-9 * t ** 5))
     return density
 
-
-
-def graphique(x,y,xerr,yerr,r_value,slope,intercept):
-    sns.set(font_scale=2)
-    sns.set_style("ticks")
-
-    plt.grid(False)
-
-    colorpalette = sns.color_palette("dark", 10)
-    lineStart = 0
-    lineEnd = 14
-    fig, ax = plt.subplots(figsize=(15.0, 14.5))
-    plt.plot ( [lineStart, lineEnd], [lineStart, lineEnd], 'k-', color=colorpalette[9],label="y= x",linewidth=4 )
-    plt.xlim(0, 14)
-    plt.ylim(0, 14)
-    (_, caps, _)=plt.errorbar ( x,y, xerr=xerr, yerr=yerr, fmt='o',color=colorpalette[3],markersize=8, capsize=20, linewidth= 4,elinewidth=4 )
-    for cap in caps:
-        cap.set_markeredgewidth ( 4 )
-
-    fig.suptitle("")
-    fig.tight_layout(pad=2)
-
-
-
-    x = sm.add_constant(x) # constant intercept term
-    # Model: y ~ x + c
-    model = sm.OLS(y, x)
-    fitted = model.fit()
-    x_pred = np.linspace(x.min(), x.max(), 50)
-    x_pred2 = sm.add_constant(x_pred)
-    y_pred = fitted.predict(x_pred2)
-
-    ax.plot(x_pred, y_pred, '-', color='k', linewidth=4,label="linear regression (y = %0.3f x + %0.3f) \n R\u00b2 : %0.3f "%(slope,intercept,r_value))
-
-
-    print(fitted.params)     # the estimated parameters for the regression line
-    print(fitted.summary())  # summary statistics for the regression
-
-    y_hat = fitted.predict(x) # x is an array from line 12 above
-    y_err = y - y_hat
-    mean_x = x.T[1].mean()
-    n = len(x)
-    dof = n - fitted.df_model - 1
-
-    t = stats.t.ppf(1-0.025, df=dof)
-    s_err = np.sum(np.power(y_err, 2))
-    conf = t * np.sqrt((s_err/(n-2))*(1.0/n + (np.power((x_pred-mean_x),2)/((np.sum(np.power(x_pred,2))) - n*(np.power(mean_x,2))))))
-    upper = y_pred + abs(conf)
-    lower = y_pred - abs(conf)
-    ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.4,label="Confidence interval")
-
-
-    sdev, lower, upper = wls_prediction_std(fitted, exog=x_pred2, alpha=0.025)
-    ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.1,label="Prediction interval")
-    plt.xlabel ( "Average Observed Secchi_Depth (m)" )
-    plt.ylabel ( "Average Modeled Secchi Depth (m)" )
-    plt.ylim ()
-    plt.xlim()
-
-    ax.legend (loc='lower right')
-    fig.savefig('Secchi_mean_comparison.png', dpi=125)
-    plt.close()
-
-
-def graphiqueTO(x,y,z,symbol,r_value,slope,intercept,variable):
-    sns.set(font_scale=2)
-    sns.set_style("ticks")
-
-    rmse,nrmse = root_mean_square([item for sublist in x for item in sublist],[item for sublist in y for item in sublist])
-    plt.grid(False)
-
-    colorpalette = sns.color_palette("dark", 10)
-    lineStart = 0
-    if variable == "Temperature (°C)":
-        lineEnd = 28
-    else:
-        lineEnd = 28
-    fig, ax = plt.subplots(figsize=(15.0, 14.5))
-
-    if variable == "Temperature (°C)":
-        plt.plot([lineStart, lineEnd], [lineStart, lineEnd], 'k-', color=colorpalette[0], label="y= x", linewidth=4)
-        plt.xlim(-1,28)
-        plt.ylim(-1,28)
-        ccmap = 'Blues'
-    else:
-        plt.plot([lineStart, lineEnd], [lineStart, lineEnd], 'k-', color=colorpalette[3], label="y= x", linewidth=4)
-        plt.xlim(-1,20)
-        plt.ylim(-1,28)
-        ccmap = 'Reds'
-    markers = [ "o", "v", "^","s", "P","*","+","X","D","1","p","d"]
-    for i, c in enumerate(np.unique(symbol)):
-        cs = plt.scatter(x[i], y[i], c=z[i], marker=markers[i], s=90,cmap=ccmap, linewidths=1, edgecolors = 'k',alpha=0.8)
-    cb = plt.colorbar(cs)
-    cb.ax.tick_params(labelsize=14)
-
-
-    fig.suptitle("")
-    fig.tight_layout(pad=2)
-
-
-    x,y =[item for sublist in x for item in sublist],[item for sublist in y for item in sublist]
-    x = sm.add_constant(x) # constant intercept term
-    # Model: y ~ x + c
-    model = sm.OLS(y, x)
-    fitted = model.fit()
-    x_pred = np.linspace(x.min(), x.max(), 50)
-    x_pred2 = sm.add_constant(x_pred)
-    y_pred = fitted.predict(x_pred2)
-
-    ax.plot(x_pred, y_pred, '-', color='k', linewidth=4,label="linear regression (y = %0.3f x + %0.3f) \n R\u00b2 : %0.3f RMSE: %0.3f"%(slope,intercept,r_value,rmse))
-
-
-    print(fitted.params)     # the estimated parameters for the regression line
-    print(fitted.summary())  # summary statistics for the regression
-
-    y_hat = fitted.predict(x) # x is an array from line 12 above
-    y_err = y - y_hat
-    mean_x = x.T[1].mean()
-    n = len(x)
-    dof = n - fitted.df_model - 1
-
-    t = stats.t.ppf(1-0.025, df=dof)
-    s_err = np.sum(np.power(y_err, 2))
-    conf = t * np.sqrt((s_err/(n-2))*(1.0/n + (np.power((x_pred-mean_x),2)/((np.sum(np.power(x_pred,2))) - n*(np.power(mean_x,2))))))
-    upper = y_pred + abs(conf)
-    lower = y_pred - abs(conf)
-    ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.4,label="Confidence interval")
-
-
-    sdev, lower, upper = wls_prediction_std(fitted, exog=x_pred2, alpha=0.025)
-    ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.1,label="Prediction interval")
-    plt.xlabel ( "Average Observed %s" %variable)
-    plt.ylabel ( "Average Modeled %s"%variable )
-    plt.ylim ()
-    plt.xlim()
-
-    ax.legend (loc='upper left')
-    if variable == "Temperature (°C)":
-        fig.savefig('Temperature_comparison.png', dpi=125)
-    else:
-        fig.savefig('Oxygen_comparison.png', dpi=125)
-    plt.close()
-
 def findYPoint(xa, xb, ya, yb, xc):
     """
     Function used to calculate the temperature at a depth non simulated by the model. MyLake simulates the temperature
@@ -2031,13 +2686,1157 @@ def findYPoint(xa, xb, ya, yb, xc):
     :param ya: Temperature at the depth xa.
     :param yb: Temperature at the depth xb.
     :param xc: Depth at which the temparature is wanted
-    :return: Temperature at the depth yc.
+    :return: Temperature at the depth yc.graphique()
     """
     m = (float(ya) - float(yb)) / (float(xa) - float(xb))
     yc = (float(xc) - (float(xb) + 0.5)) * m + float(yb)
     return yc
 
+def final_equation_parameters(longitude, latitude, depthmax, depthmean, CL, SCL, Turnover, area, volume, Area_sed):
+    # swa_b1 = (4.02808 + 0.04542 * CL - 0.50796 * longitude - 0.10301 * SCL - 0.19259 * depthmean + 0.04685 * Turnover
+    #           + 0.03645 * depthmax + 0.07105 * latitude)
+
+    swa_b1 = 10**( 13.6349  -0.3636 *log10(Turnover) -7.8264*log10(latitude))
+    # swa_b0 = (-0.3666 + 3.4702 * sqrt(SCL))
+    swa_b0 = 10**(2.8320 -0.4710*log(volume) -0.1689*sqrt(SCL) +0.1366*sqrt(depthmax) + 0.7736*log10(area))
+    # c_shelter = (2.1544 - 0.2194 * log10(area)) ** 2
+    c_shelter = (-1.752484 -0.006331*(Turnover) +0.040554 *(latitude)+0.003181*(CL))
+
+    # i_scv = ((87.7621 - 166.1369 * log10(area) + 8.3947 * log10(CL) + 0.9242 * log10(Turnover) + 68.6099 * log(volume)
+    #           - 1.3728 * sqrt(SCL) + 20.5551 * log(longitude) - 130.8638 * log10(depthmean) - 65.8479 * log10(
+    #             latitude)) ** 2)
+    i_scv = 10**(-2.3419+1.6295*log10(Turnover)-1.0389*sqrt(SCL) -0.5237*sqrt(depthmax)
+                 -11.5569*log10(depthmean)+1.7065*log(longitude)-15.9455*log10(area)+0.9293*log10(CL)+6.6762*log(volume))
+
+    # i_sct = 1.577e+01 - 4.499e-01 * SCL - 1.717e-09 * area - 1.975e-01 * latitude - 1.421e-02 * CL
+    i_sct = (46.3645-0.1034*sqrt(depthmax)+1.9745*log10(Turnover)+14.1969*log(volume)-710.7061*log10(Area_sed)+671.3723*log10(area)
+     -1.1202*sqrt(SCL) +0.7519*log10(CL)-20.3059*log10(depthmean))
+    # (46.41172 -0.09901*sqrt(depthmax)+2.00148*log10(Turnover)+ 14.16320*log(volume)-711.74348*log10(Area_sed)+
+    #      672.47314*log10(area)-1.11753*sqrt(SCL) +0.79024*log10(CL) -20.24508*log10(depthmean))
+
+    if i_sct <= 0:
+        i_sct = 0.01
+    # i_sct = 0
+    # i_scv = 1.15
+
+    #i_sco = -7.428e-01 - 1.737e-11 * volume + 1.049e-01 * longitude + 1.269e-02 * depthmean + 1.218e-03 * i_scv
+    i_sco = 0.38630+0.02608 *CL+0.25853 *SCL
+    if i_sco <= 0:
+        i_sco = 0.01
+
+    # k_sod = math.exp(
+    #     103.17131 - 0.24447 * log10(CL) - 50.57089 * log10(latitude) - 0.05483 * swa_b0 + 0.73326 * log(swa_b1)
+    #     - 2.48570 * log(longitude) - 0.05313 * sqrt(i_scv))
+    k_sod = math.exp(3.6879 +1.8295*log10(CL) -0.9509*sqrt(SCL)+2.4462*log10(i_sct) )
+
+    if k_sod <= 0:
+        k_sod = 100
+    # k_bod = 10 ** (-53.5941 + 18.3879 * log(longitude) + 1.002 * log(swa_b1) + 0.3627 * sqrt(depthmax) + 0.105 * sqrt(
+    #     i_scv))
+    k_bod = 10**(-47.4540+15.4350*log(longitude) -0.5858*log(i_scv)+ 5.6893*log10(i_sct)-0.3248*(swa_b0))
+    if k_bod <= 0:
+        k_bod = 0.001
+
+
+    # i_scdoc = (374.8321 - 163.3363 * log10(latitude) - 29.1505 * log(longitude) - 0.3314 * sqrt(i_scv))
+    # i_scdoc = (11.8440-0.4454*i_scv-1.7905*swa_b0-0.6655*sqrt(depthmax))
+    i_scdoc = (-27.756-7.515*log10(CL)-2.684 *swa_b0 -7.410*log10(Turnover)+18.220*log(longitude))
+
+    if i_scdoc <= 0:
+        i_scdoc = 4.75
+    kzn0, albice, albsnow = 0.000574155, 0.242398444, 0.647403043
+
+    if swa_b1 <= 0.01:
+        swa_b1 = 0.01
+
+    if swa_b0 <= 0:
+        swa_b0 = 0.01
+    return swa_b1, swa_b0, c_shelter, i_sct, i_scv, i_sco, i_scdoc, k_sod, k_bod, kzn0, albice, albsnow
+
+def Area_base_i(i, surface_area, max_depth, mean_depth):
+    """
+        Function calculating the proportional base area of the cylindric layer at a certain depth.
+        equation from Lester et al. (2004).
+        :param i: the depth where the cylindric is calculated (from 0(surface) to max_depth)
+        :param surface_area: surface area of the lake
+        :param max_depth: maximm depth of the lake
+        :param mean_depth: mean depth of the lake
+        :return: base area of the cylindric layer at i depth
+        """
+    return surface_area * (1 - (i / max_depth) ** basin_shape(mean_depth, max_depth)) ** 2
+
+def basin_shape(mean_depth, max_depth):
+    """
+    estimate shape of the lake for calculating the sediment area and water volume
+    :param mean_depth: mean depth of the lake
+    :param max_depth: mmaximun depth of the lake
+    :return: shape coefficient. When equals  1, estimated lake has a cone-shaped,
+                                when less than 1, estimated a saucer-shaped lake,
+                                and when greater than 1, estimated bowl-shaped lake.
+    """
+    r = mean_depth / max_depth
+    return (3 * r + (r ** 2 + 8 * r) ** 0.5) / (4 * (1 - r))
+
+def ice_cover_comparison(outputfolder = r"F:\output" ,
+                         lake_list = r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList_only_validation_12lakes.csv",
+                         sjolista = r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\sjolista.xlsx"):
+
+
+    exA, y1A, exB, y1B = scenarios[2]
+    m1, m2 = models[2]
+    y2A = y1A + 4
+    y2B = y1B + 4
+
+    data_lake = pd.read_csv(lake_list, encoding='latin')
+    data_sjolista = pd.read_excel(sjolista)
+    data_sjolista.drop("X", axis=1, inplace=True)
+    data_sjolista.drop("Y", axis=1, inplace=True)
+    data_sjolista.drop("adjustment  factor", axis=1, inplace=True)
+    data_sjolista.drop("type of problem", axis=1, inplace=True)
+    data_sjolista.drop("Comment", axis=1, inplace=True)
+    data_sjolista.drop("endd", axis=1, inplace=True)
+    data_sjolista.drop("startd", axis=1, inplace=True)
+    data_sjo = data_sjolista.dropna()
+    lake_id = data_lake["ebhex"].tolist()
+    lake_id2 = data_sjo['ebhex'].tolist()
+
+    test = data_sjo.loc[data_sjo['ebhex'].isin(lake_id)]
+    test = test.sort_values(by=['ebhex'])
+    test2 = data_lake.loc[data_lake['ebhex'].isin(lake_id2)]
+    test2 = test2.sort_values(by=['ebhex'])
+
+    list_selected_lake = test["ebhex"].tolist()
+    listmeanice = []
+    for eh in list_selected_lake:
+
+        eh = eh[2:] if eh[:2] == '0x' else eh
+        while len(eh) < 6:
+            eh = '0' + eh
+        d1, d2, d3 = eh[:2], eh[:4], eh[:6]
+        outdir = os.path.join(outputfolder, d1, d2, d3,
+                              'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
+                                  m1, exA, exB, m2, y1A, y2B), "calibration_result_old")
+
+        outdir
+        try:
+            ice = pd.read_csv(os.path.join(outdir, 'His.csv'), names=['1', '2', '3', '4', '5', '6', '7', '8'])
+            meanice = (ice['7'].sum()) / 10
+            listmeanice.append(meanice)
+            print(listmeanice)
+        except:
+            listmeanice.append("")
+
+    test['meanice'] = listmeanice
+    print(test2['area'])
+    test['area'] = test2['area'].tolist()
+    test['Mean'] = test2['Mean'].tolist()
+    test['volume'] = test2['volume'].tolist()
+
+    print(test)
+
+    import time
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    test.to_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\icemodelvsdata1001old_%s.csv" % timestr)
+    print("eee")
+
+    list_selected_lake = lake_id
+    test = data_lake
+    listmeanice = []
+    for eh in list_selected_lake:
+
+        eh = eh[2:] if eh[:2] == '0x' else eh
+        while len(eh) < 6:
+            eh = '0' + eh
+        d1, d2, d3 = eh[:2], eh[:4], eh[:6]
+        outdir = os.path.join(outputfolder, d1, d2, d3,
+                              'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
+                                  m1, exA, exB, m2, y1A, y2B), "calibration_result_old")
+
+        try:
+            ice = pd.read_csv(os.path.join(outdir, 'His.csv'), names=['1', '2', '3', '4', '5', '6', '7', '8'])
+            meanice = (ice['7'].sum()) / 10
+            listmeanice.append(meanice)
+            print(listmeanice)
+        except:
+            listmeanice.append("")
+
+    test['meanice'] = listmeanice
+
+    print(test)
+
+    timestr = time.strftime("%Y%m%d-%H%M%S")
+    test.to_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\icemodelvsdata100111old_%s.csv" % timestr)
+    print("eee")
+
+
 
 if __name__ == "__main__":
     lake_info = LakeInfo("test")
 
+# def graphique(x, y, xerr, yerr, r_value, slope, intercept, calibration=False,old=False):
+#
+#     sns.set(font_scale=2)
+#     sns.set_style("ticks")
+#
+#     plt.grid(False)
+#
+#     colorpalette = sns.color_palette("dark", 10)
+#     lineStart = 0
+#     lineEnd = 20
+#     fig, ax = plt.subplots(figsize=(15.0, 14.5))
+#     plt.plot([lineStart, lineEnd], [lineStart, lineEnd], 'k-', color=colorpalette[9], label="y= x", linewidth=4)
+#     plt.xlim(0, 15)
+#     plt.ylim(0, 20)
+#     (_, caps, _) = plt.errorbar(x, y, xerr=xerr, yerr=yerr, fmt='o', color=colorpalette[3], markersize=8, capsize=20,
+#                                 linewidth=4, elinewidth=4)
+#     for cap in caps:
+#         cap.set_markeredgewidth(4)
+#
+#     fig.suptitle("")
+#     fig.tight_layout(pad=2)
+#
+#     x = smodels.add_constant(x)  # constant intercept term
+#     # Model: y ~ x + c
+#     model = smodels.OLS(y, x)
+#     fitted = model.fit()
+#     x_pred = np.linspace(x.min(), x.max(), 50)
+#     x_pred2 = smodels.add_constant(x_pred)
+#     y_pred = fitted.predict(x_pred2)
+#
+#     ax.plot(x_pred, y_pred, '-', color='k', linewidth=4,
+#             label="linear regression (y = %0.3f x + %0.3f) \n R\u00b2 : %0.3f " % (slope, intercept, r_value))
+#
+#     print(fitted.params)  # the estimated parameters for the regression line
+#     print(fitted.summary())  # summary statistics for the regression
+#
+#     y_hat = fitted.predict(x)  # x is an array from line 12 above
+#     y_err = y - y_hat
+#     mean_x = x.T[1].mean()
+#     n = len(x)
+#     dof = n - fitted.df_model - 1
+#
+#     t = stats.t.ppf(1 - 0.025, df=dof)
+#     s_err = np.sum(np.power(y_err, 2))
+#     conf = t * np.sqrt((s_err / (n - 2)) * (1.0 / n + (
+#             np.power((x_pred - mean_x), 2) / ((np.sum(np.power(x_pred, 2))) - n * (np.power(mean_x, 2))))))
+#     upper = y_pred + abs(conf)
+#     lower = y_pred - abs(conf)
+#     ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.4, label="Confidence interval")
+#
+#     sdev, lower, upper = wls_prediction_std(fitted, exog=x_pred2, alpha=0.025)
+#     ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.1, label="Prediction interval")
+#     plt.xlabel("Average Observed Secchi_Depth (m)")
+#     plt.ylabel("Average Modeled Secchi Depth (m)")
+#     plt.ylim()
+#     plt.xlim()
+#
+#     ax.legend(loc='lower right')
+#
+#     timestr = time.strftime("%Y%m%d-%H%M%S")
+#     if calibration:
+#         fig.savefig('Secchi_mean_comparison_calibration_old_%s_%s.png' % (old,timestr), dpi=125)
+#     else:
+#         fig.savefig('Secchi_mean_comparison_old_%s_%s.png' % (old,timestr), dpi=125)
+#     plt.close()
+#
+# def graphiqueTO(x, y, z, symbol, r_value, slope, intercept, variable, calibration=False,old=False, lakeid="",
+#                 outputfolder=r'F:\output'):
+#     sns.set(font_scale=2)
+#     sns.set_style("ticks")
+#     print(len(x), len(y), len(z))
+#     if lakeid == "":
+#         rmse, nrmse = root_mean_square([item for sublist in x for item in sublist],
+#                                        [item for sublist in y for item in sublist])
+#     else:
+#         rmse, nrmse = root_mean_square(x, y)
+#     plt.grid(False)
+#
+#     colorpalette = sns.color_palette("dark", 10)
+#     lineStart = -1
+#     if variable == "Temperature (°C)":
+#         lineEnd = 28
+#     else:
+#         lineEnd = 28
+#     fig, ax = plt.subplots(figsize=(15.0, 12))
+#
+#     if variable == "Temperature (°C)":
+#         plt.plot([lineStart, lineEnd], [lineStart, lineEnd], 'k-', color=colorpalette[0], label="y= x", linewidth=4)
+#         plt.xlim(-1, 28)
+#         plt.ylim(-1, 28)
+#         ccmap = 'Blues'
+#     else:
+#         plt.plot([lineStart, lineEnd], [lineStart, lineEnd], 'k-', color=colorpalette[3], label="y= x", linewidth=4)
+#         plt.xlim(-1, 28)
+#         plt.ylim(-1, 28)
+#         ccmap = 'Reds'
+#     markers = ["o", "v", "^", "s", "P", "*", ">", "X", "D", "<", "p", "d"]
+#     if lakeid == "":
+#         for i, c in enumerate(np.unique(symbol)):
+#             try:
+#                 cs = plt.scatter(x[i], y[i], c=z[i], marker=markers[c], s=90, cmap=ccmap, linewidths=1, edgecolors='k',
+#                                  alpha=0.8)
+#             except:
+#                 print("error in")
+#     else:
+#         try:
+#             i = int(symbol[0])
+#         except:
+#             i = 1
+#         print(i)
+#         if i > 11:
+#             print("here")
+#         print(markers[i])
+#         cs = plt.scatter(x, y, c=z, marker=markers[i], s=90, cmap=ccmap, linewidths=1, edgecolors='k',
+#                          alpha=0.8)
+#     cb = plt.colorbar(cs)
+#     plt.clim(0.0, 1.0)
+#     cb.ax.tick_params(labelsize=14)
+#
+#     cb.ax.invert_yaxis()
+#
+#     fig.suptitle("")
+#     fig.tight_layout(pad=2)
+#     if lakeid == "":
+#         x, y = [item for sublist in x for item in sublist], [item for sublist in y for item in sublist]
+#
+#     x = smodels.add_constant(x)  # constant intercept term
+#     # Model: y ~ x + c
+#     model = smodels.OLS(y, x)
+#     fitted = model.fit()
+#     x_pred = np.linspace(x.min(), x.max(), 50)
+#     x_pred2 = smodels.add_constant(x_pred)
+#     y_pred = fitted.predict(x_pred2)
+#
+#     ax.plot(x_pred, y_pred, '-', color='k', linewidth=4,
+#             label="linear regression (y = %0.3f x + %0.3f) \n R\u00b2 : %0.3f RMSE: %0.3f" % (
+#                 slope, intercept, r_value, rmse))
+#
+#     print(fitted.params)  # the estimated parameters for the regression line
+#     print(fitted.summary())  # summary statistics for the regression
+#
+#     y_hat = fitted.predict(x)  # x is an array from line 12 above
+#     y_err = y - y_hat
+#     mean_x = x.T[1].mean()
+#     n = len(x)
+#     dof = n - fitted.df_model - 1
+#
+#     t = stats.t.ppf(1 - 0.025, df=dof)
+#     s_err = np.sum(np.power(y_err, 2))
+#     conf = t * np.sqrt((s_err / (n - 2)) * (1.0 / n + (
+#             np.power((x_pred - mean_x), 2) / ((np.sum(np.power(x_pred, 2))) - n * (np.power(mean_x, 2))))))
+#     upper = y_pred + abs(conf)
+#     lower = y_pred - abs(conf)
+#     ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.4, label="Confidence interval")
+#
+#     sdev, lower, upper = wls_prediction_std(fitted, exog=x_pred2, alpha=0.025)
+#     ax.fill_between(x_pred, lower, upper, color='#888888', alpha=0.1, label="Prediction interval")
+#     plt.xlabel("Average Observed %s" % variable)
+#     plt.ylabel("Average Modeled %s" % variable)
+#     plt.ylim()
+#     plt.xlim()
+#
+#     ax.legend(loc='best')  # 'upper left')
+#     import time
+#     timestr = time.strftime("%Y%m%d-%H%M%S")
+#     if calibration:
+#         if variable == "Temperature (°C)":
+#             fig.savefig(os.path.join(outputfolder, 'Temperature_comparison_calibrated_old_%s_%s_%s.png' % (old,lakeid, timestr)), dpi=125)
+#
+#         else:
+#             fig.savefig(os.path.join(outputfolder, 'Oxygen_comparison_calibrated_old_%s_%s_%s.png' % (old,lakeid, timestr)),
+#                         dpi=125)
+#     else:
+#         if variable == "Temperature (°C)":
+#             fig.savefig(os.path.join(outputfolder, 'Temperature_comparison_old_%s_%s_%s.png' % (old,lakeid, timestr)),
+#                         dpi=125)
+#         else:
+#             fig.savefig(os.path.join(outputfolder, 'Oxygen_comparison_old_%s_%s_%s.png' % (old,lakeid, timestr)),
+#                         dpi=125)
+#     plt.close()
+# def taylor_target_plot(all_data_from_model, all_data_from_observation, label_method, variable, information,
+#                        label_taylor):
+#     """
+#
+#     :param all_data_from_model:
+#     :param all_data_from_observation:
+#     :param label_method:
+#     :param variable:
+#     :return:
+#     """
+#     # take list of lists
+#     # [[[]*3]*12]
+#     colorpalette = ['#7A0014', '#E7FFD6', '#4A7FBF']  # sns.color_palette('Accent_r', 3)
+#     markers = ["o", "v", "^", "s", "P", "*", ">", "X", "D", "<", "p", "d"]
+#     sizes = [200, 150, 100]
+#     biaslist, crmsdlist, rmsdlist = [None] * (len(all_data_from_model)), [None] * (len(all_data_from_model)), [None] * (len(all_data_from_model))
+#     sdevlist, crmsdtaylist, ccoeflist = [None] * (len(all_data_from_model) ), [None] * (len(all_data_from_model) ), [None] * (len(all_data_from_model) )
+#     fig1, ax1 = plt.subplots(figsize=(10, 10), dpi=100)
+#     print(len(all_data_from_model))
+#     for lake in range(0, len(all_data_from_model)):
+#         observations = all_data_from_observation[lake]
+#         models = all_data_from_model[lake]
+#         print(len(models))
+#         statistic_target_lake = [None] * (len(models))
+#         statistic_taylor_lake = [None] * (len(models)+1)
+#         bias, crmsd, rmsd =  [None] * (len(models)),[None] * (len(models)),[None] * (len(models))
+#         sdev, crmsdtay, ccoef = [None] * (len(models)+1),[None] * (len(models)+1),[None] * (len(models)+1)
+#         for method in range(0, len(models)):
+#             stats_target = sm.target_statistics(models[method], observations[method],norm=True)
+#             stats_taylor = sm.taylor_statistics(models[method], observations[method])
+#
+#             # Calculate statistics for target and taylor diagram
+#             bias[method] = stats_target['bias']
+#             crmsd[method] = stats_target['crmsd']
+#             rmsd[method] = stats_target['rmsd']
+#
+#             if method == 0:
+#                 crmsdtay[method] = stats_taylor['crmsd'][0]
+#                 ccoef[method] = stats_taylor['ccoef'][0]
+#                 sdev[method] = stats_taylor['sdev'][0]/np.mean(observations[method])
+#
+#
+#             crmsdtay[method+1] = stats_taylor['crmsd'][1]
+#             ccoef[method+1] = stats_taylor['ccoef'][1]
+#             sdev[method + 1] = stats_taylor['sdev'][1] / np.mean(models[method])
+#
+#             statistic_target_lake[method] = stats_target
+#             statistic_taylor_lake[method] = stats_taylor
+#
+#         biaslist[lake], crmsdlist[lake], rmsdlist[lake] = bias, crmsd, rmsd
+#         sdevlist[lake], crmsdtaylist[lake], ccoeflist[lake] = sdev, crmsdtay, ccoef
+#         # Specify labels for points in a list (M1 for model prediction # 1,
+#         # etc.).
+#
+#         # fig2, ax2 = plt.subplots(figsize=(15, 10), dpi=100)
+#         # colorss = ['darkred']
+#         # label_methodt = ["Observations"] + label_method
+#         # fig2 = sm.taylor_diagram(np.array(sdev), np.array(crmsdtay), np.array(ccoef),
+#         #                          markerLabel=label_methodt,
+#         #                          markerLabelColor='r',
+#         #                          markerColor='darkred', markerLegend='on',
+#         #
+#         #                          colRMS='dimgrey', styleRMS=':',
+#         #                          titleRMS='on',
+#         #                          colSTD='grey', styleSTD='-.',
+#         #                           titleSTD='on',
+#         #                          colCOR='k', styleCOR='--',
+#         #                          titleCOR='on', markerSize=10, alpha=0.0)
+#         # # fig2 =  sm.taylor_diagram(np.array(sdev), np.array(crmsdtay), np.array(ccoef),
+#         # #               markerLabel = label_methodt,
+#         # #               markerLabelColor = 'r',
+#         # #               markerColor = 'r', markerLegend = 'on',
+#         # #               tickRMS = range(0,3,1),
+#         # #               colRMS = 'dimgrey', styleRMS = ':', widthRMS = 2.0,
+#         # #               titleRMS = 'on', titleRMSDangle = 4.0, tickSTD = range(0,4,1),
+#         # #               axismax = 4.0, colSTD = 'grey', styleSTD = '-.',
+#         # #               widthSTD = 1.0, titleSTD = 'on',
+#         # #               colCOR = 'k', styleCOR = '--', widthCOR = 1.0,
+#         # #               titleCOR = 'on', markerSize = 10, alpha = 0.0)
+#         # # fig2 = sm.taylor_diagram(np.array(sdev), np.array(crmsdtay), np.array(ccoef),
+#         # #                          markerLabel=label_methodt, markerLabelColor='k',
+#         # #                                            markerLegend='on', markerColor='y',
+#         # #                                            styleOBS='-', colOBS='grey', markerobs='o',
+#         # #                                            markerSize=6, tickRMS=[0.0, 1.0, 2.0, 3.0,4.0,5.0],
+#         # #                                            tickRMSangle=115, showlabelsRMS='on',
+#         # #                                            titleRMS='on', titleOBS='Ref', checkstats='on')
+#         #     #sm.taylor_diagram(np.array(sdev), np.array(crmsdtay), np.array(ccoef),
+#         #                       #    checkStats='on', styleOBS = '-', markerLabel = label_methodt, colOBS = 'blue',
+#         #                       # markerobs = 'o', markerLegend = 'on',stylerms ='-',colRMS='grey',
+#         #                       # titleOBS = 'Observation',showlabelsRMS='on', titleRMS = 'off',
+#         #                       # colCOR='dimgrey', alpha=0.7)
+#         #
+#         # plt.show()
+#         # timestr = time.strftime("%Y%m%d-%H%M%S")
+#         # plt.savefig(
+#         #     os.path.join(outputfolder, "Comparative_taylor_%s_%s_%s" % (variable, information, timestr)))
+#         # plt.close()
+#         if information == "lake_698":
+#             print('here')
+#         #symbol = [markers[lake]]*len(models)
+#         if not information == "all_lakes":
+#             maxv = abs(round_decimals_up(max([max(bias),max(crmsd)])))
+#             minv = abs(round_decimals_down(min([min(bias), min(crmsd)])))
+#             if minv> maxv:
+#                 inverse = maxv
+#                 maxv = minv
+#                 minv = inverse
+#             ax1.add_patch(plt.Circle((0, 0), maxv, color='k', fill=False,ls='--',zorder=0))
+#             ax1.add_patch(plt.Circle((0, 0), 1, color='k', fill=False, ls='-', zorder=0))
+#             ax1.add_patch(plt.Circle((0, 0), minv, color='k', fill=False,ls='--',zorder=0))
+#             if abs((maxv)-(minv))> 0.2:
+#                 test = ((minv)+round_decimals_up(abs((maxv)-(minv))/2))
+#                 ax1.add_patch(plt.Circle((0, 0), ((minv)+round_decimals_up(abs((maxv)-(minv))/2)), color='k', fill=False,ls='--',zorder=0))
+#             for i in range(len(crmsd)):
+#                 fig1=plt.scatter(y=bias[i], x=crmsd[i], color=colorpalette[i], marker=markers[lake],label=label_method[i],zorder=100,alpha=0.8,s=sizes[i],edgecolors='k')
+#             if lake == 0:
+#                 plt.legend()
+#             if (minv)< (maxv):
+#                 if (maxv) < 1:
+#                     limit = 1.5
+#                 else:
+#                     limit = (maxv+0.5)
+#             else:
+#                 if (minv) < 1:
+#                     limit = 1.5
+#                 else:
+#                     limit = (minv + 0.5)
+#             plt.ylim(-1 * limit, limit)
+#             plt.xlim(-1 * limit, limit)
+#         else:
+#             for i in range(len(crmsd)):
+#                 fig1=plt.scatter(y=bias[i], x=crmsd[i], color=colorpalette[i], marker=markers[lake],label=label_method[i],zorder=100,alpha=0.8,s=sizes[i],edgecolors='k')
+#             if lake == 0:
+#                 plt.legend()
+#
+#     if information == "all_lakes":
+#         t1 = [max(i) for i in biaslist]
+#         t2 = max(t1)
+#         t3 = max([t2, max([max(i) for i in crmsdlist])])
+#         maxv = abs(round_decimals_up(max([max([max(i) for i in biaslist]), max([max(i) for i in crmsdlist])])))
+#         minv = abs(round_decimals_down(min([min([min(i) for i in biaslist]), min([min(i) for i in crmsdlist])])))
+#         if minv > maxv:
+#             inverse = maxv
+#             maxv = minv
+#             minv = inverse
+#         ax1.add_patch(plt.Circle((0, 0), maxv, color='k', fill=False, ls='--', zorder=0))
+#         ax1.add_patch(plt.Circle((0, 0), 1, color='k', fill=False, ls='-', zorder=0))
+#         ax1.add_patch(plt.Circle((0, 0), minv, color='k', fill=False, ls='--', zorder=0))
+#         if abs(abs(maxv) - abs(minv)) > 0.2:
+#             test = (abs(minv) + round_decimals_up(abs(abs(maxv) - abs(minv)) / 2))
+#             ax1.add_patch(plt.Circle((0, 0), (abs(minv) + round_decimals_up(abs(abs(maxv) - abs(minv)) / 2)), color='k',
+#                                      fill=False, ls='--', zorder=0))
+#         for i in range(len(crmsd)):
+#             fig1 = plt.scatter(y=bias[i], x=crmsd[i], color=colorpalette[i], marker=markers[lake],
+#                                label=label_method[i], zorder=100, alpha=0.8, s=sizes[i], edgecolors='k')
+#
+#         if abs(minv) < abs(maxv):
+#             if abs(maxv) < 1:
+#                 limit = 1.5
+#             else:
+#                 limit = abs(maxv + 0.5)
+#
+#         else:
+#             if abs(minv) < 1:
+#                 limit = 1.1
+#             else:
+#                 limit = abs(minv - 0.5)
+#         plt.ylim(-1 * limit, limit)
+#         plt.xlim(-1 * limit, limit)
+#
+#
+#     sns.despine()
+#     ax1.spines['left'].set_position('center')
+#     ax1.spines['bottom'].set_position('center')
+#     plt.xlabel('Normalized\n cRMSE', horizontalalignment='right', x=1)
+#     # #ax.set_xlabel('Normalized cRMSE', loc='right')
+#     plt.ylabel('Normalized Bias', verticalalignment="top", y=1)
+#     #ax.set_ylabel('Normalized Bias')
+#     ax1.xaxis.set_minor_locator(MultipleLocator(5))
+#     ax1.yaxis.set_minor_locator(MultipleLocator(5))
+#     ax1.set_aspect(1.0)
+#
+#     #plt.show()
+#
+#
+#     timestr = time.strftime("%Y%m%d-%H%M%S")
+#     plt.savefig(
+#         os.path.join(outputfolder, "Comparative_target_%s_%s_%s" % ( variable,information, timestr)))
+#     plt.close()
+#
+#     # if information == "all_lakes":
+#     #     fig2, ax2 = plt.subplots(figsize=(10,10), dpi=100)
+#     #     limitrmsmax = round_decimals_up(max([max(i) for i in crmsdtaylist])+1,0)
+#     #     if max([max(i) for i in crmsdtaylist]) < 0:
+#     #         limitrmsmin = round_decimals_down(min([min(i) for i in crmsdtaylist]),0)
+#     #     else:
+#     #         limitrmsmin=0
+#     #     limitsdmax = round_decimals_up(max([max(i) for i in sdevlist]) + 1, 0)
+#     #     if min([min(i) for i in sdevlist]) < 0:
+#     #         limitsdmin = round_decimals_down(min([min(i) for i in sdevlist]), 0)
+#     #     else:
+#     #         limitsdmin = 0
+#     #     for i in range(len(label_method)):
+#     #         lakesdev = [sdev[i] for sdev in sdevlist]
+#     #         lakecrmsd = [crmsd[i] for crmsd in crmsdtaylist]
+#     #         lakeccoef = [ccoef[i] for ccoef in ccoeflist]
+#     #         if i == 0:
+#     #             fig2 = sm.taylor_diagram(np.array(lakesdev), np.array(lakecrmsd), np.array(lakeccoef),markerLabel = label_taylor,
+#     #                       markerLabelColor = 'r',
+#     #                       markerColor = 'r', markerLegend = 'on',
+#     #                       tickRMS = range(limitrmsmin,limitrmsmax,1),
+#     #                       colRMS = 'm', styleRMS = ':', widthRMS = 2.0,
+#     #                       titleRMS = 'on', titleRMSDangle = 40.0, tickSTD = range(limitsdmin,limitsdmax,1),
+#     #                       axismax = limitsdmax, colSTD = 'b', styleSTD = '-.',
+#     #                       widthSTD = 1.0, titleSTD = 'on',
+#     #                       colCOR = 'k', styleCOR = '--', widthCOR = 1.0,
+#     #                       titleCOR = 'on', markerSize = 10, alpha = 0.0)
+#     #         else:
+#     #             fig2 = sm.taylor_diagram(np.array(lakesdev), np.array(lakecrmsd), np.array(lakeccoef), overlay='on',
+#     #                               markerLabel=label_taylor, markerLabelColor='b',
+#     #                               markerColor='b')
+#     #         plt.show()
+#     #     timestr = time.strftime("%Y%m%d-%H%M%S")
+#     #     plt.savefig(
+#     #         os.path.join(outputfolder, "Comparative_taylor_%s_%s_%s" % (variable, information, timestr)))
+#     #     plt.close()
+    # def comparison_obs_simsold(self, thermocline):
+    #     """
+    #     Opens the comparison file created by make_comparison_file, and prints the results of analysis functions.
+    #     :return: Score, a float representing the overall performance of the current simulation.
+    #     """
+    #     if 1 == 1:
+    #
+    #         # try:
+    #         if 1 == 1:
+    #             # if self.runlake(2,2) == False:
+    #             if os.path.exists("{}/Tztcompare.csv".format(self.calibration_path)):
+    #                 # sns.set(font_scale=3)
+    #                 sns.set_style("ticks")
+    #                 sns.set_context("ticks", rc={"font.size": 40, "axes.titlesize": 40, "axes.labelsize": 40})
+    #
+    #                 plt.grid(False)
+    #                 plt.figure(figsize=(20, 10))
+    #                 axe = plt.subplot(111)
+    #                 for path_data in [self.calibration_path, self.outdir]:
+    #                     variable = "Temperature"
+    #                     data = pd.read_csv("{}/Tztcompare.csv".format(path_data), header=None)
+    #                     data.columns = ['Dates', 'Depth', 'Observed %s (°C)' % variable, 'Modeled %s (°C)' % variable]
+    #                     data['Dates'] = pd.to_datetime(data['Dates'])
+    #                     data['Dates1'] = pd.to_datetime(data['Dates'])
+    #                     data.set_index('Dates1', inplace=True)
+    #                     exA, y1A, exB, y1B = scenarios[2]
+    #                     all_data = pd.read_csv("{}/Tzt.csv".format(path_data), header=None)
+    #                     all_data.columns = ["%s" % (i) for i in np.arange(0.5, len(all_data.columns), 1)]
+    #
+    #                     dataunder = data[data['Depth'] < thermocline]
+    #                     dataover = data[data['Depth'] >= thermocline]
+    #
+    #                     Dates_range = pd.date_range(start='1/1/%s' % y1A, end='31/12/%s' % (int(y1B) + 4))
+    #                     Alldataunder = pd.DataFrame()
+    #                     Alldataunder['Dates'] = Dates_range
+    #                     # alldataover = [Dates_range]
+    #                     Alldataover = pd.DataFrame()
+    #                     Alldataover['Dates'] = Dates_range
+    #                     # alldataunder = [Dates_range]
+    #
+    #                     depthunder = ['Dates']
+    #                     depthover = ['Dates']
+    #                     for i in data['Depth'].unique():
+    #                         if i in np.arange(0.5, len(all_data), 1):
+    #                             dataa = all_data['%s' % i].tolist()
+    #                         else:
+    #                             if (round(i) - floor(i)) == 0:
+    #                                 dataa = [findYPoint(int(round(i)) - 1, int(round(i)),
+    #                                                     all_data.iloc[y, int(round(i)) - 1],
+    #                                                     all_data.iloc[y, int(round(i))], i) for y in
+    #                                          range(0, len(all_data))]
+    #                             else:
+    #                                 dataa = [
+    #                                     findYPoint(int(round(i)), int(round(i)) + 1, all_data.iloc[y, int(round(i))],
+    #                                                all_data.iloc[y, int(round(i)) + 1], i) for y in
+    #                                     range(0, len(all_data))]
+    #                         if i < thermocline:
+    #                             depthunder.append(i)
+    #                             Alldataunder['%s' % i] = dataa
+    #                             # alldataunder.append(dataa)
+    #                             print('under:', len(depthunder))
+    #
+    #                         else:
+    #                             depthover.append(i)
+    #                             Alldataover['%s' % i] = dataa
+    #                             # alldataover.append(dataa)
+    #                             print('over', len(depthover))
+    #
+    #                     try:
+    #                         year = dataover.iloc[0, 0].year
+    #                         Alldataover = Alldataover.loc[
+    #                             Alldataover['Dates'] >= datetime.datetime.strptime("%s-01-01" % (year - 1), '%Y-%m-%d')]
+    #                         year = dataunder.iloc[0, 0].year
+    #                         Alldataunder = Alldataunder.loc[
+    #                             Alldataunder['Dates'] >= datetime.datetime.strptime("%s-01-01" % (year - 1),
+    #                                                                                 '%Y-%m-%d')]
+    #                     except:
+    #                         print("1")
+    #                     colorpalette = sns.color_palette("colorblind")
+    #
+    #                     depthrange = list(map(float, depthover[1:]))
+    #
+    #                     for i in range(0, len(depthrange)):
+    #                         # sns.lineplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder, color="black")
+    #                         # d = colorpalette[int(i)]
+    #                         # dd = "%s"%(depthrange[i])
+    #                         if i in [0, (len(depthrange) - 1)]:
+    #
+    #                             if path_data == self.calibration_path:
+    #                                 try:
+    #                                     sns.lineplot(x="Dates", y=depthrange[i], data=Alldataunder,
+    #                                                  color=colorpalette[int(i)], zorder=-1,
+    #                                                  label='M%s' % (1))  # float(depthrange[0])))
+    #                                 except:
+    #                                     print('error layer')
+    #                             else:
+    #                                 try:
+    #                                     sns.lineplot(x="Dates", y=depthrange[i], data=Alldataunder,
+    #                                                  color=colorpalette[int(i)], zorder=-1, dashes=[(2, 2), (2, 2)],
+    #                                                  label='M%s' % (1))  # float(depthrange[0])))
+    #                                 except:
+    #                                     print('error layer')
+    #                         # sns.scatterplot(x="Dates", y="%s"%i, data=Alldataunder, markers="-o",color=colorpalette[floor(float(i))], label='Modeled %s(%s m)' % (variable, floor(float(i))))
+    #                         # sns.scatterplot(x="Dates", y='Modeled %s (°C)' % variable, data=dataunder, markers="-o-",
+    #                         #                color="black",
+    #                         #                label='Observation %s (0-%s m)' % (variable, thermocline))
+    #
+    #                 sns.scatterplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder, markers="-o-", s=100,
+    #                                 zorder=10,
+    #                                 color="blue",
+    #                                 label='O>%s' % (thermocline))
+    #                 plt.xticks(rotation=15)
+    #                 ax = plt.axes()
+    #                 ax.xaxis.set_major_locator(plt.MaxNLocator(15))
+    #                 plt.ylabel("%s" % variable)
+    #                 # Put a legend to the right of the current axis
+    #                 axe.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    #                 s3year = dataunder.iloc[0, 0].year
+    #                 e3year = dataunder.iloc[-1, 0].year
+    #                 s3y = datetime.datetime.strptime("%s-01-01" % (s3year), '%Y-%m-%d')
+    #                 e3y = datetime.datetime.strptime("%s-01-01" % (e3year), '%Y-%m-%d')
+    #                 plt.xlim(s3y, e3y)
+    #                 plt.savefig("comparison_%s_%s_epi.png" % (self.lake_name, variable))
+    #                 plt.close()
+    #                 # sns.set(font_scale=5)
+    #                 # sns.set_style("ticks")
+    #                 sns.set_context("paper", font_scale=4)
+    #                 plt.grid(False)
+    #                 plt.figure(figsize=(20, 10))
+    #                 axe = plt.subplot(111)
+    #
+    #                 for i in depthover[1:]:
+    #                     # sns.lineplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder, color="black")
+    #                     sns.lineplot(x="Dates", y="%s" % i, data=Alldataover, color='black', zorder=-1,
+    #                                  label='M%s' % (floor(float(i))))
+    #                     # sns.scatterplot(x="Dates", y="%s"%i, data=Alldataunder, markers="-o",color=colorpalette[floor(float(i))], label='Modeled %s(%s m)' % (variable, floor(float(i))))
+    #                     # sns.scatterplot(x="Dates", y='Modeled %s (°C)' % variable, data=dataunder, markers="-o-",
+    #                     #                color="black",
+    #                     #                label='Observation %s (0-%s m)' % (variable, thermocline))
+    #                 sns.scatterplot(x="Dates", y='Observed %s (°C)' % variable, data=dataover, markers="-o-", s=100,
+    #                                 zorder=10,
+    #                                 color="red",
+    #                                 label='O%s-%s' % (thermocline, depthover[-1]))
+    #                 plt.xticks(rotation=15)
+    #                 ax = plt.axes()
+    #                 ax.xaxis.set_major_locator(plt.MaxNLocator(15))
+    #                 plt.ylabel("%s" % variable)
+    #                 axe.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    #                 try:
+    #                     syear = dataover.iloc[0, 0].year
+    #                     eyear = dataover.iloc[-1, 0].year
+    #                     sy = datetime.datetime.strptime("%s-01-01" % (syear), '%Y-%m-%d')
+    #                     ey = datetime.datetime.strptime("%s-01-01" % (eyear), '%Y-%m-%d')
+    #                     plt.xlim(sy, ey)
+    #                 except:
+    #                     print('1')
+    #
+    #                 plt.savefig("comparison_%s_%s_hypo.png" % (self.lake_name, variable))
+    #                 plt.close()
+    #
+    #             if os.path.exists("{}/O2ztcompare.csv".format(self.calibration_path)):
+    #
+    #                 for path_data in [self.calibration_path, self.outdir]:
+    #                     Alldataover, Alldataunder, dataunder, dataover = [], [], [], []
+    #                     variable = "Oxygen"
+    #                     data = pd.read_csv("{}/O2ztcompare.csv".format(path_data), header=None)
+    #                     data.columns = ['Dates', 'Depth', 'Observed %s (°C)' % variable, 'Modeled %s (°C)' % variable]
+    #                     data['Dates'] = pd.to_datetime(data['Dates'])
+    #                     data['Dates1'] = pd.to_datetime(data['Dates'])
+    #                     data.set_index('Dates1', inplace=True)
+    #                     exA, y1A, exB, y1B = scenarios[2]
+    #                     all_data = pd.read_csv("{}/O2zt.csv".format(path_data), header=None)
+    #                     all_data.columns = ["%s" % (i) for i in np.arange(0.5, len(all_data.columns), 1)]
+    #
+    #                     dataunder = data[data['Depth'] < thermocline]
+    #                     dataover = data[data['Depth'] >= thermocline]
+    #
+    #                     Dates_range = pd.date_range(start='1/1/%s' % y1A, end='31/12/%s' % (int(y1B) + 4))
+    #                     Alldataunder = pd.DataFrame()
+    #                     Alldataunder['Dates'] = Dates_range
+    #                     # alldataover = [Dates_range]
+    #                     Alldataover = pd.DataFrame()
+    #                     Alldataover['Dates'] = Dates_range
+    #                     # alldataunder = [Dates_range]
+    #
+    #                     depthunder = ['Dates']
+    #                     depthover = ['Dates']
+    #                     for i in data['Depth'].unique():
+    #                         if i in np.arange(0.5, len(all_data), 1):
+    #                             dataa = all_data['%s' % i].tolist()
+    #
+    #                         else:
+    #                             if (round(i) - floor(i)) == 0:
+    #                                 dataa = [findYPoint(int(round(i)) - 1, int(round(i)),
+    #                                                     all_data.iloc[y, int(round(i)) - 1],
+    #                                                     all_data.iloc[y, int(round(i))], i) for y in
+    #                                          range(0, len(all_data))]
+    #                             else:
+    #                                 dataa = [
+    #                                     findYPoint(int(round(i)), int(round(i)) + 1, all_data.iloc[y, int(round(i))],
+    #                                                all_data.iloc[y, int(round(i)) + 1], i) for y in
+    #                                     range(0, len(all_data))]
+    #                             # dataa = [float(i)*0.001 for i in dataa]
+    #                         dataa = [element * 0.001 for element in dataa]
+    #                         if i < thermocline:
+    #                             depthunder.append(i)
+    #                             Alldataunder['%s' % i] = dataa
+    #                             # alldataunder.append(dataa)
+    #                             print('under:', len(depthunder))
+    #
+    #                         else:
+    #                             depthover.append(i)
+    #                             Alldataover['%s' % i] = dataa
+    #                             # alldataover.append(dataa)
+    #                             print('over', len(depthover))
+    #
+    #                     try:
+    #                         year = dataover.iloc[0, 0].year
+    #                         Alldataover = Alldataover.loc[
+    #                             Alldataover['Dates'] >= datetime.datetime.strptime("%s-01-01" % (year - 1), '%Y-%m-%d')]
+    #                         year = dataunder.iloc[0, 0].year
+    #                         Alldataunder = Alldataunder.loc[
+    #                             Alldataunder['Dates'] >= datetime.datetime.strptime("%s-01-01" % (year - 1),
+    #                                                                                 '%Y-%m-%d')]
+    #                     except:
+    #                         print("1")
+    #                     colorpalette = sns.color_palette("colorblind")
+    #
+    #                 sns.set(font_scale=2)
+    #                 sns.set_style("ticks")
+    #                 sns.set_context("paper", font_scale=4)
+    #
+    #                 plt.grid(False)
+    #                 plt.figure(figsize=(20, 10))
+    #                 axe = plt.subplot(111)
+    #
+    #                 for i in depthunder[1:]:
+    #                     # sns.lineplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder, color="black")
+    #                     sns.lineplot(x="Dates", y="%s" % i, data=Alldataunder, color="black", zorder=-1,
+    #                                  label='M%s' % (floor(float(i))))
+    #                     # sns.scatterplot(x="Dates", y="%s"%i, data=Alldataunder, markers="-o",color=colorpalette[floor(float(i))], label='Modeled %s(%s m)' % (variable, floor(float(i))))
+    #                     # sns.scatterplot(x="Dates", y='Modeled %s (°C)' % variable, data=dataunder, markers="-o-",
+    #                     #                color="black",
+    #                     #                label='Observation %s (0-%s m)' % (variable, thermocline))
+    #                 sns.scatterplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder, markers="-o-", s=100,
+    #                                 zorder=10,
+    #                                 color="blue",
+    #                                 label='O>%s' % (thermocline))
+    #                 plt.xticks(rotation=15)
+    #                 ax = plt.axes()
+    #                 ax.xaxis.set_major_locator(plt.MaxNLocator(15))
+    #                 plt.ylabel("%s" % variable)
+    #                 # Put a legend to the right of the current axis
+    #                 axe.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    #                 s2year = dataunder.iloc[0, 0].year
+    #                 e2year = dataunder.iloc[-1, 0].year
+    #                 s2y = datetime.datetime.strptime("%s-01-01" % (s2year), '%Y-%m-%d')
+    #                 e2y = datetime.datetime.strptime("%s-01-01" % (e2year), '%Y-%m-%d')
+    #                 plt.xlim(s2y, e2y)
+    #                 plt.savefig("comparison_%s_%s_epi.png" % (self.lake_name, variable))
+    #                 plt.close()
+    #                 sns.set(font_scale=2)
+    #                 sns.set_style("ticks")
+    #                 sns.set_context("paper", font_scale=4)
+    #                 plt.grid(False)
+    #                 plt.figure(figsize=(20, 10))
+    #                 axe = plt.subplot(111)
+    #
+    #                 for i in depthover[1:]:
+    #                     # sns.lineplot(x="Dates", y='Observed %s (°C)' % variable, data=dataunder, color="black")
+    #                     sns.lineplot(x="Dates", y="%s" % i, data=Alldataover, color='black', zorder=-1,
+    #                                  label='M%s' % (floor(float(i))))
+    #                     # sns.scatterplot(x="Dates", y="%s"%i, data=Alldataunder, markers="-o",color=colorpalette[floor(float(i))], label='Modeled %s(%s m)' % (variable, floor(float(i))))
+    #                     # sns.scatterplot(x="Dates", y='Modeled %s (°C)' % variable, data=dataunder, markers="-o-",
+    #                     #                color="black",
+    #                     #                label='Observation %s (0-%s m)' % (variable, thermocline))
+    #                 sns.scatterplot(x="Dates", y='Observed %s (°C)' % variable, data=dataover, markers="-o-", s=100,
+    #                                 zorder=10,
+    #                                 color="red",
+    #                                 label='O%s-%s' % (thermocline, depthover[-1]))
+    #                 plt.xticks(rotation=15)
+    #                 ax = plt.axes()
+    #                 ax.xaxis.set_major_locator(plt.MaxNLocator(15))
+    #                 plt.ylabel("%s" % variable)
+    #                 axe.legend(loc='center left', bbox_to_anchor=(1, 0.5))
+    #                 try:
+    #                     s1year = dataover.iloc[0, 0].year
+    #                     e1year = dataover.iloc[-1, 0].year
+    #                     s1y = datetime.datetime.strptime("%s-01-01" % (s1year), '%Y-%m-%d')
+    #                     e1y = datetime.datetime.strptime("%s-01-01" % (e1year), '%Y-%m-%d')
+    #                     plt.xlim(s1y, e1y)
+    #                 except:
+    #                     print("1")
+    #                 plt.savefig("comparison_%s_%s_hypo.png" % (self.lake_name, variable))
+    #                 plt.close()
+    #         else:
+    #             print("issues with the complete run")
+    #         # except:
+    #         print('error lake')
+
+    # def comparison_obs_sims(self, thermocline, calibration=False,outputfolder=r'F:\output'):
+    #
+    #     if calibration:
+    #         outfolder = self.calibration_path
+    #     else:
+    #         outfolder = self.outdir
+    #     fig, ax = plt.subplots(1, 2, figsize=(30, 12))
+    #     fig, ax = plt.subplots( figsize=(15, 6))
+    #
+    #     plotplacex = {"Tzt": 0, "O2zt": 1}
+    #     if self.lake_name == 14939:
+    #         print("here")
+    #     for variable in ["O2zt"]: #"Tzt" ,
+    #         # try:
+    #         print(outfolder)
+    #         if os.path.exists(os.path.join(outfolder, "%scompare.csv" % variable)):
+    #             data = pd.read_csv(os.path.join(outfolder, "%scompare.csv" % variable), header=None,
+    #                                names=['Date', 'Depth', 'Observations', 'Modelisation'])
+    #
+    #             data['Dates'] = pd.to_datetime(data["Date"])
+    #             data = data.set_index(data['Dates'])
+    #             initial_date = data['Dates'].min()
+    #             final_date = data['Dates'].max()
+    #             depth_range = data["Depth"].unique()
+    #
+    #             start = 2001
+    #             end = 2010
+    #             reds = sns.color_palette("rocket")
+    #             blues = sns.color_palette("mako")
+    #             characteristics = {"surface": [reds[2], reds[4]], "deepwater": [blues[1], blues[4]]}
+    #             plotplacey = {"surface": 1, "deepwater": 0}
+    #             markerstyle = {"surface": "o", "deepwater": "s"}
+    #             markercolor = {"surface": "None", "deepwater": "black"}
+    #             for modelresult in ['calculated']:  # ,'estimated']:
+    #                 if modelresult == 'calculated':
+    #                     modeldata = pd.read_csv(os.path.join(self.calibration_path, "%s.csv" % variable), header=None)
+    #                 else:
+    #                     modeldata = pd.read_csv(os.path.join(self.outdir, "%s.csv" % variable), header=None)
+    #
+    #                 dates = pd.date_range(start='1/1/%s' % start, end='12/31/%s' % end)
+    #                 if len(dates) == len(modeldata):
+    #                     modeldata = modeldata.set_index(dates)
+    #                 else:
+    #                     dates = pd.date_range(start='1/1/%s' % self.start_year, end='12/31/%s' % self.end_year)
+    #                     modeldata = modeldata.set_index(dates)
+    #
+    #                 modeldata = modeldata.loc["%s-01-01" % str(initial_date.year):"%s-12-31" % str(final_date.year)]
+    #
+    #                 for depthlevel in ['surface', 'deepwater']:
+    #                     if depthlevel == 'surface':
+    #                         subdatabydepth = [depth for depth in depth_range if depth < thermocline]
+    #                     else:
+    #                         subdatabydepth = [depth for depth in depth_range if depth >= thermocline]
+    #
+    #                     # Select depth representing surface and deepwater
+    #
+    #                     numberbydepth = list(
+    #                         data[data['Depth'].isin(subdatabydepth)].groupby(['Depth']).count()['Observations'])
+    #
+    #                     if len(numberbydepth) == 1:
+    #                         depthlayer = subdatabydepth[0]
+    #                     elif len(numberbydepth) < 1:
+    #                         depthlayer = "no data"
+    #                     else:
+    #                         max_position = [i for i, x in enumerate(numberbydepth) if x == max(numberbydepth)]
+    #                         max1 = max_position[0]
+    #                         if depthlevel == "deepwater":
+    #                             depthlayer = float(subdatabydepth[max_position[-1]])
+    #                         else:
+    #                             depthlayer = float(subdatabydepth[max_position[0]])
+    #                         # depthlayer = subdatabydepth[numberbydepth.index(max(numberbydepth)]
+    #
+    #                     if depthlayer != "no data":
+    #                         sns.set_style("ticks", {"xtick.major.size": 100, "ytick.major.size": 100})
+    #                         if (floor(depthlayer) + 0.5) == depthlayer:
+    #                             modelatlayer = list(modeldata[int(floor(depthlayer))])
+    #                         elif (floor(depthlayer) + 0.5) > depthlayer:
+    #                             modelatlayer = [findYPoint((floor(depthlayer)) - 0.5, int(floor(depthlayer)) + 0.5,
+    #                                                        modeldata.iloc[y, int(floor(depthlayer)) - 1],
+    #                                                        modeldata.iloc[y, int(floor(depthlayer))], depthlayer) for y in
+    #                                             range(0, len(modeldata))]
+    #                         else:
+    #                             modelatlayer = [
+    #                                 findYPoint(round(depthlayer), round(depthlayer) + 1,
+    #                                            modeldata.iloc[y, int(floor(depthlayer))],
+    #                                            modeldata.iloc[y, floor(depthlayer) + 1], depthlayer) for y in
+    #                                 range(0, len(modeldata))]
+    #
+    #                         if variable == "O2zt":
+    #                             modelatlayer = [element * 0.001 for element in modelatlayer]
+    #
+    #                         if modelresult == 'calculated':
+    #
+    #                             date = pd.date_range(start="%s-01-01" % str(initial_date.year),
+    #                                                  end="%s-12-31" % str(final_date.year))
+    #
+    #                             modelfinalresult = pd.DataFrame(modelatlayer, index=date,
+    #                                                             columns=['%s_Model_%s' % (modelresult, depthlevel)])
+    #                             modelfinalresult['Dates'] = date
+    #                         else:
+    #                             modelfinalresult['%s_Model_%s' % (modelresult, depthlevel)] = modelatlayer
+    #
+    #                         if modelresult == "estimated":
+    #
+    #                             sns.lineplot(x="Dates", y="%s_Model_%s" % (modelresult, depthlevel), zorder=0,
+    #                                          linewidth=1.5, color=characteristics[depthlevel][0], dashes=[(2, 2)],
+    #                                          data=modelfinalresult)  # ,ax=ax[plotplacex[variable]])
+    #                         else:
+    #
+    #                             sns.lineplot(x="Dates", y="%s_Model_%s" % (modelresult, depthlevel), zorder=0,
+    #                                          linewidth=1.5,
+    #                                          color=characteristics[depthlevel][1],
+    #                                          data=modelfinalresult)  # ,ax=ax[plotplacex[variable]])
+    #                             data2 = data.loc[data['Depth'] == depthlayer]
+    #                             sns.scatterplot(x='Dates', y="Observations", data=data2, color='black', zorder=1,
+    #                                             marker=markerstyle[depthlevel], s=50, facecolors=markercolor[depthlevel],
+    #                                             edgecolor='k',
+    #                                             linewidth=2,
+    #                                             linestyle='-')  # ,ax=ax[plotplacex[variable]])
+    #             # except:
+    #             #     print("error with variable %s"%variable)
+    #             # facecolors = markercolor[depthlevel], edgecolors = 'black',
+    #
+    #             plt.xticks(rotation=15)
+    #
+    #             # plt.title('seaborn-matplotlib example')
+    #             timestr = time.strftime("%Y%m%d-%H%M%S")
+    #             # plt.show()
+    #             plt.savefig(os.path.join(outputfolder,"Comparative_timeline_%s_%s_%s" % (self.lake_name,variable, timestr)))
+    #             plt.close()
+    #     else:
+    #         print("comparison file of %s doesn't exist"%variable)
+
+    # def comparison_obs_sims_plot(self, variable_analized, calibration_methods,modeldata, obsdata,depthlayers,comparison_target,ice_cover):
+    #
+    #     fig,  axs = plt.subplots(2,1, sharex= True,constrained_layout = True, figsize=(15,8),gridspec_kw={'height_ratios': [1, 1]})
+    #     reds = sns.color_palette("rocket")
+    #     blues = sns.color_palette("mako")
+    #     characteristics = {"surface": ["black","#B30000", "#FF9785"], "deepwater": ["black",'#14218F', "#0AEFFF"]}
+    #     plotplacey = {"surface": 0, "deepwater": 1}
+    #     markerstyle = {"surface": "o", "deepwater": "s"}
+    #     markercolor = {"surface": "#B30000", "deepwater": '#14218F'}
+    #     sns.set_style("ticks", {"xtick.major.size": 100, "ytick.major.size": 100})
+    #
+    #     plt.xticks(rotation=15)
+    #     allmodels = []
+    #     for depth_level in plotplacey:
+    #         try:
+    #             level = plotplacey[depth_level]
+    #             depthlayer = depthlayers[depth_level]
+    #             ax2 = axs[level].twinx()
+    #             ax2.fill_between(ice_cover.iloc[:, 1].tolist(), ice_cover.iloc[:, 0].tolist(),
+    #                              color="grey", alpha=0.2,zorder=-10)
+    #
+    #             ax2.set_ylim(0, 1)
+    #             ax2.set_yticklabels([])
+    #             ax2.yaxis.set_visible(False)
+    #
+    #             for method in calibration_methods:
+    #                 allmodels.append(modeldata["%s_Model_%s" % (method, depth_level)].tolist())
+    #                 if method == "estimated" :
+    #
+    #                     sns.lineplot(x="Dates", y="%s_Model_%s" % (method, depth_level),
+    #                                  linewidth=1, color=characteristics[depth_level][2],
+    #                                  data=modeldata, ax=axs[level],zorder=90)  # ,ax=ax[plotplacex[variable]])
+    #                     axs[level].lines[2].set_linestyle("-.")
+    #
+    #
+    #                 elif method == "old_calculated":
+    #                     sns.lineplot(x="Dates", y="%s_Model_%s" % (method, depth_level),
+    #                                  linewidth=1.5, color=characteristics[depth_level][1],
+    #                                  data=modeldata, ax=axs[level],zorder=80)  # ,ax=ax[plotplacex[variable]])
+    #
+    #                     axs[level].lines[1].set_linestyle("--")
+    #                     axs[level].set_ylim(-0.5, 30)
+    #
+    #                 else:
+    #
+    #                     observations = obsdata.loc[obsdata['Depth'] == depthlayer]
+    #                     sns.scatterplot(x='Dates', y="Observations", data=observations, color='black',
+    #                                     marker=markerstyle[depth_level], s=50, facecolors=markercolor[depth_level],
+    #                                     edgecolor='k',
+    #                                     linewidth=2,
+    #                                     linestyle='-', ax=axs[level], zorder=100)
+    #                     sns.lineplot(x="Dates", y="%s_Model_%s" % (method, depth_level),
+    #                                  linewidth=2, color=characteristics[depth_level][0],
+    #                                  data=modeldata, ax=axs[level],alpha=0.8,zorder = 60)
+    #
+    #
+    #                     axs[level].set_ylim(-0.5, 30)
+    #
+    #
+    #
+    #             axs[level].set_ylim(-0.5, 30)
+    #             axs[level].set_xlim(modeldata['Dates'].min(), modeldata['Dates'].max())
+    #             axs[level].legend(["Second GA Calibration","First GA Calibration","Stewise Regression","Observations"])
+    #         except:
+    #             print("missing layer %s for lake %s"%(depth_level,self.lake_name))
+    #     # plt.title('timeline_lake_%s_%s'%(self.lake_name,variable_analized)))
+    #     timestr = time.strftime("%Y%m%d-%H%M%S")
+    #     # plt.show()
+    #     plt.savefig(os.path.join(outputfolder, "Comparative_timeline_%s_%s_%s" % (self.lake_name, variable_analized, timestr)))
+    #     plt.close('all')
+    #
+    #
+    #
+    #     # Calculate statistics for target diagram
+    #
+    #     # if len(calibration_methods) >= 2:
+    #     #
+    #     #     bias = np.array([target_stats_esti['bias'], target_stats_old['bias'],
+    #     #                      target_stats_cali['bias']])
+    #     #     crmsd = np.array([target_stats_esti['crmsd'], target_stats_old['crmsd'],
+    #     #                       target_stats_cali['crmsd']])
+    #     #     rmsd = np.array([target_stats_esti['rmsd'], target_stats_old['rmsd'],
+    #     #                      target_stats_cali['rmsd']])
+    #     #
+    #     #     # Specify labels for points in a list (M1 for model prediction # 1,
+    #     #     # etc.).
+    #     #     label = ['Estimation', 'old Calibration', 'New Calibration']
+    #     #
+    #     #     sm.target_diagram(bias, crmsd, rmsd, markerLabel=label)#,ticks=np.arange(-50, 60, 10))
+    #     #
+    #     #     # # maybe one taylor by type (one color by type) and all lake by taylor
+    #     #     # from vacumm.misc.plot import taylor
+    #     #     # taylor(allmodels, obsdata.tolist(), figsize=(8, 8), label_size='large', size=15,
+    #     #     #        labels=calibration_methods, colors='cyan', title_size=18,
+    #     #     #        savefigs=__file__, savefigs_pdf=True, show=False, close=True)
+    #     #
+    #     #     plt.savefig(
+    #     #         os.path.join(outputfolder, "Comparative_target_%s_%s_%s" % (self.lake_name, variable_analized, timestr)))
+    #     #
+    #     #     plt.close()
+    #     #
+    #     #
+    #     #     # # Set the figure properties (optional)
+    #     #     # rcParams["figure.figsize"] = [8.0, 6.4]
+    #     #     # rcParams['lines.linewidth'] = 1  # line width for plots
+    #     #     # rcParams.update({'font.size': 12})  # font size of axes text
+    #     #
+    #     #     label = ["Obs",'Estimation', 'old Calibration', 'New Calibration']
+    #     #
+    #     #     # Store statistics in arrays
+    #     #     sdev = np.array([ taylor_stats_cali['sdev'][0],taylor_stats_esti['sdev'][1], taylor_stats_old['sdev'][1],
+    #     #                      taylor_stats_cali['sdev'][1]])
+    #     #     crmsd = np.array([ taylor_stats_cali['crmsd'][0],taylor_stats_esti['crmsd'][1], taylor_stats_old['crmsd'][1],
+    #     #                       taylor_stats_cali['crmsd'][1]])
+    #     #     ccoef = np.array([ taylor_stats_cali['ccoef'][0],taylor_stats_esti['ccoef'][1], taylor_stats_old['ccoef'][1],
+    #     #                       taylor_stats_cali['ccoef'][1]])
+    #     #
+    #     #     sm.taylor_diagram(sdev,crmsd,ccoef, checkStats='on', styleOBS = '-', markerLabel = label, colOBS = 'blue',
+    #     #                       markerobs = 'o', markerLegend = 'on',stylerms ='-',colRMS='grey',
+    #     #                       titleOBS = 'Observation',showlabelsRMS='on', titleRMS = 'off',
+    #     #                       colCOR='dimgrey', alpha=0.7)
+    #     #
+    #     #     #sm.taylor_diagram(sdev, crmsd, ccoef,  markerLabel=label)
+    #     #
+    #     #     # Write plot to file
+    #     #     plt.savefig( os.path.join(outputfolder, "Comparative_taylor_%s_%s_%s" % (self.lake_name, variable_analized, timestr)))
+    #     #     plt.close()
+    #     #     print("end")

@@ -6,6 +6,8 @@ Created on Thu Sep 12 14:27:30 2019
 """
 import os
 import pandas as pd
+import time
+
 
 models = {1: ('ICHEC-EC-EARTH', 'r1i1p1_KNMI-RACMO22E_v1_day'),
           2: ('ICHEC-EC-EARTH', 'r3i1p1_DMI-HIRHAM5_v1_day'),
@@ -115,7 +117,6 @@ test['meanice'] = listmeanice
 
 print(test)
 
-import time
 
 timestr = time.strftime("%Y%m%d-%H%M%S")
 test.to_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\icemodelvsdata100111old_%s.csv" % timestr)
