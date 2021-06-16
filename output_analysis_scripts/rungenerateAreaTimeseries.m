@@ -17,7 +17,7 @@ exA = 'historical';
 exB = 'rcp45';
 y1A = 2001;
 y1B = 2010;
-csvfiledir = 'f:\output';
+csvfiledir = 'F:\output';
 outputdir = 'F:\output\T_L_O_matrices';
 
 %generateParamTimeseries(lakelistfile,m1,m2,exA,y1A,exB,y1B,outputdir)

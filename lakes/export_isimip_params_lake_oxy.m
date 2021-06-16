@@ -12,7 +12,7 @@ function export_isimip_params_lake(lake_params,parfileplace, parfile)
         while ischar(tline)
             i = i+1;
            
-            if( i == 49 || i== 50 || i == 62)
+            if( i==25 ||i == 49 || i== 50 || i == 62)
                 j = i-2;
                 tline = fgets(fid);
                 sc = split(tline);
@@ -27,12 +27,9 @@ function export_isimip_params_lake(lake_params,parfileplace, parfile)
                 tline = fgets(fid);
                 if j >= 61
                     tline = fgets(fid);
-                else    
-                    try
+                else
                     sc = split(tline);
-                    catch
-                        allo=1;
-                    end
+                   
                     if j == 0
                       tline = sprintf('            %s\t%s\t%s\t%s\t%s',sc{2},sc{3},sc{4},sc{5},sc{6});
 

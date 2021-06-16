@@ -145,20 +145,8 @@ for O2_x = 1:length(O2_list)
                     %end
                 end
                 if i >= 1
-                     if floor(ppfd_min)==ppfd_min
-                        if floor(O2_min)==O2_min
-                            name = sprintf('%s/fish_niche_Area_Light%d_T%d_O%d_%d-%d.csv',outputdir,ppfd_min,T_max,O2_min,y1A,y1B);
-                            exportAreaTimeseries(name,timeseries_records,startdate)
-                        else
-                            exportAreaTimeseries(sprintf('%s/fish_niche_Area_Light%d_T%d_O%.2f_%d-%d.csv',outputdir,ppfd_min,T_max,O2_min,y1A,y1B),timeseries_records,startdate)
-                        end
-                    else
-                        if floor(O2_min)==O2_min
-                            exportAreaTimeseries(sprintf('%s/fish_niche_Area_Light%.2f_T%d_O%d_%d-%d.csv',outputdir,ppfd_min,T_max,O2_min,y1A,y1B),timeseries_records,startdate)
-                        else
-                            exportAreaTimeseries(sprintf('%s/fish_niche_Area_Light%.2f_T%d_O%.2f_%d-%d.csv',outputdir,ppfd_min,T_max,O2_min,y1A,y1B),timeseries_records,startdate)
-                        end
-                    end
+                    name = sprintf('%s/fish_niche_Area_Light%.1f_Temperature%.1f_Oxygen%.1f_%d-%d.csv',outputdir,ppfd_min,T_max,O2_min,y1A,y1B);
+                    exportAreaTimeseries(name,timeseries_records,startdate)
                 end
              end
 %          fprintf(1, 'Outputting for Light %d\n',light_list(Light_x));

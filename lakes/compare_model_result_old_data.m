@@ -1,32 +1,41 @@
-function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_stop2,Tzt,O2zt,lambdazt,calibration)
-    %model = readtable(sprintf("%s/Tzt.csv",outdir));
-    directory = split(outdir,"EUR-11");
+function ModelComparison = compare_model_result_old_data(outdir, m_start2, m_stop2)
+    %try
+    Tzt = readtable(sprintf("%s/Tzt.csv",outdir));
+    Tzt = Tzt{:,:};
+    O2zt = readtable(sprintf("%s/O2zt.csv",outdir));
+    O2zt= O2zt{:,:};
+    lambdazt = readtable(sprintf("%s/lambdazt.csv",outdir));
+    lambdazt = lambdazt{:,:};
+    %directory = split(outdir,"EUR-11");
     d4 = sprintf('EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231');
-    lakedir = strcat(directory{1,1},d4,"/calibration_result");
+    lakedir = outdir;%strcat(directory{1,1},d4,"/calibration_result");
     
-    model = Tzt.';
-    modelO = O2zt.';
-    modelS = lambdazt.';
-    modelO = modelO*0.001; %convert from mg/m*-3 to mg/l to have same unit as observed oxygen.
+    m_start = datetime(sprintf('%d-01-01',m_start2),'Format','yyyy-MM-dd')-1; 
+    m_stop =  datetime(sprintf('%d-12-31',m_stop2),'Format','yyyy-MM-dd'); 
+    model = Tzt;
+    modelS = lambdazt;
     data = readtable(sprintf("%s/Observed_Temperature.csv",lakedir));
-    dataO = readtable(sprintf("%s/Observed_Oxygen.csv",lakedir));
+   
     dataS = readtable(sprintf("%s/Observed_Secchi.csv",lakedir));
     depthsmodel = 0.5:size(model,2);
     depths = data{1,2:size(data,2)};
-    m_start = datetime(sprintf('%d-01-01',m_start2),'Format','yyyy-MM-dd')-1; 
-    m_stop =  datetime(sprintf('%d-12-31',m_stop2),'Format','yyyy-MM-dd'); 
+    initial_date = datetime(data{2,1},'Format','yyyy-MM-dd');
+    
+    modelO = O2zt;
+   
+    depthsmodel = 0.5:size(model,2);
+    depths = data{1,2:size(data,2)};
     initial_date = datetime(data{2,1},'Format','yyyy-MM-dd');
     if m_start < initial_date
         start_row = days(initial_date-m_start)-1;
     else
         start_row = 0;
     end
+
     z = 0;
     zz=0;
     dates = [];
-    
-    try
-        error("bypass the other variable");
+    %try
         maxdepth = size(data,2);
         depths = data{1,2:size(data,2)};
         if(depths(1)< 0.5)
@@ -60,7 +69,7 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
         temperature_depth =[];
         for i = start_row:size(model,1)
             date = m_start + i;
-           
+
             for ii = 2+zz:height(data)
                 datedata =  datetime(data{ii,1},'Format','yyyy-MM-dd');
                 if date < datedata
@@ -81,9 +90,10 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
                             if (ismember([depth],depthsmodel))==1
                                 temperature_model = [temperature_model model(i,round(depth))];
                             else
-                               
+                                ttt = depths(jj);
+                                tttt = (ceil(depths(jj))-0.5);
                                 if depths(jj) > (ceil(depths(jj))-0.5)
-                                   
+                                    test2 = ceil(depth);
                                     aa =(model(i,ceil(depth)));
                                     bb = (model(i,(ceil(depth)+1)));
                                     cc =(depthsmodel(ceil(depth)));
@@ -97,11 +107,11 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
                                     bb = (model(i,(ceil(depth))));
                                     cc =(depthsmodel(ceil(depth)-1));
                                     ccc = depthsmodel(ceil(depth));
-                                    m = aa - bb/(cc- ccc);
+                                    m = (aa - bb)/(cc- ccc);
                                     yc = (ceil(depth) - depthsmodel(ceil(depth))) * m + (model(i,(ceil(depth))));
                                     temperature_model = [temperature_model yc];
                                 end
-                                
+
                             end
                         end
                     end
@@ -111,7 +121,7 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
         formatOut = 'yyyy-mm-dd';
         datetest = datestr(dates,formatOut);
         datetest = string(datetest);
-    
+
         A(:,1) = datetest;
         A(:,2) = temperature_depth;
         A(:,3) = temperature_data;
@@ -120,18 +130,111 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
         f1_name = (strcat(outdir, '\Tztcompare.csv')); % b = binary mode, z = archived file
         writematrix(A,f1_name);
         dates = transpose(datetest);
-    catch
-        dates=[];
-        temperature_model = [];
-        temperature_data = [];
-        temperature_depth =[];
-    end
+    %catch
+    %    dates=[];
+    %    temperature_model = [];
+    %    temperature_data = [];
+    %    temperature_depth =[];
+    %end
     ModelComparison.Dates = dates;
     ModelComparison.Depth = temperature_depth;
     ModelComparison.T_data = temperature_data;
     ModelComparison.T_model = temperature_model;
+
+    %secchi treatment
+    z = 0;
+    zz=0;
+    dates = [];
+
+    secchi_model = [];
+    secchi_data = [];
+    secchi_depth =[];
+   % try
+        ttt =size(modelS,1);
+        if ttt > 0
+            lambda = mean(modelS, 2);
+            for i = start_row:size(modelS,1)
+                date = m_start + i;
+                aaa= height(dataS);
+                for ii = 2+zz:height(dataS)
+                   datedataS =  datetime(dataS{ii,1},'Format','yyyy-MM-dd');
+                   test = days(date - datedataS);
+                   if date < datedataS
+                       break
+                   end
+                   if date > datedataS
+                       zz = zz+1;
+
+                   elseif (date - datedataS) == 0
+                       for jj = 2+z:size(dataS,2)
+                           cc = size(dataS,2);
+                           c = dataS{ii,jj};
+                           try
+                               if isnan(dataS{ii,jj})
+                                   continue
+                               else
+                                   secchimodel = 1.48/lambda(ii);
+                                   dates = [dates; datestr(date)];
+                                   secchi_data = [secchi_data dataS{ii,jj}];
+                                   secchi_depth = [secchi_depth 0.5];
+                                   secchi_model = [secchi_model secchimodel];
+                               end
+                           catch
+                               disp("gg");
+                           end
+                       end
+
+                   else
+                       continue
+                   end
+                end
+            end
+
+        else
+            datetest = [];
+            secchi_depth = [];
+            secchi_data = [];
+            secchi_model = [];
+        end
+%     catch
+%         disp("ee")
+%     end
+    formatOut = 'yyyy-mm-dd';
+    datetest = datestr(dates,formatOut);
+    datetest = string(datetest);
+    C(:,1) = datetest;
+    C(:,2) = secchi_depth;
+    C(:,3) = secchi_data;
+    C(:,4) = secchi_model;
+    C = rmmissing(C);
+
+    f1_name = (strcat(outdir, '\Secchicompare.csv')); % b = binary mode, z = archived file
+    writematrix(C,f1_name);
+
+    ModelComparison.S_data = secchi_data;
+    ModelComparison.S_model = secchi_model;
+    %ModelComparison.S_data = [];
+    %ModelComparison.S_model = [];
+%     error = (temperature_data-temperature_model);
+%     errorsqrt= error.^2;
+%     mean1 = nanmean(errorsqrt);
+%     rmse = sqrt(mean1);
+%     R = corrcoef(temperature_data,temperature_model,'rows','complete');
+%     R2 = (R.^2);
+%     evaluator = [rmse R2];
+   
+
     
-    
+    modelO = modelO*0.001; %convert from mg/m*-3 to mg/l to have same unit as observed oxygen.
+    dataO = readtable(sprintf("%s/Observed_Oxygen.csv",lakedir));
+    depthsmodel = 0.5:size(modelO,2);
+%         depths = dataO{1,2:size(dataO,2)};
+%         initial_date = datetime(dataO{2,1},'Format','yyyy-MM-dd');
+    if m_start < initial_date
+        start_row = days(initial_date-m_start)-1;
+    else
+        start_row = 0;
+    end
     %treatment oxygen
     z = 0;
     zz=0;
@@ -182,7 +285,7 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
                             z = z+1;
                         elseif depthsO(jj) > depthsmodel(end)
                                   break
-                        
+
                         else
                             datesO = [datesO; datenum(date)];
                             oxygen_data = [oxygen_data dataO{ii,jj+1}];
@@ -217,9 +320,9 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
                     end
                 end
             end
-            
+
         end
-        datesO = [];
+%         datesO = [];
         formatOut = 'yyyy-mm-dd';
         datetestO = datestr(datesO,formatOut);
         datetestO = string(datetestO);
@@ -241,82 +344,6 @@ function ModelComparison = compare_model_result_data2_oxy(outdir, m_start2, m_st
     ModelComparison.DepthsO = oxygen_depth;
     ModelComparison.O_data = oxygen_data;
     ModelComparison.O_model = oxygen_model;
-    
-    
-%secchi treatment
-    z = 0;
-    zz=0;
-    dates = [];
-    
-    secchi_model = [];
-    secchi_data = [];
-    secchi_depth =[];
-    try
-        error("bypass the other variable");
-        ttt =size(modelS,1);
-        if ttt > 0
-            lambda = mean(modelS, 2);
-            for i = start_row:size(modelS,1)
-                date = m_start + i;
-                aaa= height(dataS);
-                for ii = 2+zz:height(dataS)
-                   datedataS =  datetime(dataS{ii,1},'Format','yyyy-MM-dd');
-                   test = days(date - datedataS);
-                   if date < datedataS
-                       break
-                   end
-                   if date > datedataS
-                       zz = zz+1;
-
-                   elseif (date - datedataS) == 0
-                       secchimodel = 1.48/lambda(ii);
-                       jj = 2;
-                       dates = [dates; datestr(date)];
-                       secchi_data = [secchi_data dataS{ii,jj}];
-                       secchi_depth = [secchi_depth 0.5];
-                       secchi_model = [secchi_model secchimodel];
-
-                   else
-                       continue
-                   end
-                end
-            end
-            formatOut = 'yyyy-mm-dd';
-            datetest = datestr(dates,formatOut);
-            datetest = string(datetest);
-        else
-            datetest = [];
-            secchi_depth = [];
-            secchi_data = [];
-            secchi_model = [];
-        end
-        C(:,1) = datetest;
-        C(:,2) = secchi_depth;
-        C(:,3) = secchi_data;
-        C(:,4) = secchi_model;
-        C = rmmissing(C);
-
-        f1_name = (strcat(outdir, '\Secchicompare.csv')); % b = binary mode, z = archived file
-        writematrix(C,f1_name);
-        
-        dates = transpose(datetest);
-    catch
-        dates = [];
-        secchi_data = [];
-        secchi_model = [];
-        
-    end
-    ModelComparison.DateS = dates;
-    ModelComparison.S_model = secchi_model;
-    ModelComparison.S_data = secchi_data;
-%     error = (temperature_data-temperature_model);
-%     errorsqrt= error.^2;
-%     mean1 = nanmean(errorsqrt);
-%     rmse = sqrt(mean1);
-%     R = corrcoef(temperature_data,temperature_model,'rows','complete');
-%     R2 = (R.^2);
-%     evaluator = [rmse R2];
-    
-    
-    
+    %catch
+%     end
 end

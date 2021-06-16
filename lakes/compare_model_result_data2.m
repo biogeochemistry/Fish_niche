@@ -1,15 +1,20 @@
-function ModelComparison = compare_model_result_data2(outdir, m_start2, m_stop2,Tzt,O2zt,lambdazt,calibration)
+function ModelComparison = compare_model_result_data2(outdir, m_start2, m_stop2,Tzt,O2zt,lambdazt,icedays,calibration)
     %model = readtable(sprintf("%s/Tzt.csv",outdir));
+    directory = split(outdir,"EUR-11");
+    d4 = sprintf('EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231');
+    lakedir = strcat(directory{1,1},d4,"/calibration_result");
+    
     model = Tzt.';
     modelO = O2zt.';
     modelS = lambdazt.';
     modelO = modelO*0.001; %convert from mg/m*-3 to mg/l to have same unit as observed oxygen.
-    data = readtable(sprintf("%s/Observed_Temperature.csv",outdir));
-    dataO = readtable(sprintf("%s/Observed_Oxygen.csv",outdir));
-    dataS = readtable(sprintf("%s/Observed_Secchi.csv",outdir));
+    data = readtable(sprintf("%s/Observed_Temperature.csv",lakedir));
+    his = readtable(sprintf("%s/his.csv",lakedir));
+    dataO = readtable(sprintf("%s/Observed_Oxygen.csv",lakedir));
+    dataS = readtable(sprintf("%s/Observed_Secchi.csv",lakedir));
     depthsmodel = 0.5:size(model,2);
     depths = data{1,2:size(data,2)};
-    m_start = datetime(sprintf('%d-01-01',m_start2),'Format','yyyy-MM-dd'); 
+    m_start = datetime(sprintf('%d-01-01',m_start2),'Format','yyyy-MM-dd')-1; 
     m_stop =  datetime(sprintf('%d-12-31',m_stop2),'Format','yyyy-MM-dd'); 
     initial_date = datetime(data{2,1},'Format','yyyy-MM-dd');
     if m_start < initial_date
@@ -20,83 +25,107 @@ function ModelComparison = compare_model_result_data2(outdir, m_start2, m_stop2,
     z = 0;
     zz=0;
     dates = [];
-    
-    temperature_model = [];
-    temperature_data = [];
-    temperature_depth =[];
-    ttt =size(model,1);
-    for i = start_row:size(model,1)
-        date = m_start + i;
-        aaa= height(data);
-        for ii = 2+zz:height(data)
-           datedata =  datetime(data{ii,1},'Format','yyyy-MM-dd');
-           test = days(date - datedata);
-           if date < datedata
-               break
-           end
-           if date > datedata
-               zz = zz+1;
-               
-           elseif (date - datedata) == 0
-               ss = 1+z:size(depths,2);
-               for jj = 1+z:size(depths,2)
-                  d = depths(jj) ;
-                  dd = depthsmodel(end);
-                  if depths(jj) < 0.5
-                    z = z+1;
-                  elseif depths(jj) > depthsmodel(end)
-                          break
-                  else
-                    dates = [dates; datestr(date)];
-                    temperature_data = [temperature_data data{ii,jj+1}];
-                    temperature_depth = [temperature_depth depths(jj)];
-                    depth = depths(jj);
-                    if (ismember([depth],depthsmodel))==1
-                        temperature_model = [temperature_model model(i,round(depth))];
-                    else
-                        ttt = depths(jj);
-                        tttt = (ceil(depths(jj))-0.5);
-                        if depths(jj) > (ceil(depths(jj))-0.5)
-                            test2 = ceil(depth);
-                            aa =(model(i,ceil(depth)));
-                            bb = (model(i,(ceil(depth)+1)));
-                            cc =(depthsmodel(ceil(depth)));
-                            ccc = depthsmodel(ceil(depth)+1);
-                            m = (model(i,ceil(depth)) - model(i,ceil(depth)+1))/(depthsmodel(ceil(depth))- depthsmodel(ceil(depth)+1));
-                            yc = (ceil(depth) - (depthsmodel(ceil(depth)+1))) * m + model(i,ceil(depth)+1);
-                            temperature_model = [temperature_model yc];
-                        else
-                            test2 = ceil(depth);
-                            aa =(model(i,(ceil(depth)-1)));
-                            bb = (model(i,(ceil(depth))));
-                            cc =(depthsmodel(ceil(depth)-1));
-                            ccc = depthsmodel(ceil(depth));
-                            m = aa - bb/(cc- ccc);
-                            yc = (ceil(depth) - depthsmodel(ceil(depth))) * m + (model(i,(ceil(depth))));
-                            temperature_model = [temperature_model yc];
-                        end
-                        
+    %try
+        maxdepth = size(data,2);
+        depths = data{1,2:size(data,2)};
+        if(depths(1)< 0.5)
+            min_depth_correct = 0;
+            for i =1:size(depths,2)
+                if min_depth_correct == 1
+                    break
+                else
+                    depths(1) = [];
+                    if (depths(1) < 0.5)
+                        min_depth_correct = 1;
                     end
-                  end
-               end
-               zz = zz+1;
-           else
-               continue
-           end
+                end
+            end
         end
-    end
-    formatOut = 'yyyy-mm-dd';
-    datetest = datestr(dates,formatOut);
-    datetest = string(datetest);
-   
-    A(:,1) = datetest;
-    A(:,2) = temperature_depth;
-    A(:,3) = temperature_data;
-    A(:,4) = temperature_model;
-    A = rmmissing(A);
-    f1_name = (strcat(outdir, '\Tztcompare.csv')); % b = binary mode, z = archived file
-    writematrix(A,f1_name);
-    dates = transpose(datetest);
+        if (depths(end) > depthsmodel(end))
+            max_depth_correct = 0;
+            for i = 1:size(depths,2)
+                if max_depth_correct == 1
+                    break
+                else
+                    depths(end) = [];
+                    if (depths(end) < depthsmodel(end))
+                        max_depth_correct = 1;
+                    end
+                end
+            end
+        end
+        temperature_model = [];
+        temperature_data = [];
+        temperature_depth =[];
+        for i = start_row:size(model,1)
+            date = m_start + i;
+           
+            for ii = 2+zz:height(data)
+                datedata =  datetime(data{ii,1},'Format','yyyy-MM-dd');
+                if date < datedata
+                    break
+                elseif date > datedata
+                    zz = zz+1;
+                else 
+                    for jj = 1+z:size(depths,2)
+                        if depths(jj) < 0.5
+                            z = z+1;
+                        elseif depths(jj) > depthsmodel(end)
+                                break
+                        else
+                            dates = [dates; datestr(date)];
+                            temperature_data = [temperature_data data{ii,jj+1}];
+                            temperature_depth = [temperature_depth depths(jj)];
+                            depth = depths(jj);
+                            if (ismember([depth],depthsmodel))==1
+                                temperature_model = [temperature_model model(i,round(depth))];
+                            else
+                                ttt = depths(jj);
+                                tttt = (ceil(depths(jj))-0.5);
+                                if depths(jj) > (ceil(depths(jj))-0.5)
+                                    test2 = ceil(depth);
+                                    aa =(model(i,ceil(depth)));
+                                    bb = (model(i,(ceil(depth)+1)));
+                                    cc =(depthsmodel(ceil(depth)));
+                                    ccc = depthsmodel(ceil(depth)+1);
+                                    m = (model(i,ceil(depth)) - model(i,ceil(depth)+1))/(depthsmodel(ceil(depth))- depthsmodel(ceil(depth)+1));
+                                    yc = (ceil(depth) - (depthsmodel(ceil(depth)+1))) * m + model(i,ceil(depth)+1);
+                                    temperature_model = [temperature_model yc];
+                                else
+                                    test2 = ceil(depth);
+                                    aa =(model(i,(ceil(depth)-1)));
+                                    bb = (model(i,(ceil(depth))));
+                                    cc =(depthsmodel(ceil(depth)-1));
+                                    ccc = depthsmodel(ceil(depth));
+                                    m = (aa - bb)/(cc- ccc);
+                                    yc = (ceil(depth) - depthsmodel(ceil(depth))) * m + (model(i,(ceil(depth))));
+                                    temperature_model = [temperature_model yc];
+                                end
+                                
+                            end
+                        end
+                    end
+                end
+            end
+        end
+        formatOut = 'yyyy-mm-dd';
+        datetest = datestr(dates,formatOut);
+        datetest = string(datetest);
+    
+        A(:,1) = datetest;
+        A(:,2) = temperature_depth;
+        A(:,3) = temperature_data;
+        A(:,4) = temperature_model;
+        A = rmmissing(A);
+        f1_name = (strcat(outdir, '\Tztcompare.csv')); % b = binary mode, z = archived file
+        writematrix(A,f1_name);
+        dates = transpose(datetest);
+    %catch
+    %    dates=[];
+    %    temperature_model = [];
+    %    temperature_data = [];
+    %    temperature_depth =[];
+    %end
     ModelComparison.Dates = dates;
     ModelComparison.Depth = temperature_depth;
     ModelComparison.T_data = temperature_data;
@@ -107,7 +136,7 @@ function ModelComparison = compare_model_result_data2(outdir, m_start2, m_stop2,
     zz=0;
     datesO = [];
     try
-        x = 1/0;
+        error("bypass the other variable");
         depthsO  = dataO{1,2:size(dataO,2)};
         depths= depthsO;
         kk= find(depths==max(depthsO));
@@ -281,57 +310,72 @@ function ModelComparison = compare_model_result_data2(outdir, m_start2, m_stop2,
     secchi_model = [];
     secchi_data = [];
     secchi_depth =[];
-    
-    ttt =size(modelS,1);
-    if ttt > 0
-        lambda = mean(modelS, 2);
-        for i = start_row:size(modelS,1)
-            date = m_start + i;
-            aaa= height(dataS);
-            for ii = 2+zz:height(dataS)
-               datedataS =  datetime(dataS{ii,1},'Format','yyyy-MM-dd');
-               test = days(date - datedataS);
-               if date < datedataS
-                   break
-               end
-               if date > datedataS
-                   zz = zz+1;
+   % try
+        ttt =size(modelS,1);
+        if ttt > 0
+            lambda = mean(modelS, 2);
+            for i = start_row:size(modelS,1)
+                date = m_start + i;
+                aaa= height(dataS);
+                for ii = 2+zz:height(dataS)
+                   datedataS =  datetime(dataS{ii,1},'Format','yyyy-MM-dd');
+                   test = days(date - datedataS);
+                   if date < datedataS
+                       break
+                   end
+                   if date > datedataS
+                       zz = zz+1;
 
-               elseif (date - datedataS) == 0
-                   secchimodel = 1.48/lambda(ii);
-                   jj = 2;
-                   dates = [dates; datestr(date)];
-                   secchi_data = [secchi_data dataS{ii,jj}];
-                   secchi_depth = [secchi_depth 0.5];
-                   secchi_model = [secchi_model secchimodel];
+                   elseif (date - datedataS) == 0
+                       for jj = 2+z:size(dataS,2)
+                           cc = size(dataS,2);
+                           c = dataS{ii,jj};
+                           try
+                               if isnan(dataS{ii,jj})
+                                   continue
+                               else
+                                   secchimodel = 1.48/lambda(ii);
+                                   dates = [dates; datestr(date)];
+                                   secchi_data = [secchi_data dataS{ii,jj}];
+                                   secchi_depth = [secchi_depth 0.5];
+                                   secchi_model = [secchi_model secchimodel];
+                               end
+                           catch
+                               disp("gg");
+                           end
+                       end
 
-               else
-                   continue
-               end
+                   else
+                       continue
+                   end
+                end
             end
+            
+        else
+            datetest = [];
+            secchi_depth = [];
+            secchi_data = [];
+            secchi_model = [];
         end
-        formatOut = 'yyyy-mm-dd';
-        datetest = datestr(dates,formatOut);
-        datetest = string(datetest);
-    else
-        datetest = [];
-        secchi_depth = [];
-        secchi_data = [];
-        secchi_model = [];
-    end
-        C(:,1) = datetest;
-        C(:,2) = secchi_depth;
-        C(:,3) = secchi_data;
-        C(:,4) = secchi_model;
-        C = rmmissing(C);
+%     catch
+%         disp("ee")
+%     end
+    formatOut = 'yyyy-mm-dd';
+    datetest = datestr(dates,formatOut);
+    datetest = string(datetest);
+    C(:,1) = datetest;
+    C(:,2) = secchi_depth;
+    C(:,3) = secchi_data;
+    C(:,4) = secchi_model;
+    C = rmmissing(C);
    
     f1_name = (strcat(outdir, '\Secchicompare.csv')); % b = binary mode, z = archived file
     writematrix(C,f1_name);
     
     ModelComparison.S_data = secchi_data;
     ModelComparison.S_model = secchi_model;
-    ModelComparison.S_data = [];
-    ModelComparison.S_model = [];
+    %ModelComparison.S_data = [];
+    %ModelComparison.S_model = [];
 %     error = (temperature_data-temperature_model);
 %     errorsqrt= error.^2;
 %     mean1 = nanmean(errorsqrt);
@@ -339,6 +383,11 @@ function ModelComparison = compare_model_result_data2(outdir, m_start2, m_stop2,
 %     R = corrcoef(temperature_data,temperature_model,'rows','complete');
 %     R2 = (R.^2);
 %     evaluator = [rmse R2];
+    his2 = his{:,7};
+    sum2 = nansum(his2)/10;
+    ModelComparison.ice = abs(sum2 - icedays);
+    ModelComparison.icedata =  icedays;
+    ModelComparison.icemodel = sum2 ;
     
     
     
