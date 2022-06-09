@@ -1,13 +1,6 @@
 
-output/
-.idea/
-lakes/calibration/
-*.png
-*.mat
-lake_subset_SHMI_data/
-output_calibration/
-lakes/result/
-sweden_inflow_data/Validation_data_for_lookup12 dataanalyse.xlsx
-lakes/venv/
-*.log
-output_analysis_scripts/figure_ice_time.py
+lakes/model_inputs/
+lakes/obs/
+lakes/sweden_inflow_data/
+lakes/weather_cordex/
+lakes/lake_subset_SHMI_data/
