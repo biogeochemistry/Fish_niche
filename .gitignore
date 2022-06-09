@@ -4,3 +4,4 @@ lakes/obs/
 lakes/sweden_inflow_data/
 lakes/weather_cordex/
 lakes/lake_subset_SHMI_data/
+reorganise_infor.py
