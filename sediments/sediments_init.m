@@ -65,7 +65,8 @@ function [sediment_params] = params(max_depth, temperature)
     P_water = 998 * 9.8 * max_depth/10^5; % [Bar]
     pressure = P_atm + P_water; % [Bar]
     salinity = 0;
-    viscosity = viscosity(temperature,pressure,salinity);
+    viscosity = viscosity1(temperature,pressure,salinity);
+%     viscosity = viscosity(temperature,pressure,salinity);
 
     % Linear regression of Diffusion coefficients for cations and anions (Boudreau, 1997):
     D_H    = lr_ion_diffusion(54.4, 1.555, temperature);
@@ -342,7 +343,7 @@ function [D] = lr_ion_diffusion(m0, m1, t)
   D = ( m0 + m1*t ) * 10^-6 * 3.156 * 10^7;
 end
 
-function [u] = viscosity(temperature,pressure,salinity)
+function [u] = viscosity1(temperature,pressure,salinity)
   %% viscosity: Values of the dynamic viscosity can be calculated from an empirical equation
   % developed by Matthaus (as quoted in Kukulka et al., 1987), which is claimed to be accurate to within 0.7% for the temperature, t, salinity, S, and pressure, P, ranges of 0
   % ≤ C ≤ 30, 0 ≤ S ≤ 36, and 1 to 1000 bars, respectively (Boudreau, 1997):
