@@ -61,8 +61,8 @@ function Result = MyLake_optimizer_final(m_start, m_stop,spin_up, parfile, input
 
         % Setting up the min and max boundaries for each covarying set of parameters.
                        %kz_N0,  c_shelter, alb_melt_ice, alb_melt_snow, I_scV, i_scT, swa_b0, swa_b1,
-        minparam = [ 0.000001,     0.0001,          0.0,           0.4, 0.001,   0.0,    0.1,    0.1];
-        maxparam = [     0.01,          1,          0.4,             1,     2,     5,     10,     10];
+        minparam = [ 0.000001,     0.001,          0.0,           0.4, 0.001,   0.0,    0.1,    0.1];
+        maxparam = [     0.01,          1,          0.4,             1,     2,     5,     10,     5];
 
         % The best initial guess for the values of each set of covarying parameters (can have
         % multiple rows for multiple initial guesses. (up to population_size rows))
@@ -91,8 +91,8 @@ function Result = MyLake_optimizer_final(m_start, m_stop,spin_up, parfile, input
     
         % Setting up the min and max boundaries for each covarying set of parameters.
                     %I_scDOC,    k_BOD, k_SOD, I_scO
-        minparam = [    0.01, 0.000001,     5, 0.001];
-        maxparam = [      10,      3.0,  1500,   5];
+        minparam = [    0.1, 0.000001,     50, 0.001];
+        maxparam = [      10,      5.0,  1500,   3];
 
         % The best initial guess for the values of each set of covarying parameters (can have
         % multiple rows for multiple initial guesses. (up to population_size rows)
@@ -201,7 +201,7 @@ function Result = MyLake_optimizer_final(m_start, m_stop,spin_up, parfile, input
                     errS = 0;
                     errT = 0;
                     errI = 0;
-                    icemodel = 0;
+ex                    icemodel = 0;
             
                 else
                     %Normalized root-mean-square deviation

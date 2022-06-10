@@ -1,9 +1,11 @@
-function ModelComparison = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt,O2zt,lambdazt,His,icedays,calibration,variable_calibrated)
+function ModelComparison = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt,O2zt,lambdazt,His,icedays,variable_calibrated)
     %model = readtable(sprintf("%s/Tzt.csv",outdir));
     directory = split(outdir,"EUR-11");
+%     disp(calibration_folder)
+%     calidirectory = split(calibration_folder,"EUR-11");
     d4 = sprintf('EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231');
     lakedir = strcat(directory{1,1},d4,"/calibration_result");
-    
+%     lakedir = strcat(calidirectory{1,1},d4,"/calibration_result");
     m_start = datetime(sprintf('%d-01-01',m_start2),'Format','yyyy-MM-dd')-1; 
     m_stop =  datetime(sprintf('%d-12-31',m_stop2),'Format','yyyy-MM-dd'); 
     model = Tzt.';
@@ -234,123 +236,126 @@ function ModelComparison = compare_model_result_data_final(outdir, m_start2, m_s
         modelO = O2zt.';
         modelO = modelO*0.001; %convert from mg/m*-3 to mg/l to have same unit as observed oxygen.
         dataO = readtable(sprintf("%s/Observed_Oxygen.csv",lakedir));
-        depthsmodel = 0.5:size(modelO,2);
-%         depths = dataO{1,2:size(dataO,2)};
-%         initial_date = datetime(dataO{2,1},'Format','yyyy-MM-dd');
-        if m_start < initial_date
-            start_row = days(initial_date-m_start)-1;
-        else
-            start_row = 0;
-        end
-        %treatment oxygen
-        z = 0;
-        zz=0;
-        datesO = [];
-        try
-            maxdepth = size(dataO,2);
-            depthsO = dataO{1,2:size(dataO,2)};
-            if(depthsO(1)< 0.5)
-                min_depth_correct = 0;
-                for i =1:size(depthsO,2)
-                    if min_depth_correct == 1
-                        break
-                    else
-                        depthsO(1) = [];
-                        if (depthsO(1) < 0.5)
-                            min_depth_correct = 1;
-                        end
-                    end
-                end
+        depths = data{1,2:size(data,2)};
+        if isempty( dataO ) == 0
+            depthsmodel = 0.5:size(modelO,2);
+    %         depths = dataO{1,2:size(dataO,2)};
+    %         initial_date = datetime(dataO{2,1},'Format','yyyy-MM-dd');
+            if m_start < initial_date
+                start_row = days(initial_date-m_start)-1;
+            else
+                start_row = 0;
             end
-            if (depthsO(end) > depthsmodel(end))
-                max_depth_correct = 0;
-                for i = 1:size(depthsO,2)
-                    if max_depth_correct == 1
-                        break
-                    else
-                        depthsO(end) = [];
-                        if (depthsO(end) < depthsmodel(end))
-                            max_depth_correct = 1;
-                        end
-                    end
-                end
-            end
-            oxygen_model = [];
-            oxygen_data = [];
-            oxygen_depth =[];
-            for i = start_row:size(modelO,1)
-                date = m_start + i;
-                for ii = 2+zz:height(dataO)
-                    datedata =  datetime(dataO{ii,1},'Format','yyyy-MM-dd');
-                    if date < datedata 
-                        break
-                    elseif date > datedata
-                        zz = zz+ 1;
-                    else
-                        for jj = 1 + z:size(depthsO,2)
-                            if depthsO(jj) < 0.5
-                                z = z+1;
-                            elseif depthsO(jj) > depthsmodel(end)
-                                      break
-
-                            else
-                                datesO = [datesO; datenum(date)];
-                                oxygen_data = [oxygen_data dataO{ii,jj+1}];
-                                oxygen_depth = [oxygen_depth depths(jj)];
-                                depth = depths(jj); 
-                                if (ismember([depth],depthsmodel))==1
-                                    oxygen_model = [oxygen_model modelO(i,round(depth))];
-                                else
-                                    ttt = depths(jj);
-                                    tttt = (ceil(depths(jj))-0.5);
-                                    if depths(jj) > (ceil(depths(jj))-0.5)
-                                        test2 = ceil(depth);
-                                        aa =(modelO(i,ceil(depth)));
-                                        bb = (modelO(i,(ceil(depth)+1)));
-                                        cc =(depthsmodel(ceil(depth)));
-                                        ccc = depthsmodel(ceil(depth)+1);
-                                        m = (modelO(i,ceil(depth)) - modelO(i,ceil(depth)+1))/(depthsmodel(ceil(depth))- depthsmodel(ceil(depth)+1));
-                                        yc = (ceil(depth) - (depthsmodel(ceil(depth)+1))) * m + modelO(i,ceil(depth)+1);
-                                        oxygen_model = [oxygen_model yc];
-                                    else
-                                        test2 = ceil(depth);
-                                        aa =(modelO(i,(ceil(depth)-1)));
-                                        bb = (modelO(i,(ceil(depth))));
-                                        cc =(depthsmodel(ceil(depth)-1));
-                                        ccc = depthsmodel(ceil(depth));
-                                        m = (modelO(i,(ceil(depth)-1))) - (modelO(i,(ceil(depth))))/((depthsmodel(ceil(depth)-1))- depthsmodel(ceil(depth)));
-                                        yc = (ceil(depth) - depthsmodel(ceil(depth))) * m + (modelO(i,(ceil(depth))));
-                                        oxygen_model = [oxygen_model yc];
-                                    end
-                                end               
+            %treatment oxygen
+            z = 0;
+            zz=0;
+            datesO = [];
+    %         try
+                maxdepth = size(dataO,2);
+                depthsO = dataO{1,2:size(dataO,2)};
+                if(depthsO(1)< 0.5)
+                    min_depth_correct = 0;
+                    for i =1:size(depthsO,2)
+                        if min_depth_correct == 1
+                            break
+                        else
+                            depthsO(1) = [];
+                            if (depthsO(1) < 0.5)
+                                min_depth_correct = 1;
                             end
                         end
                     end
                 end
+                if (depthsO(end) > depthsmodel(end))
+                    max_depth_correct = 0;
+                    for i = 1:size(depthsO,2)
+                        if max_depth_correct == 1
+                            break
+                        else
+                            depthsO(end) = [];
+                            if (depthsO(end) < depthsmodel(end))
+                                max_depth_correct = 1;
+                            end
+                        end
+                    end
+                end
+                oxygen_model = [];
+                oxygen_data = [];
+                oxygen_depth =[];
+                for i = start_row:size(modelO,1)
+                    date = m_start + i;
+                    for ii = 2+zz:height(dataO)
+                        datedata =  datetime(dataO{ii,1},'Format','yyyy-MM-dd');
+                        if date < datedata 
+                            break
+                        elseif date > datedata
+                            zz = zz+ 1;
+                        else
+                            for jj = 1 + z:size(depthsO,2)
+                                if depthsO(jj) < 0.5
+                                    z = z+1;
+                                elseif depthsO(jj) > depthsmodel(end)
+                                          break
 
-            end
-%             datesO = [];
-            formatOut = 'yyyy-mm-dd';
-            datetestO = datestr(datesO,formatOut);
-            datetestO = string(datetestO);
-            B(:,1) = datetestO;
-            B(:,2) = oxygen_depth;
-            B(:,3) = oxygen_data;
-            B(:,4) = oxygen_model;
-            B = rmmissing(B);
-            f1_name = (strcat(outdir, '\O2ztcompare.csv')); % b = binary mode, z = archived file
-            writematrix(B,f1_name);
-            datesO = transpose(datetestO);
-        catch
-            datesO = [];
-            oxygen_depth = [];
-            oxygen_data = [];
-            oxygen_model = [];
-        end    
-        ModelComparison.DatesO = datesO;
-        ModelComparison.DepthsO = oxygen_depth;
-        ModelComparison.O_data = oxygen_data;
-        ModelComparison.O_model = oxygen_model;
+                                else
+                                    datesO = [datesO; datenum(date)];
+                                    oxygen_data = [oxygen_data dataO{ii,jj+1}];
+                                    oxygen_depth = [oxygen_depth depthsO(jj)];
+                                    depth = depthsO(jj); 
+                                    if (ismember([depth],depthsmodel))==1
+                                        oxygen_model = [oxygen_model modelO(i,round(depth))];
+                                    else
+                                        ttt = depthsO(jj);
+                                        tttt = (ceil(depthsO(jj))-0.5);
+                                        if depthsO(jj) > (ceil(depthsO(jj))-0.5)
+                                            test2 = ceil(depth);
+                                            aa =(modelO(i,ceil(depth)));
+                                            bb = (modelO(i,(ceil(depth)+1)));
+                                            cc =(depthsmodel(ceil(depth)));
+                                            ccc = depthsmodel(ceil(depth)+1);
+                                            m = (modelO(i,ceil(depth)) - modelO(i,ceil(depth)+1))/(depthsmodel(ceil(depth))- depthsmodel(ceil(depth)+1));
+                                            yc = (ceil(depth) - (depthsmodel(ceil(depth)+1))) * m + modelO(i,ceil(depth)+1);
+                                            oxygen_model = [oxygen_model yc];
+                                        else
+                                            test2 = ceil(depth);
+                                            aa =(modelO(i,(ceil(depth)-1)));
+                                            bb = (modelO(i,(ceil(depth))));
+                                            cc =(depthsmodel(ceil(depth)-1));
+                                            ccc = depthsmodel(ceil(depth));
+                                            m = (modelO(i,(ceil(depth)-1))) - (modelO(i,(ceil(depth))))/((depthsmodel(ceil(depth)-1))- depthsmodel(ceil(depth)));
+                                            yc = (ceil(depth) - depthsmodel(ceil(depth))) * m + (modelO(i,(ceil(depth))));
+                                            oxygen_model = [oxygen_model yc];
+                                        end
+                                    end               
+                                end
+                            end
+                        end
+                    end
+
+                end
+    %             datesO = [];
+                formatOut = 'yyyy-mm-dd';
+                datetestO = datestr(datesO,formatOut);
+                datetestO = string(datetestO);
+                B(:,1) = datetestO;
+                B(:,2) = oxygen_depth;
+                B(:,3) = oxygen_data;
+                B(:,4) = oxygen_model;
+                B = rmmissing(B);
+                f1_name = (strcat(outdir, '\O2ztcompare.csv')); % b = binary mode, z = archived file
+                writematrix(B,f1_name);
+                datesO = transpose(datetestO);
+    %         catch
+    %             datesO = [];
+    %             oxygen_depth = [];
+    %             oxygen_data = [];
+    %             oxygen_model = [];
+    %         end    
+            ModelComparison.DatesO = datesO;
+            ModelComparison.DepthsO = oxygen_depth;
+            ModelComparison.O_data = oxygen_data;
+            ModelComparison.O_model = oxygen_model;
+        end
     end
  
 end

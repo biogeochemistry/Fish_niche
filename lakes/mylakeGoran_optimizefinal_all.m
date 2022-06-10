@@ -1,4 +1,4 @@
-function ModelResult = mylakeGoran_optimizefinal_all(initfile, parfile, inputfile, m_start2, m_stop2,spin_up, outdir,calibration)
+function ModelResult = mylakeGoran_optimizefinal_all(initfile, parfile, inputfile, m_start2, m_stop2,spin_up, outdir,calibration,calibration_folder,variable)
 %MyLake_optimizer_final - Main Function to optimize the MyLake model for one lake with Genetic algorythm.
 %This script is a modified version from Mylake_optimizer.m from Kateri Salk (Project MyLake Lake 227)
 %
@@ -46,7 +46,7 @@ test_time = 0;
 Eevapor = 0;
 
 dt = 1.0;
-try
+%try
     [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
         Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
         = modelinputs_v2_MC(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parfile, 'lake', dt);
@@ -107,13 +107,22 @@ try
     dlmwrite(f11_name, PARMaxt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
     
     if calibration == 1
-        ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),100,calibration,"temperature");
-        ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),100,calibration,"oxygen");
+        if variable == "both"
+            ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"temperature",calibration_folder);
+            ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"oxygen",calibration_folder);
+        elseif variable == "temperature"
+            ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"temperature",calibration_folder);
+        elseif variable == "oxygen"
+            ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"oxygen",calibration_folder);
+        end
+%         ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"temperature",calibration_folder);
+%         ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"oxygen",calibration_folder);
     end
-catch
-      ModelResult.Dates = [];
-      ModelResult.Depth = [];
-      ModelResult.T_data = [];
-      ModelResult.T_model = [];
-end
+% catch
+%       ModelResult.Dates = [];
+%       ModelResult.Depth = [];
+%       ModelResult.T_data = [];
+%       ModelResult.T_model = [];
+% end
+
 end          

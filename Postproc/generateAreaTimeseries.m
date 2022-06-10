@@ -15,8 +15,8 @@ function generateAreaTimeseries(lakelistfile,T_list, light_list,O2_list,m1,m2,ex
 %Call the function exportAreaTimeseries to export the timeseries of NTGdays,AreaDays and Areaday for each lake into csv. 
 
 path(path, '../outputinflow')
-path(path, 'E:\output-06-08-2018')
-path(path, 'E:\output-21-08-2018')
+%path(path, 'E:\output-06-08-2018')
+%path(path, 'E:\output-21-08-2018')
 
 warning('off', 'all') 
 startdate = [y1A, 1, 1];
@@ -48,7 +48,7 @@ for O2_x = 1:length(O2_list)
                     lakedir = strcat(outputdir2, d4, '\');
     %                 disp(lakedir)
 
-                    %try
+                    try
                         T    = csvread(strcat(lakedir, 'Tzt.csv'));
                         lambdazt = csvread(strcat(lakedir, 'lambdazt.csv'));
                         ppfd = csvread(strcat(lakedir, 'PARzt.csv'));
@@ -140,9 +140,9 @@ for O2_x = 1:length(O2_list)
 
                         i = i + 1;
 
-                    %catch
-                       % warning('O2zt contain NaN')
-                    %end
+                    catch
+                       warning('O2zt contain NaN')
+                    end
                 end
                 if i >= 1
                     name = sprintf('%s/fish_niche_Area_Light%.1f_Temperature%.1f_Oxygen%.1f_%d-%d.csv',outputdir,ppfd_min,T_max,O2_min,y1A,y1B);

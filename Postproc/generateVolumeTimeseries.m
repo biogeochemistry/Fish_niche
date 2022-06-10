@@ -150,10 +150,13 @@ for lakenum = 1:nlakes
 	
     catch
 		warning('O2zt contain NaN')
+end
 		
-	end
+end
+
 
 if i >= 1
 	exportVolumeTimeseries(sprintf('%s/fish_niche_export01_%s.csv',outputdir,d4),timeseries_records,startdate)
-	end
+end
+    clearvars
 end
