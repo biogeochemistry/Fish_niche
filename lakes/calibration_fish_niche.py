@@ -8,7 +8,7 @@ The score used by the algorithm is calculating by the addition the sum of square
 
 __author__ = "Julien Bellavance and Marianne Cote"
 
-from lake_information import LakeInfo
+from lakes.lake_information import LakeInfo
 import pandas as pd
 import os
 import sys
@@ -105,7 +105,7 @@ class CalibrationInfo(LakeInfo):
     Class contains all the attributes needed to run the calibration.
     """
 
-    def __init__(self, lake_name, lake_id, subid, ebhex, area, depth, mean, longitude, latitude, volume, turnover,scenarioid,outputfolder= r'F:\output',calibration=True,old=False):
+    def __init__(self, lake_name, lake_id, subid, ebhex, area, depth, mean, longitude, latitude, volume, turnover,scenarioid,calibration=False, old=False, outputfolder=r"F:\output",new=False):
         """
         Initiates the class. CalibrationInfo inherites from the class LakeInfo all the attributes and functions.
         :param lake_name: Type string. Long lake's name.
@@ -122,10 +122,9 @@ class CalibrationInfo(LakeInfo):
         :param i_sc_doc: Type float: by default 1. Scaling factor for inflow concentration of DOC  (-)
         """
         super().__init__(lake_name, lake_id, subid, ebhex, area, depth, mean, longitude, latitude, volume, turnover,
-                 swab1='default',swab0='default',cshelter='default',isct='default',iscv='default',
-                 isco='default',iscdoc='default',ksod='default',kbod='default',kzn0='default',albice='default',
-                         albsnow='default',scenarioid=scenarioid,outputfolder=outputfolder,
-                         calibration=calibration,old=old)
+                 swab1='default', swab0='default', cshelter='default', isct='default', iscv='default',
+                 isco='default', iscdoc='default', ksod='default', kbod='default', kzn0='default', albice='default',
+                 albsnow='default', scenarioid=scenarioid, modelid=2, calibration=calibration, outputfolder=outputfolder,old =old, new= new)
         self.selected_depth = temp_by_lake.get(lake_name, None)
         if calibration:
             if old:
@@ -134,6 +133,9 @@ class CalibrationInfo(LakeInfo):
                 self.outdir_path = self.calibration_path
         else:
             self.outdir_path = self.outdir
+
+        if not os.path.exists(self.outdir_path):
+            os.makedirs(self.outdir_path)
 
 
     def optimize_differential_evolution(self, modelid="EWEMBI", scenarioid="historical"):

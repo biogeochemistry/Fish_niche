@@ -10,7 +10,7 @@ from math import sqrt, pi,log10
 import numpy as np
 import pandas as pd
 import os
-from lake_information import final_equation_parameters, Area_base_i
+from lakes.lake_information import final_equation_parameters, Area_base_i
 
 skype_data_path = r"C:\Users\macot620\Documents\GitHub\Fish_niche\lake_subset_SHMI_data\SHYPEdata"
 
