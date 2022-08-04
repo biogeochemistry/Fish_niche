@@ -2,7 +2,7 @@
 %2018-08-03
 %create csv file containing water volume for one model and one scenario.
 
-function generateVolumeTimeseries(lakelistfile,m1,m2,exA,y1A,exB,y1B,outputdir,parts)
+function generateVolumeTimeseries(lakelistfile,m2,exA,y1A,y1B,csvfiledir,outputdir)
 %UNTITLED2 Summary of this function goes here
 %   Detailed explanation goes here
 path(path, 'F:/output')
@@ -40,14 +40,15 @@ for lakenum = 1:nlakes
     if ebhex == "0x2af5d2"
         disp(ebhex);
     end
-    outputdir2 = getOutputPathFromEbHex(outputdir, ebhex);
-    d4 = sprintf('EUR-11_%s_%s-%s_%s_%d0101-%d1231', m1, exA, exB, m2, y1A, y2B);
-    lakedir = strcat(outputdir2, d4, '\');
+    outputdir2 = getOutputPathFromEbHex(csvfiledir, ebhex);
+    d4 = sprintf('%s_%s_%d-%d', m2, exA, y1A, y1B);
+    lakedir = strcat(csvfiledir,'\',num2str( lakes(lakenum).lake_id),'\', d4, '\');
+    %                 
 	disp(lakedir)
-	try
-		O2   = csvread(strcat(lakedir, 'O2zt.csv'));
-		T    = csvread(strcat(lakedir, 'Tzt.csv'));
-		PARzt = csvread(strcat(lakedir, 'PARzt.csv'));
+	%try
+		O2   = csvread(strcat(lakedir, 'Oxygen.csv'));
+		T    = csvread(strcat(lakedir, 'Temperature.csv'));
+		PARzt = csvread(strcat(lakedir, 'PAR.csv'));
     
 		surface_area = lakes(lakenum).area;
 		max_depth    = lakes(lakenum).depth;
@@ -148,15 +149,15 @@ for lakenum = 1:nlakes
 		timeseries_records{1+lakenum, 15} = pvolume_all_three;
 		i = i + 1;
 	
-    catch
-		warning('O2zt contain NaN')
-end
+    %catch
+%		warning('O2zt contain NaN')
+%end
 		
 end
 
 
 if i >= 1
-	exportVolumeTimeseries(sprintf('%s/fish_niche_export01_%s.csv',outputdir,d4),timeseries_records,startdate)
+	exportVolumeTimeseries(sprintf('%s/fish_niche_export_%s.csv',outputdir,d4),timeseries_records,startdate)
 end
     clearvars
 end

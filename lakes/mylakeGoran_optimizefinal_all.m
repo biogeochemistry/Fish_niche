@@ -46,7 +46,7 @@ test_time = 0;
 Eevapor = 0;
 
 dt = 1.0;
-%try
+try
     [In_Z,In_Az,tt,In_Tz,In_Cz,In_Sz,In_TPz,In_DOPz,In_Chlz,In_DICz,In_DOCz,In_TPz_sed,In_Chlz_sed,In_O2z,In_NO3z,In_NH4z,In_SO4z,In_HSz,In_H2Sz,In_Fe2z,In_Ca2z,In_pHz,In_CH4z,In_Fe3z,In_Al3z,In_SiO4z,In_SiO2z,In_diatomz,In_FIM,Ice0,Wt,Inflw,...
         Phys_par,Phys_par_range,Phys_par_names,Bio_par,Bio_par_range,Bio_par_names] ...
         = modelinputs_v2_MC(m_start,m_stop, initfile, 'lake', inputfile, 'timeseries', parfile, 'lake', dt);
@@ -79,32 +79,32 @@ dt = 1.0;
     
     %row_remove = dates_to_remove;
     
-    f1_name = (strcat(outdir, '\Tzt.csv')); % b = binary mode, z = archived file
+    f1_name = (strcat(outdir, '\Temperature.csv')); % b = binary mode, z = archived file
     dlmwrite(f1_name, Tzt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f5_name = (strcat(outdir, '\O2zt.csv'));
+    f5_name = (strcat(outdir, '\Oxygen.csv'));
     dlmwrite(f5_name, O2zt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f7_name =(strcat(outdir, '\lambdazt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
+    f7_name =(strcat(outdir, '\lambda.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
     dlmwrite(f7_name, lambdazt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f8_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f8_name, DOCzt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
+    %f8_name =(strcat(outdir, '\DOCzt.csv'));%MC uncomment to ensure creation of 2017REDOCOMPLETE
+    %dlmwrite(f8_name, DOCzt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f6_name =(strcat(outdir, '\Qst.csv'));%MC add to ensure creation of 2017REDOCOMPLETE
-    dlmwrite(f6_name, Qst(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
+    %f6_name =(strcat(outdir, '\Qst.csv'));%MC add to ensure creation of 2017REDOCOMPLETE
+    %dlmwrite(f6_name, Qst(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f7_name =(strcat(outdir, '\Attn_zt.csv'));%MC 2018-05-31 add to comparaison with SDD
-    dlmwrite(f7_name, Attn_zt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
+    %f7_name =(strcat(outdir, '\Attn_zt.csv'));%MC 2018-05-31 add to comparaison with SDD
+    %dlmwrite(f7_name, Attn_zt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
     
-    f12_name =(strcat(outdir, '\His.csv'));%MC 2018-05-31 add to comparaison with SDD
+    f12_name =(strcat(outdir, '\Ice.csv'));%MC 2018-05-31 add to comparaison with SDD
     dlmwrite(f12_name, His(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f10_name =(strcat(outdir, '\PARzt.csv'));%MC 2018-05-31 add to comparaison with SDD
+    f10_name =(strcat(outdir, '\PAR.csv'));%MC 2018-05-31 add to comparaison with SDD
     dlmwrite(f10_name, PARzt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
 
-    f11_name =(strcat(outdir, '\PARMaxt.csv'));%MC 2018-05-31 add to comparaison with SDD
-    dlmwrite(f11_name, PARMaxt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
+    %f11_name =(strcat(outdir, '\PARMaxt.csv'));%MC 2018-05-31 add to comparaison with SDD
+    %dlmwrite(f11_name, PARMaxt(:, row_remove:end)', 'delimiter', ',', 'precision', '%.3f');
     
     if calibration == 1
         if variable == "both"
@@ -118,11 +118,11 @@ dt = 1.0;
 %         ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"temperature",calibration_folder);
 %         ModelResult = compare_model_result_data_final(outdir, m_start2, m_stop2,Tzt(:, row_remove:end),O2zt(:, row_remove:end),lambdazt(:, row_remove:end),His(:, row_remove:end),100,calibration,"oxygen",calibration_folder);
     end
-% catch
-%       ModelResult.Dates = [];
-%       ModelResult.Depth = [];
-%       ModelResult.T_data = [];
-%       ModelResult.T_model = [];
-% end
+catch
+      ModelResult.Dates = [];
+      ModelResult.Depth = [];
+      ModelResult.T_data = [];
+      ModelResult.T_model = [];
+end
 
 end          

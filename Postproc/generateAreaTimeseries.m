@@ -2,7 +2,7 @@
 %2018-11-28
 %create csv file containing area for one model and one scenario.
 
-function generateAreaTimeseries(lakelistfile,T_list, light_list,O2_list,m1,m2,exA,y1A,exB,y1B,csvfiledir,outputdir)
+function generateAreaTimeseries(lakelistfile,T_list, light_list,O2_list,m2,exA,y1A,y1B,csvfiledir,outputdir)
 %For each lake and for each day (y1A to y1B):  
 %       Determine the depth (Dtemp) at which the water temperature was colder than Tc .
 %       Calculate the area below Dtemp (i.e. AT = Area colder than Tc).
@@ -42,17 +42,17 @@ for O2_x = 1:length(O2_list)
             else
                 for lakenum = 1:nlakes
                
-                    ebhex = lakes(lakenum).ebhex;
-                    outputdir2 = getOutputPathFromEbHex(csvfiledir, ebhex);
-                    d4 = sprintf('EUR-11_%s_%s-%s_%s_%d0101-%d1231', m1, exA, exB, m2, y1A, y1B);
-                    lakedir = strcat(outputdir2, d4, '\');
+                    %ebhex = lakes(lakenum).ebhex;
+                    %outputdir2 = getOutputPathFromEbHex(csvfiledir, ebhex);
+                    d4 = sprintf('%s_%s_%d-%d', m2, exA, y1A, y1B);
+                    lakedir = strcat(csvfiledir,'\',num2str( lakes(lakenum).lake_id),'\', d4, '\');
     %                 disp(lakedir)
 
                     try
-                        T    = csvread(strcat(lakedir, 'Tzt.csv'));
-                        lambdazt = csvread(strcat(lakedir, 'lambdazt.csv'));
-                        ppfd = csvread(strcat(lakedir, 'PARzt.csv'));
-                        O2 = csvread(strcat(lakedir, 'O2zt.csv'));
+                        T    = csvread(strcat(lakedir, 'Temperature.csv'));
+                        lambdazt = csvread(strcat(lakedir, 'lambda.csv'));
+                        ppfd = csvread(strcat(lakedir, 'PAR.csv'));
+                        O2 = csvread(strcat(lakedir, 'Oxygen.csv'));
                         T_max = T_list(T_x);
                         O2_min = O2_list(O2_x);
                         %secchi_min = SD_list(SD_x);
