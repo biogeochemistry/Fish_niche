@@ -8,7 +8,7 @@ The score used by the algorithm is calculating by the addition the sum of square
 
 __author__ = "Julien Bellavance and Marianne Cote"
 
-from lakes.lake_information import LakeInfo
+from lake_information import LakeInfo
 import pandas as pd
 import os
 import sys
