@@ -66,7 +66,6 @@ function [sediment_params] = params(max_depth, temperature)
     pressure = P_atm + P_water; % [Bar]
     salinity = 0;
     viscosity = viscosity1(temperature,pressure,salinity);
-%     viscosity = viscosity(temperature,pressure,salinity);
 
     % Linear regression of Diffusion coefficients for cations and anions (Boudreau, 1997):
     D_H    = lr_ion_diffusion(54.4, 1.555, temperature);
