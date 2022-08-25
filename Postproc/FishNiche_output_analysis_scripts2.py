@@ -1992,7 +1992,9 @@ def generate_timeseries_his_by_model(listmodels, listscenarios, lakelistfile, da
     print('end')
 
 
-def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafolder, partype="50"):
+def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafolder, outputfolder):
+    model_reduced = {1: "KNMI", 2: "DMI", 3: "MPI", 4: "MOH", 5: "IPS", 6: "CNR"}
+    matlab_directory = r"C:\Program Files\MATLAB\R2019b\bin\matlab"
     i = 0
     complete_data = pd.DataFrame()
     for model in listmodels:
@@ -2001,27 +2003,17 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
             y2B = y1B + 4
             m1, m2 = models[model]
             if not path.exists(
-                    path.join(datafolder, 'fish_niche_export%s_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' % (partype,
-                                                                                                        m1, exA, exB,
-                                                                                                        m2, y1A, y2B))):
+                    path.join(outputfolder, 'fish_niche_export_%s_%s_%s-%s.csv' % (model_reduced[model],exA, y1A, y2B))):
                 # if os.path.exists(os.path.join(datafolder, 'fish_niche_export_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' %(m1, exA, exB, m2, y1A, y2B))):
+                if path.exists(path.join(datafolder,"310","%s_%s_%s-%s" % (model_reduced[model],exA, y1A, y2B),"Temperature.csv")):
+                    cmd = r'%s -wait -r -nosplash -nodesktop generateVolumeTimeseries(%s,%s,%s,%d,%d,%s,%s);quit' % (
+                    '"%s"' % matlab_directory,"'%s'" %lakelistfile, "'%s'" % model_reduced[model], "'%s'" %exA, y1A, y2B, "'%s'" %datafolder, "'%s'" %outputfolder)
+                    print(cmd)
+                    os.system(cmd)
+                    print('nan')
+            if path.exists(path.join(datafolder, 'fish_niche_export_%s_%s_%s0-%s.csv' % (model_reduced[model],exA, y1A, y2B))):
 
-                cmd = 'matlab -wait -r -nosplash -nodesktop generateVolumeTimeseries(\'%s\',\'%s\',\'%s\',\'%s\',%d,\'%s\',%d,\'%s\');quit' % (
-                lakelistfile, m1, m2, exA, y1A, exB, y2B, datafolder)
-                print(cmd)
-                os.system(cmd)
-                print('nan')
-            if path.exists(path.join(datafolder, 'fish_niche_export%s_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' % (partype,
-                                                                                                               m1, exA,
-                                                                                                               exB, m2,
-                                                                                                               y1A,
-                                                                                                               y2B))):
-
-                datasheet = path.join(datafolder, 'fish_niche_export%s_EUR-11_%s_%s-%s_%s_%s0101-%s1231.csv' % (partype,
-                                                                                                                m1, exA,
-                                                                                                                exB, m2,
-                                                                                                                y1A,
-                                                                                                                y2B))
+                datasheet = path.join(datafolder, 'fish_niche_export_%s_%s_%s0-%s.csv' % (model_reduced[model],exA, y1A, y2B))
                 # print(datasheet)
                 timeseries = pd.read_csv(datasheet)
                 timeseries['Date'] = pd.to_datetime(timeseries['Date'], format="%d.%m.%Y")
@@ -2038,7 +2030,7 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                 timeseries_select.loc[timeseries['Total Volume'] > 5.0e9, 'Lake_group'] = 3
                 timeseries_select['pT'] = timeseries['Pourcentage Volume with T < 15 C']
                 timeseries_select['pO2'] = timeseries['Pourcentage Volume with O2 > 3000']
-                timeseries_select['pPAR'] = timeseries['Pourcentage Volume with PPFD > %s' % partype]
+                timeseries_select['pPAR'] = timeseries['Pourcentage Volume with PPFD > 1']
                 timeseries_select['phabitable'] = timeseries['Pourcentage Volume satisfying all three previous']
                 # timeseries_select.loc[timeseries_select['pO2'] <= timeseries_select['pPAR'], 'phabitable'] = \
                 # timeseries_select['pT'] - (1 - timeseries_select['pO2'])
@@ -2055,13 +2047,13 @@ def generate_timeseries_by_model(listmodels, listscenarios, lakelistfile, datafo
                     complete_data = complete_data.append(timeseries_select, ignore_index=True)
                     print('added')
 
-    complete_data.loc[complete_data['Lake_group'] == 1].to_csv(path.join(datafolder, 'complete_data_1%s.csv' % partype),
+    complete_data.loc[complete_data['Lake_group'] == 1].to_csv(path.join(datafolder, 'complete_data_small.csv' ),
                                                                index=False)
     print('1_save')
-    complete_data.loc[complete_data['Lake_group'] == 2].to_csv(path.join(datafolder, 'complete_data_2%s.csv' % partype),
+    complete_data.loc[complete_data['Lake_group'] == 2].to_csv(path.join(datafolder, 'complete_data_medium.csv' ),
                                                                index=False)
     print('2_save')
-    complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'complete_data_3%s.csv' % partype),
+    complete_data.loc[complete_data['Lake_group'] == 3].to_csv(path.join(datafolder, 'complete_data_large.csv' ),
                                                                index=False)
     print('end')
 
@@ -3886,7 +3878,7 @@ if __name__ == '__main__':
     # FishNiche_graph_temp_time(2, 4, r'C:\Users\Marianne\Documents\Fish_niche\MDN_FishNiche_2017\lakes\test.csv')
     # plt.show()
     #FishNiche_plot_volume_param('His',r'D:\Fish_niche\lakes\2017SwedenList.csv', [1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8], 1, datafolder)
-    generate_timeseries_by_model([2], [2,1, 5, 8],r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',r"F:\output")#,"one_Pourcent")
+    generate_timeseries_by_model([1,2,3,4,5,6], [1,2,3,4,5,6,7,8],r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',r"G:\Fish_Niche_archive\Postproc\stepwise_regression_result_all_model_and_scenario", r"G:\Fish_Niche_archive\Postproc\Habitat_Volume_by_model_and_scenario")#,"one_Pourcent")
     # FishNiche_plot_volume(r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',   [1, 2, 3, 4, 5, 6, 7, 8], [1, 2, 3, 4, 5, 6], 1, datafolder)#,"one_Pourcent")
     # #
     # FishNiche_julien_data(r"F:\output")
