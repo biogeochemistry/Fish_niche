@@ -14,20 +14,19 @@ import pandas as pd
 from joblib import Parallel, delayed
 from scipy.stats import linregress
 
-from lakes.Graphics import Graphics
-from lakes.calibration_fish_niche import CalibrationInfo
-from lakes.lake_information import LakeInfo, final_equation_parameters
+from Graphics import Graphics
+from calibration_fish_niche import CalibrationInfo
+from lake_information import LakeInfo, final_equation_parameters
 
 
 num_cores = multiprocessing.cpu_count() - 6
 matlab_directory = r"C:\Program Files\MATLAB\R2019b\bin\matlab"
-output_path = r"Postproc"
+output_path = r"G:\Fish_Niche_archive\Postproc\stepwise_regression_result_all_model_and_scenario"
 input_folder = r"lakes/sweden_inflow_data/Validation_data_for_lookup.xlsx"
-forcing_data_path = r"weather_cordex"
+forcing_data_path = r"F:\MCOTE\MCote output\optimisation_2018_10_12\cordex"
 
 
-lakes = pd.read_csv("lakes/2017SwedenList.csv",
-                    encoding='ISO-8859-1')  # _only_validation_12lakes.csv", encoding='ISO-8859-1')
+lakes = pd.read_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv", encoding='ISO-8859-1')  # _only_validation_12lakes.csv", encoding='ISO-8859-1')
 lakes_data = lakes.set_index("lake_id").to_dict()
 lakes_list = list(lakes_data.get("name").keys())
 subid = list(lakes_data.get("subid").keys())
@@ -73,7 +72,7 @@ output_long = {"Tzt.csv": "Predicted temperature profile", "O2zt.csv": "Predicte
                            "rho_snow": "Initial snow density", "IceIndicator": "Indicator of ice cover"}}
 
 
-def calibration_iteration(lakesList12 = "lakes/2017SwedenList_only_validation_12lakes.csv",
+def calibration_iteration(lakesList12 = "2017SwedenList_only_validation_12lakes.csv",
                           lakes_sample_for_temperature=False, lakes_sample_for_oxygen=False):
     """
     Simple function to call the calibration of all lakes.
@@ -136,7 +135,7 @@ def calibration_iteration(lakesList12 = "lakes/2017SwedenList_only_validation_12
         return 1
 
 
-def run_calibration(lake_number, lakesList12="lakes/2017SwedenList_only_validation_12lakes.csv", lakes_list=lakes_list, old=False):
+def run_calibration(lake_number, lakesList12="2017SwedenList_only_validation_12lakes.csv", lakes_list=lakes_list, old=False):
     """
     Simple function to call the calibration of a specific lake. It create the object Lake, prepare the necessary input
     files and call for the calibration done on matlab.
@@ -274,7 +273,7 @@ def run_calibration(lake_number, lakesList12="lakes/2017SwedenList_only_validati
 
 
 
-def run_calibrationsoxy(lake_number, lakesList12="lakes/2017SwedenList_only_validation_12lakes.csv"):
+def run_calibrationsoxy(lake_number, lakesList12="2017SwedenList_only_validation_12lakes.csv"):
     """
         Intermediary function to call Nelder-mead optimization function for a single lake.
 
@@ -457,7 +456,7 @@ def calibration_iteration5():
         run_calibrations5(lake_number)
 
 
-def run_calibrations5(lake_number, lakesList12="lakes/2017SwedenList_only_validation_12lakes.csv"):
+def run_calibrations5(lake_number, lakesList12="2017SwedenList_only_validation_12lakes.csv"):
     """
         Intermediary function to call Nelder-mead optimization function for a single lake.
 
@@ -586,7 +585,7 @@ def summary_characteristics_lake_parallel(modelid=2, scenarioid=2, lakes_listcsv
 
 
 def summary_characteristics_lake1(lake_number, lakes_listcsv="2017SwedenList.csv", modelid=2, scenarioid=2,
-                                  calibration=False, old=False, outputfolder="Postproc", new=False):
+                                  calibration=False, old=False, outputfolder=output_path, new=False):
     lakes = pd.read_csv(lakes_listcsv, encoding='ISO-8859-1')  # _only_validation_12lakes.csv", encoding='ISO-8859-1')
     lakes_data = lakes.set_index("lake_id").to_dict()
     lakes_list = list(lakes_data.get("name").keys())
@@ -605,7 +604,7 @@ def summary_characteristics_lake1(lake_number, lakes_listcsv="2017SwedenList.csv
                 # lakeinfo.lake_input(modelid,scenarioid)
 
                 # test = lakeinfo.runlakefinal(modelid,scenarioid)
-                if not os.path.exists(os.path.join(lakeinfo.outdir, '20211210REDOCOMPLETE')):
+                if not os.path.exists(os.path.join(lakeinfo.outdir, 'Temperature.csv')):
 
                     if lakeinfo.lake_id in [32276, 310, 14939, 30704, 31895, 6950, 99045, 33590, 33494, 698, 16765, 67035]:
                         if calibration:
@@ -707,7 +706,7 @@ def summary_characteristics_lake1(lake_number, lakes_listcsv="2017SwedenList.csv
                             lakeinfo.lake_input(modelid, scenarioid)
                             outdir = lakeinfo.outdir
                             lakeinfo.runlakefinal(modelid, scenarioid, calibration)
-                            if not os.path.exists(os.path.join(outdir, '20211210REDOCOMPLETE')):
+                            if os.path.exists(os.path.join(outdir, '20211210REDOCOMPLETE')):
 
                                 if os.path.exists(os.path.join(outdir, '20211210REDOCOMPLETE')):
                                     lakeinfo.outputfile(calibration=calibration)
@@ -2487,18 +2486,22 @@ if __name__ == "__main__":
     #
     lakes_list1 = "2017SwedenList_only_validation_12lakes.csv"
     #
-    comparison_plot_v2(lakes_listcsv=lakes_list1, modelid=2, scenarioid=2, outputfolder="Postproc")
-    FishNiche_mean_secchi_graph(calibration=True,old=False)
-    FishNiche_mean_secchi_graph(calibration=False, old=False)
-    FishNiche_TO_graph_v2(lakes_listcsv=lakes_list1, calibration=False, modelid=2, scenarioid=2,
-                          outputfolder="Postproc", old=False)
-    FishNiche_TO_graph_v2(lakes_listcsv=lakes_list1, calibration=True, modelid=2, scenarioid=2,
-                          outputfolder="Postproc", old=False)
-    violin_plot45(lakes_list1="2017SwedenList.csv", output_path="Postproc")
-    print("part 2!")
-    # summary_characteristics_lake(lakes_listcsv=lakes_list1, calibration=True, withfig=False, old=False,new=False, outputfolder="Postproc")
-    print("part 3!")
-
+    # comparison_plot_v2(lakes_listcsv=lakes_list1, modelid=2, scenarioid=2, outputfolder="Postproc")
+    # FishNiche_mean_secchi_graph(calibration=True,old=False)
+    # FishNiche_mean_secchi_graph(calibration=False, old=False)
+    # FishNiche_TO_graph_v2(lakes_listcsv=lakes_list1, calibration=False, modelid=2, scenarioid=2,
+    #                       outputfolder="Postproc", old=False)
+    # FishNiche_TO_graph_v2(lakes_listcsv=lakes_list1, calibration=True, modelid=2, scenarioid=2,
+    #                       outputfolder="Postproc", old=False)
+    # violin_plot45(lakes_list1="2017SwedenList.csv", output_path="Postproc")
+    # print("part 2!")
+    # # summary_characteristics_lake(lakes_listcsv=lakes_list1, calibration=True, withfig=False, old=False,new=False, outputfolder="Postproc")
+    # print("part 3!")
+    # summary_characteristics_lake1(0)
+    for model in [2]:
+        for scenario in [2]:
+            print("model :",model, "scenario :",scenario)
+            summary_characteristics_lake_parallel(modelid=model, scenarioid=scenario)
     for model in [1,2,3,4,5,6]:
         for scenario in [1,2,3,4,5,6,7,8]:
             print("model :",model, "scenario :",scenario)
@@ -2538,10 +2541,10 @@ if __name__ == "__main__":
     #     for scenario in [2,1,5,8]:
     #         summary_characteristics_lake_parallel(modelid=model, scenarioid=scenario, lakes_listcsv="2017SwedenList.csv",
     #                                               calibration=False, old=False, outputfolder="Postproc",new=False)
-
-    generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],
-                                 r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',
-                                 "Postproc")  # ,"one_Pourcent")
+    #
+    # generate_timeseries_by_model([1, 2, 3, 4, 5, 6], [1, 2, 3, 4, 5, 6, 7, 8],
+    #                              r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',
+    #                              "Postproc")  # ,"one_Pourcent")
 
     # fishout.generate_timeseries_by_model([2], [2, 1, 5, 8],
     #                              r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv', "Postproc")  # ,"one_Pourcent")

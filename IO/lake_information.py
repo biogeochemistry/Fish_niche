@@ -21,7 +21,7 @@ import pandas as pd
 from math import sqrt, floor, log10, log
 from sklearn.metrics import r2_score, mean_squared_error
 
-from lakes.Graphics import Graphics
+from Graphics import Graphics
 # import matlab.engine
 variables = ['clt', 'hurs', 'tas', 'rsds', 'ps', 'pr', 'sfcWind']
 
@@ -45,16 +45,16 @@ model_reduced = {1: "KNMI", 2: "DMI", 3: "MPI", 4: "MOH", 5: "IPS", 6: "CNR"}
 scenario_reduced = {1: "historical_1971-1980", 2: "historical_2001-2010", 3: "rcp45_2031-2040", 4: "rcp45_2061-2070",
                     5: "rcp45_2091-2100", 6: "rcp85_2031-2040", 7: "rcp85_2061-2070", 8: "rcp85_2091-2100"}
 
-cordexfolder = r'F:\MCote output\optimisation_2018_10_12\cordex'  # 5-24-2018 MC #Need to be change depending where
+cordexfolder = r'F:\MCOTE\MCote output\optimisation_2018_10_12\cordex'  # 5-24-2018 MC #Need to be change depending where
 #                                                                   the climatic files where
-inflowfolder = r'C:\Users\macot620\Documents\GitHub\Fish_niche\sweden_inflow_data'
-outputfolder = r'F:\output'  # 5-9-2018 MC
-observation_folder = "Observations"
-input_folder = "Inputs"
+inflowfolder = r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\sweden_inflow_data'
+outputfolder = r"G:\Fish_Niche_archive\Postproc\stepwise_regression_result_all_model_and_scenario"  # 5-9-2018 MC
+observation_folder = r"G:\Fish_Niche_archive\IO\obs"
+input_folder = r'G:\Fish_Niche_archive\IO\model_inputs'
 
-output_folder = r"D:\output_fish_niche"
+output_folder = r"G:\Fish_Niche_archive\Postproc\stepwise_regression_result_all_model_and_scenario"
 
-lakes_data = pd.read_csv("2017SwedenList.csv", encoding='ISO-8859-1')
+lakes_data = pd.read_csv(r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv", encoding='ISO-8859-1')
 lakes_data = lakes_data.set_index("lake_id").to_dict()
 # lakes_list = list(lakes_data.get("name").keys())
 lakes_list = list(lakes_data.get("ebhex").keys())
@@ -613,7 +613,9 @@ class LakeInfo:
         else:
             self.spin_up = 5
 
-        self.lake_input_folder = "model_inputs\%s"%self.lake_id
+        self.lake_input_folder = "%s\%s"%(input_folder,self.lake_id)
+        if not os.path.exists( self.lake_input_folder ):
+            os.makedirs( self.lake_input_folder )
         self.init_file = os.path.join(self.lake_input_folder, 'init')
         if calibration:
             self.par_file = os.path.join(self.lake_input_folder, 'calibration_par')
@@ -626,11 +628,11 @@ class LakeInfo:
         while len(ebhex) < 6:
             ebhex = '0' + ebhex
         d1, d2, d3 = ebhex[:2], ebhex[:4], ebhex[:6]
-        outdir = os.path.join(outputfolder, d1, d2, d3)
-        outdir_cali = os.path.join(r'F:\output', d1, d2, d3)
-        self.output_path = outdir
+        # outdir = os.path.join(outputfolder, d1, d2, d3)
+        # outdir_cali = os.path.join(r'F:\output', d1, d2, d3)
+        # self.output_path = outdir
         self.old = old
-        self.old_calibration_path = os.path.join(self.output_path,
+        self.old_calibration_path = os.path.join(outputfolder,
                                                  "EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231",
                                                  "calibration_result_old")
         exA, y1A, exB, y1B = scenarios[scenarioid]
@@ -652,15 +654,15 @@ class LakeInfo:
         if old:
             self.calibration_path = self.old_calibration_path
         else:
-            self.calibration_path = os.path.join(self.output_path,
+            self.calibration_path = os.path.join(outputfolder,
                                              "EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231",
                                              "calibration_result")
 
-        self.outdir = os.path.join(self.output_path,
-                                   'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
-                                       m1, exA, exB, m2, y1A, y2B))
-        self.outdir_origin_cali = os.path.join(outdir_cali,
-                                   "EUR-11_ICHEC-EC-EARTH_historical-rcp45_r3i1p1_DMI-HIRHAM5_v1_day_20010101-20101231",
+        self.outdir = os.path.join(outputfolder,"%s"%self.lake_id,
+                                   "%s_%s" % (
+                                       model_reduced[modelid], scenario_reduced[scenarioid]))
+        self.outdir_origin_cali = os.path.join(outputfolder,"%s"%self.lake_id,
+                                   "DMI_historical_20010101-20101231",
                                              "calibration_result")
         #
         # for file in["Observed_Secchi.csv","Observed_Oxygen.csv","Observed_Temperature.csv","Calibration_Complete.csv","Calibration_CompleteOXY.csv"]:
@@ -1699,9 +1701,9 @@ class LakeInfo:
         else:
             datesB = pd.date_range(pd.datetime(y1B, 1, 1), pd.datetime(y2B, 12, 31), freq='d').tolist()
 
-        outdir = os.path.join(self.output_path,
-                              'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
-                                  m1, exA, exB, m2, y1A, y2B))
+        outdir = os.path.join(self.output_path,"%s"%self.lake_id,
+                              "%s_%s" % (
+                                       model_reduced[modelid], scenario_reduced[scenarioid]))
 
         if not os.path.exists(outdir):
             os.makedirs(outdir)
@@ -1720,13 +1722,14 @@ class LakeInfo:
         #     parp = os.path.join(outdir, '2020par')
         inputp = os.path.join(os.path.join(self.lake_input_folder, "%s_%s_input" % (model_reduced[modelid], scenario_reduced[scenarioid])))
 
-        if os.path.exists(os.path.join(outdir, '20211210REDOCOMPLETE')):
-            print('lake %s is already completed %s %s' % (self.ebhex,modelid,scenarioid))
-            # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
-            #    f.write ( 'lake %s is already completed\n' % ebhex )
-            #    f.close ()
-            ret = 0
-        else:
+        # if os.path.exists(os.path.join(outdir, '20211210REDOCOMPLETE')):
+        #     print('lake %s is already completed %s %s' % (self.ebhex,modelid,scenarioid))
+        #     # with open ( '%s/running_report.txt' % outputfolder, 'a' ) as f:
+        #     #    f.write ( 'lake %s is already completed\n' % ebhex )
+        #     #    f.close ()
+        #     ret = 0
+        # else:
+        if not os.path.exists(os.path.join(outdir, 'Temperature.csv')):
             # empty = pd.DataFrame(np.nan, index=np.arange(0,len(datesA+datesB)), columns=np.arange(1,int(depth)+1))
             # for i in ['Tzt.csv','O2zt.csv', 'Attn_zt.csv', 'Qst.csv', 'DOCzt.csv','lambdazt.csv']:
             #     empty.to_csv('%s/%s'%(outdir,i),na_rep='NA',header=False,index=False)
@@ -3359,8 +3362,8 @@ def ice_cover_comparison(outputfolder = r"F:\output" ,
         d1, d2, d3 = eh[:2], eh[:4], eh[:6]
         if calibration:
             outdir = os.path.join(outputfolder, d1, d2, d3,
-                                  'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (
-                                      m1, exA, exB, m2, y1A, y2B), "calibration_result")
+                                  "%s_%s" % (
+                                      model_reduced[2], scenario_reduced[2]), "calibration_result")
         else:
             outdir = os.path.join(outputfolder, d1, d2, d3,
                               'EUR-11_%s_%s-%s_%s_%s0101-%s1231' % (

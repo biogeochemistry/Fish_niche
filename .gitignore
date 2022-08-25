@@ -1,8 +1,14 @@
+IO/model_inputs/*
+!IO/model_inputs/DOWNLOAD INPUT DATA AND PUT IT HERE
 
-lakes/model_inputs/
-lakes/obs/
-lakes/sweden_inflow_data/
-lakes/weather_cordex/
-lakes/lake_subset_SHMI_data/
-reorganise_infor.py
-.idea/
+IO/cordex/*
+!IO/cordex/DOWNLOAD CORDEX DATA AND PUT IT HERE
+
+IO/obs/*
+!IO/obs/SHYPEdata/DECOMPRESSED ZIP FOLDER compressed SHYPEdata HERE
+!IO/obs/DOWNLOAD INPUT DATA AND PUT IT HERE
+
+
+IO/sweden_inflow_data/*
+!IO/sweden_inflow_data/DOWNLOAD H5 FILE SWEDEN INFLOW DATA AND PUT IT HERE
+

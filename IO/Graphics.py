@@ -217,11 +217,6 @@ def Area_at_depth():
         x = np.array(T_list)
         y = np.array(light_list)
 
-        #x = np.linspace(0, 5, 50)
-        #y = np.linspace(0, 5, 40)
-        X, Y = np.meshgrid(x, y)
-        #Z = f(X, Y)
-
         ZAreaday = np.array(Areaday)
 
         ZAreadays = np.array(AreaDays)
@@ -356,8 +351,6 @@ def target_diagram_background(crmsd, bias, max_value_overall, min_value_overall,
         if max_value > 1.5:
             limit = 4
             ax.add_patch(plt.Circle((0, 0), 3.5, **cicle_max_args))
-            # ax.add_patch(plt.Circle((0, 0), 3, **other_circle_args))
-            # ax.add_patch(plt.Circle((0, 0), 2, **other_circle_args))
             ax.add_patch(plt.Circle((0, 0), 2.5, **other_circle_args))
             ax.add_patch(plt.Circle((0, 0), 1.5, **other_circle_args))
             ax.add_patch(plt.Circle((0, 0), 1, **cicle_1_args))
@@ -373,17 +366,6 @@ def target_diagram_background(crmsd, bias, max_value_overall, min_value_overall,
         else:
             limit = max_value + space_between_circles
 
-        # if min_value < 0.2:
-        #     new_circle = math.floor(min_value)
-        # else:
-        #     new_circle = math.ceil(min_value)
-        # for i in range(max_number_cicle-1):
-        #     if (max_value-new_circle) > space_between_circles:
-        #         if (new_circle+space_between_circles) != 1:
-        #             ax.add_patch(plt.Circle((0, 0), new_circle, **other_circle_args))
-        #             new_circle += space_between_circles
-        #     else:
-        #         break
 
     for i in range(len(crmsd)):
         sct_args['facecolor'] = color[i]
@@ -521,10 +503,6 @@ def base_contourplot(X,Y,z_variable_data, z_variablelist,lake,number_of_plot_by_
                 plt.setp(axs.yaxis.get_ticklines(), 'markersize', 3)
                 plt.setp(axs.xaxis.get_ticklines(), 'markersize', 3)
 
-                # plt.setp(axs.yaxis.get_ticklines(), 'markeredgewidth', 1)
-
-                # plt.subplot_tool()
-                # plt.tight_layout()
 
                 if ntg:
                     plt.clabel(cp, inline=True,fmt='%.0f')
@@ -1146,9 +1124,6 @@ class Graphics:
                         minx = min([minbiass, mincrmsds], key=abs)
                         minr = round_decimals_down(minx)
                         minv = abs(minr)
-                        # minv = abs(
-                        #     round_decimals_down(
-                        #         min([min([min(i) for i in biaslist]), min([min(i) for i in crmsdlist])])))
                     except:
                         minv = 0
 
@@ -1540,9 +1515,6 @@ class Graphics:
             errorbararg = {'fmt': 'o', 'color': "#006600",  'markersize': 4, 'capsize':5,
                                'linewidth': 0.5, 'elinewidth':1}
 
-        # sns.set(font_scale=2)
-        # sns.set_style("ticks")
-        # plt.grid(False)
 
         # Figure
         fig, ax = plt.subplots(figsize=(15.0, 12))
@@ -1561,8 +1533,6 @@ class Graphics:
         ax.set_xticklabels([0,2,4,6,8,10,12,14], va='bottom', ha='center')
         ax.set_yticklabels([" 0"," 2"," 4"," 6"," 8","10","12","14"], va= 'center', ha='left')
         fig.suptitle("")
-        # fig.tight_layout(pad=2)
-        # ax.legend(loc='best')
 
 
         # plt.style.context('seaborn-paper')
@@ -1625,7 +1595,6 @@ class Graphics:
         sns.set_style("ticks", {"xtick.major.size": 100, "ytick.major.size": 100})
         plt.xticks(rotation=15)
         plt.rcParams.update({"font.family": self.font_family})
-        # font = {'family': self.font_family}
 
         plt.rcParams.update({"font.family": self.font_family})
         fig = plt.gcf()
@@ -1716,9 +1685,6 @@ class Graphics:
         ax.set_xticklabels([0, 5, 10, 15, 20, 25, 30], va='bottom', ha='center')
         ax.set_yticklabels([" 0 ", " 5 ", "10 ", "15 ", "20 ", "25 ", "30 "], va='center', ha='left')
         fig.suptitle("")
-        # fig.tight_layout(pad=2)
-        # ax.legend(loc='best')
-        # ax.tick_params(labelsize=self.BIGGER_SIZE)
 
         # plt.style.context('seaborn-paper')
         plt.rc('font', size=self.SMALL_SIZE)  # controls default text sizes
@@ -1797,7 +1763,7 @@ class Graphics:
         plt.clf()
 
     def contourplot_temp_vs_light_oxy(self, x_list, y_list, z_list, variables_list_in_order, label_axis_in_order,
-                                      subfolder="T_L_O_matrices",
+                                      subfolder="T_O_L_matrices",
                                       lakes_list=r'C:\Users\macot620\Documents\GitHub\Fish_niche\lakes\2017SwedenList.csv',
                                       individual=False):
 
@@ -1894,23 +1860,8 @@ class Graphics:
                         contour = base_contourplot(X, Y, dict_z_value_by_lake[column]['%s' % lake], z_list, lake, 4,
                                                    vmin[column]['%s' % lake], vmax[column]['%s' % lake], axs)
 
-                    # axs[3][3].set_visible(False)
-                    # plt.subplots_adjust(right=right, left=left,top=top, wspace=wspace, hspace=hspace)
-                    # cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
                     print(np.linspace(vmin[column]['%s' % lake], vmax[column]['%s' % lake], 10))
-                    # if column == "NTGdays":
-                    #
-                    #     clb = plt.colorbar(contour,  cax=cbar_ax,boundaries=np.linspace(0, 365, 10))
-                    #     # plt.show()
-                    #     # plt.clim(0, 365)
-                    # else:
-                    #     clb = plt.colorbar(contour, cax=cbar_ax,
-                    #                    boundaries=np.linspace(vmin[column]['%s' % lake], vmax[column]['%s' % lake], 10))
 
-                    # clb = plt.colorbar(contour, cax=cbar_ax)
-                    # clb.set_label(column)
-
-                    # plt.subplots_adjust(left, bottom, right, top, wspace, hspace)
                     fig.text(0.5, 0.02, label_axis_in_order['xlabel'], ha='center', va='center',
                              fontsize=self.MEDIUM_SIZE)
                     fig.text(0.02, 0.5, label_axis_in_order['ylabel'], ha='center', va='center', rotation='vertical',
@@ -1936,10 +1887,7 @@ class Graphics:
 
                     print(r"G:\Fish_Niche_archive\Postproc\figures_surface_area_NTGdays/contourplot_%s_lake_%s_%s.png" % (
                         column, lake, variables_list_in_order[2],))
-                    # plt.savefig(r"G:\Fish_Niche_archive\Postproc\figures_surface_area_NTGdays/contourplot_%s_lake_%s_%s.png" % (
-                    #     column, lake, variables_list_in_order[2]))
-                    # plt.savefig(r"G:\Fish_Niche_archive\Postproc\figures_surface_area_NTGdays/contourplot_%s_lake_%s_%s.svg" % (
-                    #     column, lake, variables_list_in_order[2]))
+
                     plt.savefig(
                         r"G:\Fish_Niche_archive\Postproc\figures_surface_area_NTGdays/contourplot_%s_lake_%s_%s.jpeg" % (
                             column, lake, variables_list_in_order[2]))
@@ -2038,23 +1986,9 @@ class Graphics:
                         contour = base_contourplot(X, Y, dict_z_value_by_lake[column]['%s' % lake], z_list, lake, 4,
                                                    vmin[column]['%s' % lake], vmax[column]['%s' % lake], axs)
 
-                    # axs[3][3].set_visible(False)
-                    # plt.subplots_adjust(right=right, left=left,top=top, wspace=wspace, hspace=hspace)
-                    # cbar_ax = fig.add_axes([0.85, 0.15, 0.05, 0.7])
+
                     print(np.linspace(vmin[column]['%s'%lake], vmax[column]['%s'%lake], 10))
-                    # if column == "NTGdays":
-                    #
-                    #     clb = plt.colorbar(contour,  cax=cbar_ax,boundaries=np.linspace(0, 365, 10))
-                    #     # plt.show()
-                    #     # plt.clim(0, 365)
-                    # else:
-                    #     clb = plt.colorbar(contour, cax=cbar_ax,
-                    #                    boundaries=np.linspace(vmin[column]['%s' % lake], vmax[column]['%s' % lake], 10))
 
-                    # clb = plt.colorbar(contour, cax=cbar_ax)
-                    # clb.set_label(column)
-
-                    # plt.subplots_adjust(left, bottom, right, top, wspace, hspace)
                     fig.text(0.5, 0.02, label_axis_in_order['xlabel'], ha='center', va='center',fontsize=self.MEDIUM_SIZE)
                     fig.text(0.02, 0.5, label_axis_in_order['ylabel'], ha='center', va='center', rotation='vertical',fontsize=self.MEDIUM_SIZE)
 
@@ -2159,10 +2093,7 @@ class Graphics:
                         meanbyday['p0PAR2'] = meanbyday['p0PAR']
                         stdbyday['p0O22'] = stdbyday['p0O2']
                         stdbyday['p0PAR2'] = stdbyday['p0PAR']
-                        # minbyday['p0O22'] =100- minbyday['p0O2']
-                        # maxbyday['p0O22'] = 100-maxbyday['p0O2']
-                        # minbyday['p0PAR2'] = 100 - minbyday['p0PAR']
-                        # maxbyday['p0PAR2'] = 100 - maxbyday['p0PAR']
+
                         datahabitable = pd.DataFrame()
                         # datahabitable["Date"]=tt
                         datahabitable["min"] = minbyday['p0habitable']
@@ -3215,7 +3146,7 @@ if __name__ == "__main__":
     plt.rc('legend', fontsize=MEDIUM_SIZE)  # legend fontsize
     plt.rc('figure', titlesize=MEDIUM_SIZE)  # fontsize of the figure title
     plt.rc("image",cmap='viridis')
-    lakes_list1 = "2017SwedenList209.csv"
+    lakes_list1 = "2017SwedenList200.csv"
     # mainfn.comparison_plot_v2(lakes_listcsv=lakes_list1, modelid=2, scenarioid=2, outputfolder=r'F:\output')
     # # mainfn.ice_cover_comparison(lake_list="2017SwedenList.csv")
     # mainfn.violin_plot45(lakes_list1="2017SwedenList.csv", output_path=r"F:\output")
@@ -3241,7 +3172,7 @@ if __name__ == "__main__":
     oxy_list = [0, 3, 3.5, 4, 4.5, 5, 5.5, 6, 6.5, 7, 7.5, 8, 8.5, 9, 9.5, 10]
     label_axis_in_order = {'xlabel':'Light threshold (µmol/(m2s))', 'ylabel':'Temperature threshold (°C)','zlabel':''}
     variables_list_in_order = ['Light','Temperature','Oxygen']
-    Graphics(r"F:\output", height=6.5,width=6.5,font_family="Arial",size=9.5).contourplot_temp_vs_light_oxy(light_list,T_list,oxy_list,variables_list_in_order,label_axis_in_order,lakes_list=lakes_list1)
+    Graphics(r"C:\Users\macot620\Documents\GitHub\Fish_niche\lakes", height=6.5,width=6.5,font_family="Arial",size=9.5).contourplot_temp_vs_light_oxy(light_list,T_list,oxy_list,variables_list_in_order,label_axis_in_order,lakes_list=lakes_list1)
     # #
 
     #
